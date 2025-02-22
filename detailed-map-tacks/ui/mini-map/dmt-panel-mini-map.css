@@ -1,0 +1,32 @@
+.mini-map__map-tacks-button {
+    position: relative;
+    width: 2.6666666667rem;
+    height: 2.6666666667rem;
+    pointer-events: auto;
+    transition: transform 0.25s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.mini-map__map-tacks-button:hover {
+    transform: scale(1.3);
+}
+
+.mini-map__map-tacks-button__icon {
+    position: absolute;
+    top: 0.3888888889rem;
+    left: 0.3888888889rem;
+    right: 0.3888888889rem;
+    bottom: 0.3888888889rem;
+    background-image: url("fs://game/action_lookout.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.mini-map__map-tacks-button__bg {
+    position: absolute;
+    top: -0.4444444444rem;
+    left: -0.4444444444rem;
+    right: -0.4444444444rem;
+    bottom: -0.4444444444rem;
+    background-image: url("fs://game/hud_mini_lens_btn.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+  <LocalizedText>
+    <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="zh_Hans_CN">
+      <Text>高级地图钉</Text>
+    </Replace>
+    <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="zh_Hans_CN">
+      <Text>待定</Text>
+    </Replace>
+  </LocalizedText>
+</Database>
