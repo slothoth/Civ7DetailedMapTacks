@@ -1,4 +1,5 @@
-import ContextManager from '/core/ui/context-manager/context-manager.js';
+
+import { InterfaceMode } from '/core/ui/interface-modes/interface-modes.js';
 import FocusManager from '/core/ui/input/focus-manager.js';
 
 export class DMT_PanelMiniMapDecorator {
@@ -26,7 +27,7 @@ export class DMT_PanelMiniMapDecorator {
     createMinimapMapTacksButton() {
         const miniMapButton = document.createElement("fxs-activatable");
         miniMapButton.classList.add("mini-map__map-tacks-button", "mx-1");
-        miniMapButton.setAttribute('data-tooltip-content', Locale.compose("LOC_MAP_TACKS"));
+        miniMapButton.setAttribute('data-tooltip-content', Locale.compose("LOC_DMT_MAP_TACKS"));
         miniMapButton.addEventListener('action-activate', () => {
             this.openMapTacksPanel();
             FocusManager.clearFocus(miniMapButton);
@@ -43,8 +44,7 @@ export class DMT_PanelMiniMapDecorator {
     }
 
     openMapTacksPanel() {
-        console.warn("HZ openMapTacksPanel");
-        ContextManager.push("dmt-map-tack-chooser", { singleton: true });
+        InterfaceMode.switchTo("DMT_INTERFACEMODE_MAP_TACK_CHOOSER");
     }
 }
 

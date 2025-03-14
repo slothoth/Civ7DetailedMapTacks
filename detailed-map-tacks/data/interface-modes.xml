@@ -1,0 +1,6 @@
+<Database>
+    <InterfaceModes>
+        <Row InterfaceModeType="DMT_INTERFACEMODE_MAP_TACK_CHOOSER" ViewName="Placement"/>
+        <Row InterfaceModeType="DMT_INTERFACEMODE_PLACE_MAP_TACKS" ViewName="Placement"/>
+    </InterfaceModes>
+</Database>

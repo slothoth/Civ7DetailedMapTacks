@@ -1,8 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database>
-  <LocalizedText>
-    <Replace Tag="LOC_MAP_TACKS" Language="zh_Hans_CN">
-        <Text>地图钉</Text>
-    </Replace>
-  </LocalizedText>
+    <LocalizedText>
+        <Replace Tag="LOC_DMT_MAP_TACKS" Language="zh_Hans_CN">
+            <Text>地图钉</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="zh_Hans_CN">
+            <Text>放置详情</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_LAKE_NAME" Language="zh_Hans_CN">
+            <Text>湖泊</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_NATURAL_WONDER_NAME" Language="zh_Hans_CN">
+            <Text>自然奇观</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_QUARTER_NAME" Language="zh_Hans_CN">
+            <Text>城区</Text>
+        </Replace>
+        <!-- Invalid reasons -->
+        <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="zh_Hans_CN">
+            <Text>此地块上的地图钉已达到上限。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_FULL_TILE" Language="zh_Hans_CN">
+            <Text>此地图钉或者此地块上的地图钉需要整个地块。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_DUPLICATE" Language="zh_Hans_CN">
+            <Text>此地块上已存在此地图钉。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X" Language="zh_Hans_CN">
+            <Text>不能放置在{1_Name}上.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="zh_Hans_CN">
+            <Text>必须放置在{1_Name}旁。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="zh_Hans_CN">
+            <Text>不能放置{1_Name}。</Text>
+        </Replace>
+        <!-- Adjacency texts -->
+        <Replace Tag="LOC_DMT_YIELD_FROM" Language="zh_Hans_CN">
+            <Text>+{1_Amount} {2_YieldName} 来自{3_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT" Language="zh_Hans_CN">
+            <Text>+{1_Amount} {2_YieldName} 来自相邻{3_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="zh_Hans_CN">
+            <Text>+{1_Amount} {2_YieldName} 来自相邻{3_TagName}区块</Text>
+        </Replace>
+    </LocalizedText>
 </Database>

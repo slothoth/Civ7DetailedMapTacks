@@ -1,0 +1,19 @@
+.panel-place-map-tack {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    height: 100vh;
+}
+
+.panel-place-map-tack.hidden {
+    visibility: hidden;
+}
+
+.panel-place-map-tack-panel {
+    position: absolute;
+    display: flex;
+    flex: 1 1 auto;
+    width: 28.4444444444rem;
+    pointer-events: none;
+    top: 2.6666666667rem;
+}

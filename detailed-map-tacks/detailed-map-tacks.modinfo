@@ -19,18 +19,44 @@
         <ActionGroup id="game-detailed-map-tacks" scope="game" criteria="always">
             <Actions>
                 <ImportFiles>
-                    <Item>ui/dmt/dmt-map-tack-chooser.css</Item>
-                    <Item>ui/dmt/dmt-map-tack-chooser.html</Item>
+                    <Item>texture/dmt-invalid-icon.png</Item>
+                    <Item>texture/dmt-map-tack.png</Item>
+                    <Item>ui/map-tack-chooser/dmt-map-tack-chooser.css</Item>
+                    <Item>ui/map-tack-chooser/dmt-map-tack-chooser.html</Item>
                     <Item>ui/mini-map/dmt-panel-mini-map.css</Item>
+                    <Item>ui/place-map-tack/dmt-panel-place-map-tack.css</Item>
+                    <Item>ui/place-map-tack/dmt-panel-place-map-tack.html</Item>
+                    <Item>ui/plot-icons/dmt-map-tack-icons.css</Item>
                 </ImportFiles>
                 <UIScripts>
-                    <Item>ui/dmt/dmt-map-tack-chooser.js</Item>
+                    <Item>ui/interface-modes/dmt-interface-mode-map-tack-chooser.js</Item>
+                    <Item>ui/interface-modes/dmt-interface-mode-place-map-tacks.js</Item>
+                    <Item>ui/lenses/layer/dmt-map-tack-layer.js</Item>
+                    <Item>ui/lenses/lens/dmt-map-tack-lens.js</Item>
+                    <Item>ui/map-tack-chooser/dmt-map-tack-chooser.js</Item>
+                    <Item>ui/map-tack-core/modifier/dmt-map-tack-modifier-requirement.js</Item>
+                    <Item>ui/map-tack-core/modifier/dmt-map-tack-tradition-modifier.js</Item>
+                    <Item>ui/map-tack-core/modifier/dmt-map-tack-trait-modifier.js</Item>
+                    <Item>ui/map-tack-core/dmt-map-tack-change-processor.js</Item>
+                    <Item>ui/map-tack-core/dmt-map-tack-modifier.js</Item>
+                    <Item>ui/map-tack-core/dmt-map-tack-store.js</Item>
+                    <Item>ui/map-tack-core/dmt-map-tack-utils.js</Item>
+                    <Item>ui/map-tack-core/dmt-map-tack-validator.js</Item>
+                    <Item>ui/map-tack-core/dmt-map-tack-yield.js</Item>
+                    <Item>ui/mini-map/dmt-lens-panel-decorator.js</Item>
                     <Item>ui/mini-map/dmt-panel-mini-map-decorator.js</Item>
+                    <Item>ui/place-map-tack/dmt-panel-place-map-tack.js</Item>
+                    <Item>ui/plot-icons/dmt-map-tack-icons-manager.js</Item>
+                    <Item>ui/plot-icons/dmt-map-tack-icons.js</Item>
+                    <Item>ui/plot-icons/dmt-plot-icons-root-decorator.js</Item>
                 </UIScripts>
                 <UpdateText>
                     <Item>text/en_us/UIText.xml</Item>
-                    <Item locale="zh_Hans_CN">l10n/UIText.xml</Item>
+                    <Item>l10n/UIText.xml</Item>
                 </UpdateText>
+                <UpdateDatabase>
+                    <Item>data/interface-modes.xml</Item>
+                </UpdateDatabase>
             </Actions>
         </ActionGroup>
     </ActionGroups>

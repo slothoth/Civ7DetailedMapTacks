@@ -1,22 +1,30 @@
 .map-tack-chooser {
-    position: absolute;
-    top: 8.4444444444rem;
-    left: 1.3333333333rem;
-    bottom: 1.3333333333rem;
-    pointer-events: auto;
-}
-
-.map-tack-chooser .section-list {
     position: relative;
     display: flex;
-    flex-direction: column;
-    width: 21.3333333333rem;
-    margin-left: 0.3333333333rem;
-    margin-right: 0.3333333333rem;
+    flex: 1 1 auto;
+    height: 100vh;
 }
 
 .map-tack-chooser.hidden {
     visibility: hidden;
+}
+
+.map-tack-chooser-panel {
+    position: absolute;
+    display: flex;
+    flex: 1 1 auto;
+    top: 2.6666666667rem;
+    bottom: 0.8888888889rem;
+    pointer-events: auto;
+}
+
+.map-tack-chooser-section-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 22.2222222222rem;
+    margin-left: 0.3333333333rem;
+    margin-right: 0.3333333333rem;
 }
 
 .map-tack-chooser-section {
@@ -30,4 +38,5 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
+	margin-top: 0.2222222222rem;
 }

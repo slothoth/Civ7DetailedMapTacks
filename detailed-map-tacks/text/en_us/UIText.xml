@@ -1,8 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <EnglishText>
-        <Row Tag="LOC_MAP_TACKS">
+        <Row Tag="LOC_DMT_MAP_TACKS">
             <Text>Map Tacks</Text>
+        </Row>
+        <Row Tag="LOC_DMT_PLACEMENT_DETAILS">
+            <Text>Placement Details</Text>
+        </Row>
+        <Row Tag="LOC_DMT_LAKE_NAME">
+            <Text>Lake</Text>
+        </Row>
+        <Row Tag="LOC_DMT_NATURAL_WONDER_NAME">
+            <Text>Natural Wonder</Text>
+        </Row>
+        <Row Tag="LOC_DMT_QUARTER_NAME">
+            <Text>Quarter</Text>
+        </Row>
+        <!-- Invalid reasons -->
+        <Row Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT">
+            <Text>The number of map tacks on this plot has reached the limit.</Text>
+        </Row>
+        <Row Tag="LOC_DMT_INVALID_REASON_FULL_TILE">
+            <Text>This map tack or the map tack on this plot requires full tile.</Text>
+        </Row>
+        <Row Tag="LOC_DMT_INVALID_REASON_DUPLICATE">
+            <Text>This map tack already exists on this plot.</Text>
+        </Row>
+        <Row Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X">
+            <Text>Cannot be placed on {1_Name}.</Text>
+        </Row>
+        <Row Tag="LOC_DMT_INVALID_REASON_ADJACENT_X">
+            <Text>Must be placed adjacent to a {1_Name}.</Text>
+        </Row>
+        <Row Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X">
+            <Text>Cannot place {1_Name}.</Text>
+        </Row>
+        <!-- Adjacency texts -->
+        <Row Tag="LOC_DMT_YIELD_FROM">
+            <Text>+{1_Amount} {2_YieldName} from {3_Name}</Text>
+        </Row>
+        <Row Tag="LOC_DMT_YIELD_FROM_ADJACENT">
+            <Text>+{1_Amount} {2_YieldName} from adjacent {3_Name}</Text>
+        </Row>
+        <Row Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG">
+            <Text>+{1_Amount} {2_YieldName} from adjacent {3_TagName} Constructibles</Text>
         </Row>
     </EnglishText>
 </Database>

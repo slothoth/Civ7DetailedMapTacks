@@ -1,0 +1,92 @@
+dmt-map-tack-icons {
+	pointer-events: none;
+	position: absolute;
+	transform-origin: center;
+}
+
+.map-tack-icon-container {
+    position: relative;
+}
+
+.map-tack-icon-wrapper {
+    position: relative;
+}
+
+.map-tack-icon-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -0.1666666667rem;
+    bottom: -0.1666666667rem;
+    left: -0.1666666667rem;
+    right: -0.1666666667rem;
+    z-index: -1;
+    border-style: solid;
+    border-color: transparent;
+}
+
+.map-tack-icon-wrapper.round::before {
+    border-width: 0.3333333333rem;
+    border-radius: 50%;
+    transform: none;
+}
+
+.map-tack-icon-wrapper.square::before {
+    border-width: 0.2222222222rem;
+    border-radius: 0;
+    transform: none;
+}
+
+.map-tack-icon-wrapper.diamond::before {
+    border-radius: 0;
+    border-width: 0.2777777778rem;
+    transform: rotate(45deg) scale(0.8);
+}
+
+.map-tack-icon-wrapper.food::before {
+    border-color: rgb(27, 156, 34);
+}
+
+.map-tack-icon-wrapper.production::before {
+    border-color: rgb(172, 44, 21);
+}
+
+.map-tack-icon-wrapper.gold::before {
+    border-color: rgb(213, 216, 11);
+}
+
+.map-tack-icon-wrapper.science::before {
+    border-color: rgb(16, 100, 255);
+}
+
+.map-tack-icon-wrapper.culture::before {
+    border-color: rgb(140, 64, 184);
+}
+
+.map-tack-icon-wrapper.happiness::before {
+    border-color: rgb(224, 128, 49);
+}
+
+.map-tack-icon-wrapper.diplomacy::before {
+    border-color: rgb(185, 198, 206);
+}
+
+.map-tack-icon-warn {
+    cursor: help !important;
+    position: absolute;
+    top: -0.4444444444rem;
+    right: -0.4444444444rem;
+    background-image: url("fs://game/detailed-map-tacks/texture/dmt-invalid-icon.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.map-tack-icon-yields {
+    cursor: help !important;
+    text-align: center;
+    margin-top: -0.1111111111rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 0.4444444444rem;
+    color: white;
+    z-index: 1;
+    font-size: 0.6666666667rem;
+}

@@ -1,10 +1,18 @@
 import Panel from '/core/ui/panel-support.js';
-import { MustGetElement } from '/core/ui/utilities/utilities-dom.js';
-import { InputEngineEventName } from '/core/ui/input/input-support.js';
-import NavTray from '/core/ui/navigation-tray/model-navigation-tray.js';
-import { Focus } from '/core/ui/input/focus-support.js';
-import { getConstructibleEffectStrings, composeConstructibleDescription } from '/core/ui/utilities/utilities-core-textprovider.js';
-
+import { InterfaceMode, InterfaceModeChangedEventName } from '/core/ui/interface-modes/interface-modes.js';
+import { MustGetElement } from "/core/ui/utilities/utilities-dom.js";
+import FocusManager from '/core/ui/input/focus-manager.js';
+import { getConstructibleEffectStrings } from '/core/ui/utilities/utilities-core-textprovider.js';
+import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
+// Cache constructible icons for faster panel load.
+Loading.runWhenFinished(() => {
+    let i = 0;
+    for (const c of GameInfo.Constructibles) {
+        i++;
+        const url = UI.getIconURL(c.ConstructibleType, c.ConstructibleClass);
+        Controls.preloadImage(url, 'dmt-map-tack-chooser');
+    }
+});
 class MapTackChooser extends Panel {
     constructor(root) {
         super(root);
@@ -16,15 +24,23 @@ class MapTackChooser extends Panel {
         this.dummyConstructibles = this.getDummyItems();
         this.sortedConstructibles = this.sortItems();
         this.itemList = null;
-        this.cuurentAge = GameInfo.Ages.lookup(Game.age).AgeType;
+        this.currentAge = GameInfo.Ages.lookup(Game.age).AgeType;
 
         // Settings items (TBD)
         this.showAllItems = false;
         this.showYield = false;
 
-        this.engineInputListener = (inputEvent) => { this.onEngineInput(inputEvent); };
+        // UI related
+        this.onInterfaceModeChanged = () => {
+            if (InterfaceMode.getCurrent() == "DMT_INTERFACEMODE_MAP_TACK_CHOOSER") {
+                FocusManager.setFocus(this.sectionList);
+                this.setHidden(false);
+            } else {
+                this.setHidden(true);
+            }
+        };
+        this.requestClose = this.onRequestClose.bind(this);
         this.animateInType = this.animateOutType = 5 /* AnchorType.RelativeToLeft */;
-        this.inputContext = InputContext.Dual;
         this.enableOpenSound = true;
         this.enableCloseSound = true;
     }
@@ -33,45 +49,36 @@ class MapTackChooser extends Panel {
         this.render();
     }
     render() {
-        const subsystemPanel = MustGetElement("fxs-subsystem-frame", this.Root);
-        subsystemPanel.addEventListener('subsystem-frame-close', () => { this.requestClose(null); });
-        const sectionList = MustGetElement('.section-list', this.Root);
-        sectionList.setAttribute('disable-focus-allowed', "true");
-        this.populateItems(sectionList);
+        this.panel = MustGetElement(".map-tack-chooser-panel", this.Root);
+        this.sectionList = MustGetElement(".map-tack-chooser-section-list", this.Root);
+
+        // Add items to documentFragment first for better performance.
+        const fragment = document.createDocumentFragment();
+        this.populateItems(fragment);
+        this.sectionList.append(fragment);
+    }
+    setHidden(hidden) {
+        this.panel.classList.toggle("animate-in-left", !hidden);
+        this.Root.classList.toggle("hidden", hidden);
     }
     onAttach() {
         super.onAttach();
-        this.Root.addEventListener(InputEngineEventName, this.engineInputListener);
+        window.addEventListener(InterfaceModeChangedEventName, this.onInterfaceModeChanged);
+        this.panel.addEventListener('subsystem-frame-close', this.requestClose);
     }
     onDetach() {
-        this.Root.removeEventListener(InputEngineEventName, this.engineInputListener);
+        window.removeEventListener(InterfaceModeChangedEventName, this.onInterfaceModeChanged);
+        this.panel.removeEventListener('subsystem-frame-close', this.requestClose);
+        super.onDetach();
     }
     onReceiveFocus() {
-        super.onReceiveFocus();
-        const sectionList = MustGetElement('.section-list', this.Root);
-        Focus.setContextAwareFocus(sectionList, this.Root);
-        NavTray.clear();
-        NavTray.addOrUpdateGenericBack();
-    }
-    onLoseFocus() {
-        NavTray.clear();
-        super.onLoseFocus();
-    }
-    requestClose(event) {
-        if (event) {
-            event.stopPropagation();
-            event.preventDefault();
+        if (this.sectionList) {
+            FocusManager.setFocus(this.sectionList);
         }
-        //This will call CM.pop() after the animation completes.
+    }
+    onRequestClose() {
         super.close();
-    }
-    onEngineInput(inputEvent) {
-        if (inputEvent.detail.status != InputActionStatuses.FINISH) {
-            return;
-        }
-        if (inputEvent.isCancelInput() || inputEvent.detail.name == 'sys-menu') {
-            this.requestClose(inputEvent);
-        }
+        InterfaceMode.switchToDefault();
     }
     getDummyItems() {
         // Get dummy entries that won't even show up in Civilopedia.
@@ -91,6 +98,13 @@ class MapTackChooser extends Panel {
     populateItems(container) {
         // Clear all sections first.
         container.innerHTML = "";
+        // Special tacks like city. (TODO more to come)
+        const citySection = this.createSection("LOC_UI_RESOURCE_CITY", null, [
+            GameInfo.Constructibles.lookup("BUILDING_CITY_HALL"),
+            GameInfo.Constructibles.lookup("BUILDING_PALACE")
+        ]);
+        container.appendChild(citySection);
+        this.attachDivider(container);
         // Buildings
         const buildingSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_BUILDING", "BUILDING");
         container.appendChild(buildingSection);
@@ -102,12 +116,6 @@ class MapTackChooser extends Panel {
         // Improvements
         const improvementSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_IMPROVEMENT", "IMPROVEMENT");
         container.appendChild(improvementSection);
-        // Special tacks like city. (TODO more to come)
-        const citySection = this.createSection("LOC_UI_RESOURCE_CITY", null, [
-            GameInfo.Constructibles.lookup("BUILDING_CITY_HALL"),
-            GameInfo.Constructibles.lookup("BUILDING_PALACE")
-        ]);
-        container.appendChild(citySection);
     }
     createSection(titleText, type, defs) {
         const sectionContainer = document.createElement("div");
@@ -152,16 +160,17 @@ class MapTackChooser extends Panel {
             return;
         }
         // Filter out items that don't belong to this age based on a setting (TBD).
-        if (this.showAllItems == false && itemDef.Age != null && itemDef.Age != this.cuurentAge) {
+        if (this.showAllItems == false && itemDef.Age != null && itemDef.Age != this.currentAge) {
             return;
         }
         const iconWrapper = document.createElement("fxs-activatable");
-        iconWrapper.classList.add("map-tack-icon-wrapper", "m-1");
+        const iconStyles = MapTackUtils.getMapTackIconStyles(type, itemDef.ConstructibleClass);
+        iconWrapper.classList.add("m-1\\.25", "size-10", "map-tack-icon-wrapper", ...iconStyles);
         iconWrapper.setAttribute("data-tooltip-content", this.createItemTooltip(itemDef));
         iconWrapper.setAttribute("data-audio-press-ref", "data-audio-select-press");
         iconWrapper.addEventListener('action-activate', () => this.mapTackClickListener(type));
         const icon = document.createElement('fxs-icon');
-        icon.classList.add("map-tack-icon", "size-10", "bg-contain", "bg-center", "bg-no-repeat");
+        icon.classList.add("size-10");
         icon.setAttribute("data-icon-id", type);
         iconWrapper.appendChild(icon);
         return iconWrapper;
@@ -175,23 +184,24 @@ class MapTackChooser extends Panel {
         // Production cost
         const productionCost = document.createElement('div');
         productionCost.innerHTML = Locale.stylize('LOC_UI_PRODUCTION_COST', itemDef.Cost);
+        container.append(header, productionCost);
         // Description
-        const desc = document.createElement('div');
         if (itemDef.Tooltip) {
+            const desc = document.createElement('div');
             desc.className = 'mt-1';
             desc.innerHTML = Locale.stylize(itemDef.Tooltip);
+            container.append(desc);
         }
-        container.append(header, productionCost, desc);
         // Base yield and bonus
-        const effectContainer = document.createElement('div');
         const { baseYield, adjacencies, effects } = getConstructibleEffectStrings(itemDef.ConstructibleType);
         const effectStrings = baseYield ? [baseYield, ...adjacencies, ...effects] : [...adjacencies, ...effects];
-        const effectStr = Locale.compose(effectStrings.map(s => Locale.compose(s)).join('[N]'));
+        const effectStr = Locale.stylize(effectStrings.map(s => Locale.compose(s)).join('[N]'));
         if (effectStr) {
             this.attachDivider(container);
-            effectContainer.innerHTML = Locale.stylize(effectStr);
+            const effectContainer = document.createElement('div');
+            effectContainer.innerHTML = effectStr;
+            container.append(effectContainer);
         }
-        container.append(effectContainer);
         return container.innerHTML;
     }
     attachDivider(container) {
@@ -199,15 +209,15 @@ class MapTackChooser extends Panel {
         divider.classList.add("filigree-divider-inner-frame", "w-full");
         container.appendChild(divider);
     }
-    mapTackClickListener(type) {
-        console.error("DMT clicked on", type);
+    mapTackClickListener(clickedType) {
+        InterfaceMode.switchTo("DMT_INTERFACEMODE_PLACE_MAP_TACKS", { type: clickedType });
     }
 }
 Controls.define('dmt-map-tack-chooser', {
     createInstance: MapTackChooser,
     description: 'Map tack chooser screen.',
-    styles: ['fs://game/detailed-map-tacks/ui/dmt/dmt-map-tack-chooser.css'],
-    content: ['fs://game/detailed-map-tacks/ui/dmt/dmt-map-tack-chooser.html'],
+    styles: ['fs://game/detailed-map-tacks/ui/map-tack-chooser/dmt-map-tack-chooser.css'],
+    content: ['fs://game/detailed-map-tacks/ui/map-tack-chooser/dmt-map-tack-chooser.html'],
     classNames: ['map-tack-chooser'],
     attributes: []
 });
