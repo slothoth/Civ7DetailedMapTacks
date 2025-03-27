@@ -89,9 +89,7 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
                     // Yields
                     this.yieldDetails = MapTackYield.getYieldDetails(plot.x, plot.y, this.itemType);
                 }
-
                 this.updatePlacementDetails();
-
             }
         }
     }

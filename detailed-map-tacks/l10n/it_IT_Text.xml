@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Replace Tag="LOC_DMT_MAP_TACKS" Language="it_IT">
+            <Text>Segnaposto mappa</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="it_IT">
+            <Text>Dettagli di posizionamento</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_LAKE_NAME" Language="it_IT">
+            <Text>Lago</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_NATURAL_WONDER_NAME" Language="it_IT">
+            <Text>Meraviglia naturale</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_QUARTER_NAME" Language="it_IT">
+            <Text>Quartiere</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="it_IT">
+            <Text>Fai clic per eliminare</Text>
+        </Replace>
+        
+        <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="it_IT">
+            <Text>Il numero di segnaposti su questa casella ha raggiunto il limite.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_FULL_TILE" Language="it_IT">
+            <Text>Questo segnaposto o quello su questa casella richiede l'intera tessera.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_DUPLICATE" Language="it_IT">
+            <Text>Questo segnaposto esiste già su questa casella.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X" Language="it_IT">
+            <Text>Impossibile posizionare su {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="it_IT">
+            <Text>Deve essere posizionato adiacente a {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="it_IT">
+            <Text>Impossibile posizionare {1_Name}.</Text>
+        </Replace>
+        
+        <Replace Tag="LOC_DMT_YIELD_FROM" Language="it_IT">
+            <Text>+{1_Amount} {2_YieldName} da {3_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT" Language="it_IT">
+            <Text>+{1_Amount} {2_YieldName} da {3_Name} adiacente</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="it_IT">
+            <Text>+{1_Amount} {2_YieldName} da costruzioni {3_TagName} adiacenti</Text>
+        </Replace>
+        
+        <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="it_IT">
+            <Text>Rendimento totale: {1_Yields}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_ADJACENCY_YIELD" Language="it_IT">
+            <Text>Bonus di adiacenza: {1_Yields}</Text>
+        </Replace>
+    </LocalizedText>
+</Database>

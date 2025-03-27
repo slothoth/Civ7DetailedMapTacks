@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Replace Tag="LOC_DMT_MAP_TACKS" Language="ko_KR">
+            <Text>지도 핀</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="ko_KR">
+            <Text>배치 세부 정보</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_LAKE_NAME" Language="ko_KR">
+            <Text>호수</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_NATURAL_WONDER_NAME" Language="ko_KR">
+            <Text>자연 경이</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_QUARTER_NAME" Language="ko_KR">
+            <Text>구역</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="ko_KR">
+            <Text>클릭하여 삭제</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="ko_KR">
+            <Text>이 구역의 지도 핀 수가 제한에 도달했습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_FULL_TILE" Language="ko_KR">
+            <Text>이 지도 핀 또는 이 구역의 지도 핀은 전체 타일이 필요합니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_DUPLICATE" Language="ko_KR">
+            <Text>이 구역에는 이미 해당 지도 핀이 존재합니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X" Language="ko_KR">
+            <Text>{1_Name}에 배치할 수 없습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="ko_KR">
+            <Text>{1_Name} 옆에 배치해야 합니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="ko_KR">
+            <Text>{1_Name}을(를) 배치할 수 없습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM" Language="ko_KR">
+            <Text>+{1_Amount} {2_YieldName} ({3_Name}에서)</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT" Language="ko_KR">
+            <Text>+{1_Amount} {2_YieldName} (인접한 {3_Name}에서)</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="ko_KR">
+            <Text>+{1_Amount} {2_YieldName} (인접한 {3_TagName} 건축물에서)</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="ko_KR">
+            <Text>총 수확량: {1_Yields}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_ADJACENCY_YIELD" Language="ko_KR">
+            <Text>인접 보너스: {1_Yields}</Text>
+        </Replace>
+    </LocalizedText>
+</Database>

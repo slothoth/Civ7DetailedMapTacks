@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Replace Tag="LOC_DMT_MAP_TACKS" Language="zh_Hant_HK">
+            <Text>地圖釘</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="zh_Hant_HK">
+            <Text>放置詳情</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_LAKE_NAME" Language="zh_Hant_HK">
+            <Text>湖泊</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_NATURAL_WONDER_NAME" Language="zh_Hant_HK">
+            <Text>自然奇觀</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_QUARTER_NAME" Language="zh_Hant_HK">
+            <Text>城區</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="zh_Hant_HK">
+            <Text>點擊刪除</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="zh_Hant_HK">
+            <Text>此地塊上的地圖釘已達到上限。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_FULL_TILE" Language="zh_Hant_HK">
+            <Text>此地圖釘或此地塊上的地圖釘需要整塊地圖。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_DUPLICATE" Language="zh_Hant_HK">
+            <Text>此地塊上已存在此地圖釘。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X" Language="zh_Hant_HK">
+            <Text>無法放置於{1_Name}上。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="zh_Hant_HK">
+            <Text>必須放置於{1_Name}旁邊。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="zh_Hant_HK">
+            <Text>無法放置{1_Name}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM" Language="zh_Hant_HK">
+            <Text>+{1_Amount} {2_YieldName} 來自{3_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT" Language="zh_Hant_HK">
+            <Text>+{1_Amount} {2_YieldName} 來自相鄰的{3_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="zh_Hant_HK">
+            <Text>+{1_Amount} {2_YieldName} 來自相鄰的{3_TagName}區域</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="zh_Hant_HK">
+            <Text>總收益：{1_Yields}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_ADJACENCY_YIELD" Language="zh_Hant_HK">
+            <Text>鄰近加成：{1_Yields}</Text>
+        </Replace>
+    </LocalizedText>
+</Database>

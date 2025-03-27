@@ -1,15 +1,13 @@
 
-import MapTackModifierRequirement from './dmt-map-tack-modifier-requirement.js';
-
-class MapTackTraitModifierSingleton {
+class TraitModifierSingleton {
     /**
      * Singleton accessor
      */
     static getInstance() {
-        if (!MapTackTraitModifierSingleton.singletonInstance) {
-            MapTackTraitModifierSingleton.singletonInstance = new MapTackTraitModifierSingleton();
+        if (!TraitModifierSingleton.singletonInstance) {
+            TraitModifierSingleton.singletonInstance = new TraitModifierSingleton();
         }
-        return MapTackTraitModifierSingleton.singletonInstance;
+        return TraitModifierSingleton.singletonInstance;
     }
     constructor() {
         this.leaderTraits = [];
@@ -19,9 +17,9 @@ class MapTackTraitModifierSingleton {
         engine.whenReady.then(() => { this.onReady(); });
     }
     onReady() {
-        this.cacheModifiers();
+        this.cacheData();
     }
-    cacheModifiers() {
+    cacheData() {
         this.leaderTraits = [];
         this.civilizationTraits = [];
         this.modifiers = [];
@@ -53,13 +51,9 @@ class MapTackTraitModifierSingleton {
         }
     }
     isModifierActive(modifierId) {
-        if (this.modifiers.includes(modifierId)) {
-            const requirementMet = MapTackModifierRequirement.isModifierRequirementMet(modifierId);
-            return requirementMet;
-        }
-        return false;
+        return this.modifiers.includes(modifierId);
     }
 }
 
-const MapTackTraitModifier = MapTackTraitModifierSingleton.getInstance();
-export { MapTackTraitModifier as default };
+const TraitModifier = TraitModifierSingleton.getInstance();
+export { TraitModifier as default };

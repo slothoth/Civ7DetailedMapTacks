@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Replace Tag="LOC_DMT_MAP_TACKS" Language="es_ES">
+            <Text>Chinchetas del mapa</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="es_ES">
+            <Text>Detalles de colocación</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_LAKE_NAME" Language="es_ES">
+            <Text>Lago</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_NATURAL_WONDER_NAME" Language="es_ES">
+            <Text>Maravilla natural</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_QUARTER_NAME" Language="es_ES">
+            <Text>Barrio</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="es_ES">
+            <Text>Haga clic para eliminar</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="es_ES">
+            <Text>El número de chinchetas en esta parcela ha alcanzado el límite.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_FULL_TILE" Language="es_ES">
+            <Text>Esta chincheta o la chincheta en esta parcela requiere la baldosa completa.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_DUPLICATE" Language="es_ES">
+            <Text>Esta chincheta ya existe en esta parcela.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X" Language="es_ES">
+            <Text>No se puede colocar en {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="es_ES">
+            <Text>Debe colocarse adyacente a {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="es_ES">
+            <Text>No se puede colocar {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM" Language="es_ES">
+            <Text>+{1_Amount} {2_YieldName} de {3_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT" Language="es_ES">
+            <Text>+{1_Amount} {2_YieldName} de {3_Name} adyacente</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="es_ES">
+            <Text>+{1_Amount} {2_YieldName} de Construcciones {3_TagName} adyacentes</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="es_ES">
+            <Text>Rendimiento total: {1_Yields}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_ADJACENCY_YIELD" Language="es_ES">
+            <Text>Bono de adyacencia: {1_Yields}</Text>
+        </Replace>
+    </LocalizedText>
+</Database>

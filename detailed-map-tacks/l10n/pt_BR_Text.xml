@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Replace Tag="LOC_DMT_MAP_TACKS" Language="pt_BR">
+            <Text>Alfinetes do mapa</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="pt_BR">
+            <Text>Detalhes de colocação</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_LAKE_NAME" Language="pt_BR">
+            <Text>Lago</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_NATURAL_WONDER_NAME" Language="pt_BR">
+            <Text>Maravilha natural</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_QUARTER_NAME" Language="pt_BR">
+            <Text>Bairro</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="pt_BR">
+            <Text>Clique para excluir</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="pt_BR">
+            <Text>O número de alfinetes neste terreno atingiu o limite.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_FULL_TILE" Language="pt_BR">
+            <Text>Este alfinete ou o alfinete neste terreno requer a tile completa.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_DUPLICATE" Language="pt_BR">
+            <Text>Este alfinete já existe neste terreno.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X" Language="pt_BR">
+            <Text>Não pode ser colocado em {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="pt_BR">
+            <Text>Deve ser colocado ao lado de {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="pt_BR">
+            <Text>Não pode colocar {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM" Language="pt_BR">
+            <Text>+{1_Amount} {2_YieldName} de {3_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT" Language="pt_BR">
+            <Text>+{1_Amount} {2_YieldName} de {3_Name} adjacente</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="pt_BR">
+            <Text>+{1_Amount} {2_YieldName} de {3_TagName} Construções adjacentes</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="pt_BR">
+            <Text>Rendimento total: {1_Yields}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_ADJACENCY_YIELD" Language="pt_BR">
+            <Text>Bônus de adjacência: {1_Yields}</Text>
+        </Replace>
+    </LocalizedText>
+</Database>

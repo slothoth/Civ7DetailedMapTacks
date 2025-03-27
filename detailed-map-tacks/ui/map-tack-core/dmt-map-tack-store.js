@@ -48,11 +48,9 @@ class MapTackStoreSingleton {
         window.addEventListener("user-interface-loaded-and-ready", this.onGameLoaded.bind(this)); // This has 1s delay.
     }
     onGameLoaded() {
-        console.error("Store onGameLoaded");
         this.populateCacheFromStore();
     }
     addMapTack(mapTackData) {
-        console.error("Store addMapTack", JSON.stringify(mapTackData));
         const key = this.getMapTackKey(mapTackData.x, mapTackData.y);
         const mapTackList = this.cacheMap[key] || [];
         mapTackList.push(mapTackData);
@@ -65,7 +63,6 @@ class MapTackStoreSingleton {
         return mapTackList;
     }
     removeMapTack(mapTackData) {
-        console.error("Store removeMapTack", JSON.stringify(mapTackData));
         const index = this.getIndexOfMapTack(mapTackData);
         if (index != -1) {
             const key = this.getMapTackKey(mapTackData.x, mapTackData.y);
@@ -150,16 +147,14 @@ class MapTackStoreSingleton {
                 this.cacheMap[key] = mapTackList;
             }
         }
-        // console.error("Cache Populated", JSON.stringify(this.cacheMap));
         engine.trigger("MapTackLoadedFromStore");
     }
-    getCachedMapTackStructs() {
+    getCachedMapTackStructs(plotKeys = Object.keys(this.cacheMap)) {
         const mapTackStructList = [];
-        for (const [key, mapTackList] of Object.entries(this.cacheMap)) {
-            if (mapTackList && mapTackList.length > 0) {
-                const [x, y] = key.split('-').map(Number);
-                mapTackStructList.push({ x, y, mapTackList });
-            }
+        for (const plotKey of plotKeys) {
+            const [x, y] = plotKey.split('-').map(Number);
+            const mapTackList = this.cacheMap[plotKey];
+            mapTackStructList.push({ x, y, mapTackList });
         }
         return mapTackStructList;
     }

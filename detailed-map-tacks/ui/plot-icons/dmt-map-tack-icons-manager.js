@@ -1,7 +1,5 @@
 // Modified from plot-icons-manager.js.
 
-import MapTackStore from '../map-tack-core/dmt-map-tack-store.js';
-
 export const MapTackIconRootUpdateEventName = "map-tack-icons-root-update";
 class MapTackIconRootUpdateEvent extends CustomEvent {
     constructor(mapTackStructList) {
@@ -28,12 +26,7 @@ class MapTackIconsManagerSingleton {
         engine.whenReady.then(() => { this.onReady(); });
     }
     onReady() {
-        engine.on("MapTackLoadedFromStore", this.onMapTackLoadedFromStore, this);
         engine.on("MapTackUIUpdated", this.onMapTackUIUpdated, this);
-    }
-    onMapTackLoadedFromStore() {
-        const mapTackStructList = MapTackStore.getCachedMapTackStructs();
-        this.updateMapTackIconRoot(mapTackStructList);
     }
     onMapTackUIUpdated(mapTackStructList) {
         this.updateMapTackIconRoot(mapTackStructList);

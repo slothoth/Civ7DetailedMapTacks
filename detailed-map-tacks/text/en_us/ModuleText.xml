@@ -5,7 +5,7 @@
             <Text>Detailed Map Tacks</Text>
         </Row>
         <Row Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION">
-            <Text>TBD</Text>
+            <Text>Allow placing map tacks and display yields from the map tacks.</Text>
         </Row>
     </EnglishText>
 </Database>

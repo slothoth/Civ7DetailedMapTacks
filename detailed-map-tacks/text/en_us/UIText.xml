@@ -16,6 +16,9 @@
         <Row Tag="LOC_DMT_QUARTER_NAME">
             <Text>Quarter</Text>
         </Row>
+        <Row Tag="LOC_DMT_CLICK_TO_DELETE">
+            <Text>Click to delete</Text>
+        </Row>
         <!-- Invalid reasons -->
         <Row Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT">
             <Text>The number of map tacks on this plot has reached the limit.</Text>
@@ -44,6 +47,13 @@
         </Row>
         <Row Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG">
             <Text>+{1_Amount} {2_YieldName} from adjacent {3_TagName} Constructibles</Text>
+        </Row>
+        <!-- Yield texts -->
+        <Row Tag="LOC_DMT_TOTAL_YIELD">
+            <Text>Total Yield: {1_Yields}</Text>
+        </Row>
+        <Row Tag="LOC_DMT_ADJACENCY_YIELD">
+            <Text>Adjacency Bonus: {1_Yields}</Text>
         </Row>
     </EnglishText>
 </Database>

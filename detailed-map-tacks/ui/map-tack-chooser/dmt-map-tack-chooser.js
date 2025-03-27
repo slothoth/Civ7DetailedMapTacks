@@ -6,9 +6,7 @@ import { getConstructibleEffectStrings } from '/core/ui/utilities/utilities-core
 import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
 // Cache constructible icons for faster panel load.
 Loading.runWhenFinished(() => {
-    let i = 0;
     for (const c of GameInfo.Constructibles) {
-        i++;
         const url = UI.getIconURL(c.ConstructibleType, c.ConstructibleClass);
         Controls.preloadImage(url, 'dmt-map-tack-chooser');
     }

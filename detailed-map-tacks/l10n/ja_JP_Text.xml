@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Replace Tag="LOC_DMT_MAP_TACKS" Language="ja_JP">
+            <Text>マップピン</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="ja_JP">
+            <Text>配置の詳細</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_LAKE_NAME" Language="ja_JP">
+            <Text>湖</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_NATURAL_WONDER_NAME" Language="ja_JP">
+            <Text>自然の驚異</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_QUARTER_NAME" Language="ja_JP">
+            <Text>街区</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="ja_JP">
+            <Text>クリックして削除</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="ja_JP">
+            <Text>このプロットのマップピンの数が上限に達しました。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_FULL_TILE" Language="ja_JP">
+            <Text>このマップピンまたはこのプロットのマップピンはタイル全体を必要とします。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_DUPLICATE" Language="ja_JP">
+            <Text>このプロットにはすでにこのマップピンが存在します。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X" Language="ja_JP">
+            <Text>{1_Name}に配置できません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="ja_JP">
+            <Text>{1_Name}の隣に配置する必要があります。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="ja_JP">
+            <Text>{1_Name}を配置できません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM" Language="ja_JP">
+            <Text>+{1_Amount} {2_YieldName}（{3_Name}より）</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT" Language="ja_JP">
+            <Text>+{1_Amount} {2_YieldName}（隣接する{3_Name}より）</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="ja_JP">
+            <Text>+{1_Amount} {2_YieldName}（隣接する{3_TagName}の建造物より）</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="ja_JP">
+            <Text>総収益: {1_Yields}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_ADJACENCY_YIELD" Language="ja_JP">
+            <Text>隣接ボーナス: {1_Yields}</Text>
+        </Replace>
+    </LocalizedText>
+</Database>

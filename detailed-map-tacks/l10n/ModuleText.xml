@@ -1,11 +1,82 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database>
-  <LocalizedText>
-    <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="zh_Hans_CN">
-      <Text>高级地图钉</Text>
-    </Replace>
-    <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="zh_Hans_CN">
-      <Text>待定</Text>
-    </Replace>
-  </LocalizedText>
+    <LocalizedText>
+        <!-- German (de_DE) -->
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="de_DE">
+            <Text>Detaillierte Kartenmarkierungen</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="de_DE">
+            <Text>Ermöglicht das Platzieren von Kartenmarkierungen und zeigt die Erträge von den Kartenmarkierungen an.</Text>
+        </Replace>
+        <!-- Spanish (es_ES) -->
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="es_ES">
+            <Text>Chinchetas del mapa detalladas</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="es_ES">
+            <Text>Permite colocar chinchetas en el mapa y mostrar los rendimientos de las chinchetas del mapa.</Text>
+        </Replace>
+        <!-- French (fr_FR) -->
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="fr_FR">
+            <Text>Piques de carte détaillées</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="fr_FR">
+            <Text>Permet de placer des piques de carte et d'afficher les rendements des piques de carte.</Text>
+        </Replace>
+        <!-- Italian (it_IT) -->
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="it_IT">
+            <Text>Spilli mappa dettagliati</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="it_IT">
+            <Text>Consenti di posizionare spilli sulla mappa e visualizzare i rendimenti degli spilli sulla mappa.</Text>
+        </Replace>
+        <!-- Japanese (ja_JP) -->
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="ja_JP">
+            <Text>詳細なマップのピン</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="ja_JP">
+            <Text>マップピンを配置し、マップピンから得られる収益を表示します。</Text>
+        </Replace>
+        <!-- Korean (ko_KR) -->
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="ko_KR">
+            <Text>상세한 지도 핀</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="ko_KR">
+            <Text>지도 핀을 배치하고 지도 핀에서 얻은 수확량을 표시합니다.</Text>
+        </Replace>
+        <!-- Polish (pl_PL) -->
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="pl_PL">
+            <Text>Szczegółowe pinezki na mapie</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="pl_PL">
+            <Text>Pozwala na umieszczanie pinezek na mapie i wyświetlanie plonów z pinezek.</Text>
+        </Replace>
+        <!-- Portuguese (pt_BR) -->
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="pt_BR">
+            <Text>Alfinetes detalhados do mapa</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="pt_BR">
+            <Text>Permite colocar alfinetes no mapa e exibir os rendimentos dos alfinetes do mapa.</Text>
+        </Replace>
+        <!-- Russian (ru_RU) -->
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="ru_RU">
+            <Text>Детализированные булавки на карте</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="ru_RU">
+            <Text>Разрешает размещать булавки на карте и отображать доходы от булавок на карте.</Text>
+        </Replace>
+        <!-- Simplified Chinese (zh_Hans_CN) -->
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="zh_Hans_CN">
+        <Text>高级地图钉</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="zh_Hans_CN">
+        <Text>允许在地图上放置地图钉并显示来自地图钉的收益。</Text>
+        </Replace>
+        <!-- Traditional Chinese (zh_Hant_HK) -->
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="zh_Hant_HK">
+            <Text>高級地圖釘</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="zh_Hant_HK">
+            <Text>允許在地圖上放置地圖釘並顯示來自地圖釘的收益。</Text>
+        </Replace>
+    </LocalizedText>
 </Database>

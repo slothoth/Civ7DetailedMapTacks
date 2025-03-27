@@ -16,6 +16,9 @@
         <Replace Tag="LOC_DMT_QUARTER_NAME" Language="zh_Hans_CN">
             <Text>城区</Text>
         </Replace>
+        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="zh_Hans_CN">
+            <Text>点击以删除</Text>
+        </Replace>
         <!-- Invalid reasons -->
         <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="zh_Hans_CN">
             <Text>此地块上的地图钉已达到上限。</Text>
@@ -44,6 +47,13 @@
         </Replace>
         <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="zh_Hans_CN">
             <Text>+{1_Amount} {2_YieldName} 来自相邻{3_TagName}区块</Text>
+        </Replace>
+        <!-- Yield texts -->
+        <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="zh_Hans_CN">
+            <Text>总产量：{1_Yields}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_ADJACENCY_YIELD" Language="zh_Hans_CN">
+            <Text>相邻加成：{1_Yields}</Text>
         </Replace>
     </LocalizedText>
 </Database>

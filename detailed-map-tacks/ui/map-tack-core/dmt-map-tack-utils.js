@@ -48,7 +48,9 @@ class MapTackUtilsSingleton {
         return MapTackUtilsSingleton.singletonInstance;
     }
     constructor() {
+        // Plot details cache related.
         this.cachedPlotDetails = {};
+        this.usePlotDetailsCache = false;
         // Yield changes - BUILDING_PALACE => [{type: YIELD_FOOD, amount: 5}, {type: YIELD_HAPPINESS, amount: 5}, {type: YIELD_PRODUCTION, amount: 5}]
         this.constructibleYieldChanges = {};
         // Type tags - BUILDING_PALACE => [GREATWORK, AGELESS, PERSISTENT]
@@ -140,7 +142,7 @@ class MapTackUtilsSingleton {
         }
         return plotDetails;
     }
-    getAdjacentMapTacks(x, y, includeSelf = true) {
+    getAdjacentMapTackStructs(x, y, includeSelf = true) {
         const mapTacks = [];
         if (includeSelf) {
             mapTacks.push({
@@ -161,8 +163,20 @@ class MapTackUtilsSingleton {
     }
     getValidMapTacks(x, y) {
         return MapTackStore.retrieveMapTacks(x, y)
-                .filter(m => m.validStatus?.isValid)
-                .map(m => ({ type: m.type, classType: m.classType }));
+            .filter(m => m.validStatus?.isValid);
+    }
+    getAllValidMapTacks() {
+        return MapTackStore.getCachedMapTackStructs()
+            .map(s => s.mapTackList)
+            .flat()
+            .filter(m => m.validStatus?.isValid);
+    }
+    togglePlotDetailsCache(useCache) {
+        this.usePlotDetailsCache = useCache;
+        this.cachedPlotDetails = {};
+    }
+    getCacheKey(x, y) {
+        return `${x}-${y}`;
     }
     /**
      * @param {int} x 
@@ -180,11 +194,18 @@ class MapTackUtilsSingleton {
      *      quarterType: QuarterType of this plot.
      */
     getRealizedPlotDetails(x, y) {
-        // TODO: try reading from cache.
+        // Try reading from cache.
+        if (this.usePlotDetailsCache) {
+            const cacheKey = this.getCacheKey(x, y);
+            const plotDetails = this.cachedPlotDetails[cacheKey];
+            if (plotDetails) {
+                return plotDetails;
+            }
+        }
 
         const details = {};
 
-        // Only consider valid map tacks into consideration.
+        // Only take valid map tacks into consideration.
         const validMapTacks = this.getValidMapTacks(x, y);
 
         const isPlotVisible = GameplayMap.getRevealedState(GameContext.localPlayerID, x, y) != RevealedStates.HIDDEN;
@@ -257,6 +278,11 @@ class MapTackUtilsSingleton {
         details["isNaturalWonder"] = GameplayMap.isNaturalWonder(x, y);
         details["isRiver"] = GameplayMap.isRiver(x, y);
         details["quarterType"] = this.getQuarterType(details["constructibles"]);
+
+        if (this.usePlotDetailsCache) {
+            const cacheKey = this.getCacheKey(x, y);
+            this.cachedPlotDetails[cacheKey] = details;
+        }
 
         return details;
     }
@@ -511,7 +537,7 @@ class MapTackUtilsSingleton {
         if (short) {
             return this.getYieldString(totalYieldDetails, true, "[N]");
         } else {
-            return `${Locale.compose("LOC_ATTR_TOTAL_YIELD")}: ${this.getYieldString(totalYieldDetails)}`;
+            return Locale.compose("LOC_DMT_TOTAL_YIELD", this.getYieldString(totalYieldDetails));
         }
     }
     getBaseYieldString(baseYieldDetails) {
@@ -542,13 +568,10 @@ class MapTackUtilsSingleton {
         }
         // Add summary
         const sumYieldDetails = Array.from(sumMap, ([type, amount]) => ({type, amount}));
-        const sumString = `${Locale.compose("LOC_ATTR_YIELD_FROM_ADJACENCIES")}: ${this.getYieldString(sumYieldDetails)}`;
+        const sumString = Locale.compose("LOC_DMT_ADJACENCY_YIELD", this.getYieldString(sumYieldDetails));
         return Locale.compose(`${sumString}[N][BLIST]${adjacencyStrings.join("")}[/LIST]`);
     }
     // END - UI related
-    getCacheKey(x, y) {
-        return `${x}-${y}`;
-    }
 }
 
 const MapTackUtils = MapTackUtilsSingleton.getInstance();

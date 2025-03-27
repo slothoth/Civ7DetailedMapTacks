@@ -20,81 +20,92 @@ class MapTackChangeProcessorSingleton {
     onReady() {
         engine.on("AddMapTackRequest", this.onAddMapTackRequest, this);
         engine.on("RemoveMapTackRequest", this.onRemoveMapTackRequest, this);
+        engine.on("MapTackLoadedFromStore", this.onMapTackLoadedFromStore, this);
         // Game update events
         engine.on("ConstructibleAddedToMap", this.onConstructibleChanged, this);
         engine.on("ConstructibleRemovedFromMap", this.onConstructibleChanged, this);
         engine.on("PlotVisibilityChanged", this.onPlotVisibilityChanged, this);
+        engine.on('LocalPlayerTurnBegin', this.onLocalPlayerTurnBegin, this);
     }
     onAddMapTackRequest(mapTackData) {
-        console.error("ChangeProcessor onAddMapTackRequest", JSON.stringify(mapTackData));
         MapTackStore.addMapTack(mapTackData);
-        this.triggerMapTackUIUpdate(mapTackData.x, mapTackData.y);
+        this.onPlotDetailsUpdated(mapTackData.x, mapTackData.y);
     }
     onRemoveMapTackRequest(mapTackData) {
-        console.error("ChangeProcessor onRemoveMapTackRequest", JSON.stringify(mapTackData));
         MapTackStore.removeMapTack(mapTackData);
-        this.triggerMapTackUIUpdate(mapTackData.x, mapTackData.y);
+        this.onPlotDetailsUpdated(mapTackData.x, mapTackData.y);
     }
     onConstructibleChanged(data) {
-        this.triggerMapTackUIUpdate(data.location.x, data.location.y);
+        this.onPlotDetailsUpdated(data.location.x, data.location.y);
     }
     onPlotVisibilityChanged(data) {
-        this.triggerMapTackUIUpdate(data.location.x, data.location.y);
+        this.onPlotDetailsUpdated(data.location.x, data.location.y);
     }
-    triggerMapTackUIUpdate(x, y) {
+    onPlotDetailsUpdated(x, y) {
         // Check for updates near the changed plot.
         const plotsUpdated = this.updateAdjacentMapTacks(x, y, true);
         // Make sure the changed plot is added.
         plotsUpdated.add(this.getMapTackKey(x, y));
-        const mapTackStructList = this.getMapTackStructList(plotsUpdated);
+        const mapTackStructList = MapTackStore.getCachedMapTackStructs(plotsUpdated);
+        this.triggerMapTackUIUpdate(mapTackStructList);
+    }
+    onLocalPlayerTurnBegin() {
+        const plotsUpdated = this.updateAllMapTacks();
+        const mapTackStructList = MapTackStore.getCachedMapTackStructs(plotsUpdated);
+        this.triggerMapTackUIUpdate(mapTackStructList);
+    }
+    onMapTackLoadedFromStore() {
+        const mapTackStructList = MapTackStore.getCachedMapTackStructs();
+        this.triggerMapTackUIUpdate(mapTackStructList);
+    }
+    triggerMapTackUIUpdate(mapTackStructList) {
         engine.trigger("MapTackUIUpdated", mapTackStructList);
     }
+    updateAllMapTacks() {
+        MapTackUtils.togglePlotDetailsCache(true);
+        const plotsUpdated = this.updateMapTacks(MapTackStore.getCachedMapTackStructs());
+        MapTackUtils.togglePlotDetailsCache(false);
+        return plotsUpdated;
+    }
     updateAdjacentMapTacks(x, y, includeSelf) {
+        MapTackUtils.togglePlotDetailsCache(true);
+        const plotsUpdated = this.updateMapTacks(MapTackUtils.getAdjacentMapTackStructs(x, y, includeSelf));
+        MapTackUtils.togglePlotDetailsCache(false);
+        return plotsUpdated;
+    }
+    updateMapTacks(mapTackStructs) {
         const plotsUpdated = new Set();
         const additionalPlotCenterToUpdate = new Set();
-        const adjacentMapTacks = MapTackUtils.getAdjacentMapTacks(x, y, includeSelf);
-        for (const { x: adjX, y: adjY, mapTackList } of adjacentMapTacks) {
+        for (const { x, y, mapTackList } of mapTackStructs) {
             const newMapTackList = [];
             for (const mapTack of mapTackList) {
-                const newValidStatus = MapTackValidator.isValid(mapTack.x, mapTack.y, mapTack.type, false);
-                if (mapTack.validStatus.isValid != newValidStatus.isValid) {
-                    // If the valid status of a plot has changed, queue it as a center to cascade the update.
-                    additionalPlotCenterToUpdate.add(this.getMapTackKey(mapTack.x, mapTack.y));
-                }
-                newMapTackList.push({
+                const newMapTack = {
                     x: mapTack.x,
                     y: mapTack.y,
                     type: mapTack.type,
                     classType: mapTack.classType,
-                    validStatus: newValidStatus,
+                    validStatus: MapTackValidator.isValid(mapTack.x, mapTack.y, mapTack.type, false),
                     yieldDetails: MapTackYield.getYieldDetails(mapTack.x, mapTack.y, mapTack.type)
-                });
+                };
+                newMapTackList.push(newMapTack);
+                if (mapTack.validStatus.isValid != newMapTack.validStatus.isValid) {
+                    // If the valid status of a plot has changed, queue it as a center to cascade the update.
+                    additionalPlotCenterToUpdate.add(this.getMapTackKey(mapTack.x, mapTack.y));
+                }
             }
             if (JSON.stringify(newMapTackList) != JSON.stringify(mapTackList)) {
-                MapTackStore.updateMapTacks(adjX, adjY, newMapTackList);
-                plotsUpdated.add(this.getMapTackKey(adjX, adjY));
+                MapTackStore.updateMapTacks(x, y, newMapTackList);
+                plotsUpdated.add(this.getMapTackKey(x, y));
             }
         }
         if (additionalPlotCenterToUpdate.size > 0) {
             for (const plotCenterKey of additionalPlotCenterToUpdate) {
                 const [plotCenterX, plotCenterY] = plotCenterKey.split('-').map(Number);
-                const subUpdates = this.updateAdjacentMapTacks(plotCenterX, plotCenterY);
+                const subUpdates = this.updateMapTacks(MapTackUtils.getAdjacentMapTackStructs(plotCenterX, plotCenterY, false));
                 subUpdates.forEach(plot => plotsUpdated.add(plot));
             }
         }
         return plotsUpdated;
-    }
-    getMapTackStructList(plotKeys) {
-        const mapTackStructList = [];
-        for (const plotKey of plotKeys) {
-            const [x, y] = plotKey.split('-').map(Number);
-            mapTackStructList.push({
-                x: x,
-                y: y,
-                mapTackList: MapTackStore.retrieveMapTacks(x, y)
-            });
-        }
-        return mapTackStructList;
     }
     getMapTackKey(x, y) {
         return `${x}-${y}`;

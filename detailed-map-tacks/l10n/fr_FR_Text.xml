@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Replace Tag="LOC_DMT_MAP_TACKS" Language="fr_FR">
+            <Text>Punaises de carte</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="fr_FR">
+            <Text>Détails du placement</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_LAKE_NAME" Language="fr_FR">
+            <Text>Lac</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_NATURAL_WONDER_NAME" Language="fr_FR">
+            <Text>Merveille naturelle</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_QUARTER_NAME" Language="fr_FR">
+            <Text>Quartier</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="fr_FR">
+            <Text>Cliquez pour supprimer</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="fr_FR">
+            <Text>Le nombre de punaises sur cette case a atteint la limite.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_FULL_TILE" Language="fr_FR">
+            <Text>Cette punaise ou la punaise sur cette case nécessite toute la tuile.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_DUPLICATE" Language="fr_FR">
+            <Text>Cette punaise existe déjà sur cette case.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X" Language="fr_FR">
+            <Text>Impossible de placer sur {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="fr_FR">
+            <Text>Doit être placé adjacent à {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="fr_FR">
+            <Text>Impossible de placer {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM" Language="fr_FR">
+            <Text>+{1_Amount} {2_YieldName} de {3_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT" Language="fr_FR">
+            <Text>+{1_Amount} {2_YieldName} des {3_Name} adjacents</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="fr_FR">
+            <Text>+{1_Amount} {2_YieldName} des constructions {3_TagName} adjacentes</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="fr_FR">
+            <Text>Rendement total : {1_Yields}</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_ADJACENCY_YIELD" Language="fr_FR">
+            <Text>Bonus d'adjacence : {1_Yields}</Text>
+        </Replace>
+    </LocalizedText>
+</Database>

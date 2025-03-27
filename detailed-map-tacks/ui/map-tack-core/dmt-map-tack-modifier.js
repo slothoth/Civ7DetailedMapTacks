@@ -1,6 +1,10 @@
 
-import MapTackUtils from './dmt-map-tack-utils.js';
-import MapTackTraitModifier from './modifier/dmt-map-tack-trait-modifier.js';
+import BeliefModifier from './modifier/dmt-belief-modifier.js';
+import ConstructibleModifier from './modifier/dmt-constructible-modifier.js';
+import ModifierRequirement from './modifier/dmt-modifier-requirement.js';
+import TraditionModifier from './modifier/dmt-tradition-modifier.js';
+import TraitModifier from './modifier/dmt-trait-modifier.js';
+import TreeModifier from './modifier/dmt-tree-modifier.js';
 
 const SUPPORTED_COLLECTIONS = [
     "COLLECTION_PLAYER_CITIES",
@@ -9,15 +13,10 @@ const SUPPORTED_COLLECTIONS = [
 
 const SUPPORTED_EFFECTS = [
     "EFFECT_CITY_ACTIVATE_CONSTRUCTIBLE_ADJACENCY",
-    "EFFECT_CITY_ADJUST_ADJACENCY_FLAT_AMOUNT"
+    // "EFFECT_CITY_ACTIVATE_CONSTRUCTIBLE_WAREHOUSE_YIELD", // TODO
+    // "EFFECT_CITY_ADJUST_ADJACENCY_FLAT_AMOUNT" // TODO
 ];
 
-const ModifierType = Object.freeze({
-    TRAIT: "TRAIT",
-    TRADITION: "TRADITION",
-    BELIEF: "BELIEF",
-    TREE: "TREE"
-});
 class MapTackModifierSingleton {
     /**
      * Singleton accessor
@@ -33,6 +32,7 @@ class MapTackModifierSingleton {
         this.modifierArguments = {};
         // Stores modifier map. < ModifierId, ModifierObject >
         // ModifierObject contains the following fields:
+        //      modifierId: ModifierId
         //      collection: CollectionType
         //      effect: EffectType
         //      args: [ { name, value }, {name, value}, ... ]
@@ -71,6 +71,7 @@ class MapTackModifierSingleton {
                     // Create ModifierObject
                     const modifierDef = GameInfo.Modifiers.lookup(modifierId);
                     this.modifiers[modifierId] = {
+                        modifierId: modifierId,
                         collection: e.CollectionType,
                         effect: e.EffectType,
                         args: this.modifierArguments[modifierId],
@@ -87,7 +88,10 @@ class MapTackModifierSingleton {
             const args = modifierObject.args;
             for (const arg of args) {
                 if (arg.name == "ConstructibleAdjacency") {
-                    this.adjacencyModifiers[arg.value] = modifierId;
+                    const values = arg.value?.split(", ") || []; // e.g. INTERLACUSTRINE_MOD_LAKE_ADJACENCY_BONUS_GOLD
+                    for (const value of values) {
+                        this.adjacencyModifiers[value] = modifierId;
+                    }
                 }
             }
         }
@@ -95,7 +99,12 @@ class MapTackModifierSingleton {
     isAdjacencyUnlocked(adjacencyId) {
         const modifierId = this.adjacencyModifiers[adjacencyId];
         if (modifierId) {
-            return MapTackTraitModifier.isModifierActive(modifierId);
+            const isModifierActive = TraitModifier.isModifierActive(modifierId)
+                || TraditionModifier.isModifierActive(modifierId)
+                || TreeModifier.isModifierActive(modifierId)
+                || BeliefModifier.isModifierActive(modifierId)
+                || ConstructibleModifier.isModifierActive(modifierId);
+            return isModifierActive && ModifierRequirement.isModifierRequirementMet(modifierId);
         }
         return false;
     }

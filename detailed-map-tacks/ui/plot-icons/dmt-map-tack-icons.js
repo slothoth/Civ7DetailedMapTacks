@@ -20,7 +20,11 @@ class MapTackIcons extends Component {
     }
     onAttach() {
         super.onAttach();
-        this.Root.classList.add("flex", "flex-row");
+
+        this.mapTackContainer = document.createElement("div");
+        this.mapTackContainer.classList.add("map-tack-icon-container");
+        this.Root.appendChild(this.mapTackContainer);
+
         this.location = {
             x: parseInt(this.Root.getAttribute('x') ?? '-1'),
             y: parseInt(this.Root.getAttribute('y') ?? '-1'),
@@ -41,7 +45,7 @@ class MapTackIcons extends Component {
             this.destroyWorldAnchor();
         }
         if (numOfIcons > 0) {
-            this.worldAnchorHandle = WorldAnchors.RegisterFixedWorldAnchor(location, { x: 8 - 18 * numOfIcons, y: 20, z: 20 });
+            this.worldAnchorHandle = WorldAnchors.RegisterFixedWorldAnchor(location, { x: 0, y: 0, z: 20 });
             if (this.worldAnchorHandle !== null && this.worldAnchorHandle >= 0) {
                 this.Root.setAttribute('data-bind-style-transform2d', `{{FixedWorldAnchors.offsetTransforms[${this.worldAnchorHandle}].value}}`);
                 this.Root.setAttribute('data-bind-style-opacity', `{{FixedWorldAnchors.visibleValues[${this.worldAnchorHandle}]}}`);
@@ -60,18 +64,18 @@ class MapTackIcons extends Component {
         }
     }
     updateData() {
-        this.Root.innerHTML = "";
+        this.mapTackContainer.innerHTML = "";
         const mapTackList = this.mapTackList;
         for (let mapTackData of mapTackList) {
             const item = this.createItem(mapTackData);
-            this.Root.appendChild(item);
+            this.mapTackContainer.appendChild(item);
         }
         this.makeWorldAnchor(this.location, mapTackList.length);
     }
     createItem(mapTackData) {
         const itemDef = GameInfo.Constructibles.lookup(mapTackData.type);
         const iconContainer = document.createElement("div");
-        iconContainer.classList.add("m-0\\.5", "map-tack-icon-container");
+        iconContainer.classList.add("mx-0\\.5");
 
         const iconWrapper = document.createElement("fxs-activatable");
         const iconStyles = MapTackUtils.getMapTackIconStyles(mapTackData.type, itemDef.ConstructibleClass);
@@ -119,9 +123,14 @@ class MapTackIcons extends Component {
         if (itemDef.Tooltip) {
             const desc = document.createElement('div');
             desc.className = 'mt-1';
-            desc.innerHTML = Locale.stylize(itemDef.Tooltip);
+            desc.setAttribute('data-l10n-id', itemDef.Tooltip);
             container.appendChild(desc);
         }
+        // Delete hint
+        const deleteHint = document.createElement('div');
+        deleteHint.className = 'mt-1 text-error delete-hint';
+        deleteHint.setAttribute('data-l10n-id', "LOC_DMT_CLICK_TO_DELETE");
+        container.appendChild(deleteHint);
         return container.innerHTML;
     }
     createInvalidTooltip(invalidReasons) {

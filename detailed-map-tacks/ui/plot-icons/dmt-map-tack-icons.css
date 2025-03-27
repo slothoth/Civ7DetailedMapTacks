@@ -1,11 +1,18 @@
 dmt-map-tack-icons {
 	pointer-events: none;
 	position: absolute;
-	transform-origin: center;
+}
+
+.delete-hint {
+    font-size: 0.7777777778rem;
 }
 
 .map-tack-icon-container {
     position: relative;
+    display: flex;
+    flex-direction: row;
+    transform: translateX(-50%) translateY(-1.7777777778rem);
+    transform-origin: center;
 }
 
 .map-tack-icon-wrapper {
