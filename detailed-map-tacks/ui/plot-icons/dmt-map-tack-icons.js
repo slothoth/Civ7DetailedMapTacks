@@ -2,6 +2,7 @@
 import DialogManager, { DialogBoxAction } from '/core/ui/dialog-box/manager-dialog-box.js';
 import MapTackIconsManager from './dmt-map-tack-icons-manager.js';
 import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
+import { InterfaceMode } from '/core/ui/interface-modes/interface-modes.js';
 
 class MapTackIcons extends Component {
     constructor() {
@@ -126,11 +127,6 @@ class MapTackIcons extends Component {
             desc.setAttribute('data-l10n-id', itemDef.Tooltip);
             container.appendChild(desc);
         }
-        // Delete hint
-        const deleteHint = document.createElement('div');
-        deleteHint.className = 'mt-1 text-error delete-hint';
-        deleteHint.setAttribute('data-l10n-id', "LOC_DMT_CLICK_TO_DELETE");
-        container.appendChild(deleteHint);
         return container.innerHTML;
     }
     createInvalidTooltip(invalidReasons) {
@@ -144,7 +140,10 @@ class MapTackIcons extends Component {
         return MapTackUtils.getYieldFragment(mapTackData.yieldDetails).innerHTML;
     }
     mapTackClickListener(mapTackData) {
-        engine.trigger("RemoveMapTackRequest", mapTackData);
+        if (InterfaceMode.getCurrent() == "DMT_INTERFACEMODE_MAP_TACK_CHOOSER") {
+            // Only allow map tack deletion in MapTackChooser screen.
+            engine.trigger("RemoveMapTackRequest", mapTackData);
+        }
         // DialogManager.createDialog_ConfirmCancel({
         //     body: "LOC_PAUSE_MENU_CONFIRM_QUIT_TO_DESKTOP", // TODO: add a checkbox for skipping confirmation
         //     title: "LOC_PAUSE_MENU_QUIT_TO_DESKTOP",

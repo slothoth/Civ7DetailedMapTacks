@@ -1,7 +1,8 @@
 
 import MapTackStore from './dmt-map-tack-store.js';
 
-const YieldTypes = [
+export const YieldTypes = [
+    "YIELD_UNKNOWN",
     "YIELD_FOOD",
     "YIELD_PRODUCTION",
     "YIELD_GOLD",
@@ -438,6 +439,27 @@ class MapTackUtilsSingleton {
     getConstructibleYieldChanges(type) {
         return this.constructibleYieldChanges[type] || [];
     }
+    getConstructibleDominantYieldType(type) {
+        const yields = this.constructibleYieldChanges[type];
+        if (yields) {
+            let maxAmount = -Infinity;
+            let maxType = "YIELD_UNKNOWN";
+            let hasDuplicateMax = false;
+            for (const { type, amount } of yields) {
+                if (amount > maxAmount) {
+                    maxAmount = amount;
+                    maxType = type;
+                    hasDuplicateMax = false;
+                } else if (amount === maxAmount) {
+                    hasDuplicateMax = true;
+                }
+            }
+            if (!hasDuplicateMax) {
+                return maxType;
+            }
+        }
+        return "YIELD_UNKNOWN";
+    }
     // START - UI related
     getMapTackIconStyles(type, classType) {
         // Get shape based on class type.
@@ -455,24 +477,10 @@ class MapTackUtilsSingleton {
                 break;
         }
         // Get color based on type.
-        const yields = this.constructibleYieldChanges[type];
-        if (yields) {
-            let maxAmount = -Infinity;
-            let maxType = null;
-            let hasDuplicateMax = false;
-            for (const { type, amount } of yields) {
-                if (amount > maxAmount) {
-                    maxAmount = amount;
-                    maxType = type;
-                    hasDuplicateMax = false;
-                } else if (amount === maxAmount) {
-                    hasDuplicateMax = true;
-                }
-            }
-            if (!hasDuplicateMax) {
-                const colorClass = YieldClassNames.get(maxType);
-                classes.push(colorClass);
-            }
+        const yieldType = this.getConstructibleDominantYieldType(type);
+        if (yieldType != "YIELD_UNKNOWN") {
+            const colorClass = YieldClassNames.get(yieldType);
+            classes.push(colorClass);
         }
         return classes;
     }

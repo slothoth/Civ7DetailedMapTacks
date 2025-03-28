@@ -53,6 +53,9 @@ class TraitModifierSingleton {
     isModifierActive(modifierId) {
         return this.modifiers.includes(modifierId);
     }
+    isTraitActive(traitType) {
+        return this.leaderTraits.includes(traitType) || this.civilizationTraits.includes(traitType);
+    }
 }
 
 const TraitModifier = TraitModifierSingleton.getInstance();

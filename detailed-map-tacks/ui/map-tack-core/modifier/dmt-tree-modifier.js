@@ -10,10 +10,12 @@ class TreeModifierSingleton {
         return TreeModifierSingleton.singletonInstance;
     }
     constructor() {
-        // Map of: ModifierId => { node: TreeNodeType, requiredTrait: TraitType }
+        // Map of: ModifierId => [ node: TreeNodeType, ...]
         this.modifierNode = {};
-        // Map of: TraditionType => { node: TreeNodeType, requiredTrait: TraitType }
+        // Map of: TraditionType => [ node: TreeNodeType, ...]
         this.traditionNode = {};
+        // Map of: ConstructibleType => [ node: TreeNodeType, ...]
+        this.constructibleNode = {};
 
         engine.whenReady.then(() => { this.onReady(); });
     }
@@ -23,27 +25,36 @@ class TreeModifierSingleton {
     cacheData() {
         this.modifierNode = {};
         for (const e of GameInfo.ProgressionTreeNodeUnlocks) {
-            const obj = {
-                node: e.ProgressionTreeNodeType,
-                requiredTrait: e.RequiredTraitType
-            };
+            let nodeMap;
             switch (e.TargetKind) {
                 case "KIND_MODIFIER":
-                    this.modifierNode[e.TargetType] = obj;
+                    nodeMap = this.modifierNode;
                     break;
                 case "KIND_TRADITION":
-                    this.traditionNode[e.TargetType] = obj;
+                    nodeMap = this.traditionNode;
                     break;
+                case "KIND_CONSTRUCTIBLE":
+                    nodeMap = this.constructibleNode;
+                    break;
+            }
+            if (nodeMap) {
+                const current = nodeMap[e.TargetType] || [];
+                current.push(e.ProgressionTreeNodeType);
+                nodeMap[e.TargetType] = current;
             }
         }
     }
     isModifierActive(modifierId) {
-        const nodeType = this.modifierNode[modifierId]?.node;
-        return this.isNodeUnlocked(nodeType);
+        const nodeTypes = this.modifierNode[modifierId] || [];
+        return nodeTypes.some(nodeType => this.isNodeUnlocked(nodeType));
     }
     isTraditionUnlocked(traditionType) {
-        const nodeType = this.traditionNode[traditionType]?.node;
-        return this.isNodeUnlocked(nodeType);
+        const nodeTypes = this.traditionNode[traditionType] || [];
+        return nodeTypes.some(nodeType => this.isNodeUnlocked(nodeType));
+    }
+    isConstructibleUnlocked(constructibleType) {
+        const nodeTypes = this.constructibleNode[constructibleType] || [];
+        return nodeTypes.some(nodeType => this.isNodeUnlocked(nodeType));
     }
     isNodeUnlocked(nodeType) {
         if (!nodeType) {

@@ -66,10 +66,10 @@
         </Replace>
         <!-- Simplified Chinese (zh_Hans_CN) -->
         <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="zh_Hans_CN">
-        <Text>高级地图钉</Text>
+            <Text>高级地图钉</Text>
         </Replace>
         <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_DESCRIPTION" Language="zh_Hans_CN">
-        <Text>允许在地图上放置地图钉并显示来自地图钉的收益。</Text>
+            <Text>允许在地图上放置地图钉并显示来自地图钉的收益。</Text>
         </Replace>
         <!-- Traditional Chinese (zh_Hant_HK) -->
         <Replace Tag="LOC_MOD_DETAILED_MAP_TACKS_NAME" Language="zh_Hant_HK">

@@ -3,7 +3,8 @@ import { InterfaceMode, InterfaceModeChangedEventName } from '/core/ui/interface
 import { MustGetElement } from "/core/ui/utilities/utilities-dom.js";
 import FocusManager from '/core/ui/input/focus-manager.js';
 import { getConstructibleEffectStrings } from '/core/ui/utilities/utilities-core-textprovider.js';
-import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
+import MapTackUtils, { ConstructibleClassType, YieldTypes } from '../map-tack-core/dmt-map-tack-utils.js';
+import TraitModifier from '../map-tack-core/modifier/dmt-trait-modifier.js';
 // Cache constructible icons for faster panel load.
 Loading.runWhenFinished(() => {
     for (const c of GameInfo.Constructibles) {
@@ -15,17 +16,18 @@ class MapTackChooser extends Panel {
     constructor(root) {
         super(root);
 
+        this.uniqueBuildings = [];
+        this.uniqueImprovements = [];
         this.excludedConstructibles = [
             "BUILDING_PALACE", // Palace and City Hall falls under special map tacks.
-            "BUILDING_CITY_HALL" // Palace and City Hall falls under special map tacks.
+            "BUILDING_CITY_HALL", // Palace and City Hall falls under special map tacks.
         ];
+        this.processUniqueConstructibles();
         this.dummyConstructibles = this.getDummyItems();
-        this.sortedConstructibles = this.sortItems();
         this.itemList = null;
         this.currentAge = GameInfo.Ages.lookup(Game.age).AgeType;
 
         // Settings items (TBD)
-        this.showAllItems = false;
         this.showYield = false;
 
         // UI related
@@ -78,6 +80,30 @@ class MapTackChooser extends Panel {
         super.close();
         InterfaceMode.switchToDefault();
     }
+    processUniqueConstructibles() {
+        // Unique buildings
+        for (const e of GameInfo.Buildings) {
+            if (e.TraitType) {
+                if (TraitModifier.isTraitActive(e.TraitType)) {
+                    this.uniqueBuildings.push(e.ConstructibleType);
+                }
+                if (e.TraitType != "TRAIT_LEADER_MINOR_CIV") {
+                    this.excludedConstructibles.push(e.ConstructibleType);
+                }
+            }
+        }
+        // Unique improvements
+        for (const e of GameInfo.Improvements) {
+            if (e.TraitType) {
+                if (TraitModifier.isTraitActive(e.TraitType)) {
+                    this.uniqueImprovements.push(e.ConstructibleType);
+                }
+                if (e.TraitType != "TRAIT_LEADER_MINOR_CIV") {
+                    this.excludedConstructibles.push(e.ConstructibleType);
+                }
+            }
+        }
+    }
     getDummyItems() {
         // Get dummy entries that won't even show up in Civilopedia.
         const items = new Set();
@@ -88,8 +114,18 @@ class MapTackChooser extends Panel {
         }
         return [...items];
     }
-    sortItems() {
-        return [...GameInfo.Constructibles].sort((a, b) => {
+    sortItems(filteredItemDefs) {
+        return filteredItemDefs.sort((a, b) => {
+            if (a.ConstructibleClass == ConstructibleClassType.BUILDING && b.ConstructibleClass == ConstructibleClassType.BUILDING) {
+                // Sort by yield type for buildings.
+                const aYieldType = MapTackUtils.getConstructibleDominantYieldType(a.ConstructibleType);
+                const bYieldType = MapTackUtils.getConstructibleDominantYieldType(b.ConstructibleType);
+                const yieldTypeDiff = YieldTypes.indexOf(aYieldType) - YieldTypes.indexOf(bYieldType);
+                if (yieldTypeDiff != 0) {
+                    return yieldTypeDiff;
+                }
+            }
+            // Sort by cost by default.
             return a.Cost - b.Cost;
         });
     }
@@ -104,7 +140,8 @@ class MapTackChooser extends Panel {
         container.appendChild(citySection);
         this.attachDivider(container);
         // Buildings
-        const buildingSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_BUILDING", "BUILDING");
+        const uniqueBuildingDefs = this.uniqueBuildings?.map(type => GameInfo.Constructibles.lookup(type)) || [];
+        const buildingSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_BUILDING", "BUILDING", uniqueBuildingDefs);
         container.appendChild(buildingSection);
         this.attachDivider(container);
         // Wonders
@@ -112,10 +149,11 @@ class MapTackChooser extends Panel {
         container.appendChild(wonderSection);
         this.attachDivider(container);
         // Improvements
-        const improvementSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_IMPROVEMENT", "IMPROVEMENT");
+        const uniqueImprovementDefs = this.uniqueImprovements?.map(type => GameInfo.Constructibles.lookup(type)) || [];
+        const improvementSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_IMPROVEMENT", "IMPROVEMENT", uniqueImprovementDefs);
         container.appendChild(improvementSection);
     }
-    createSection(titleText, type, defs) {
+    createSection(titleText, type, pinnedDefs = []) {
         const sectionContainer = document.createElement("div");
         sectionContainer.classList.add("map-tack-chooser-section", "mb-1");
         // Title
@@ -124,23 +162,41 @@ class MapTackChooser extends Panel {
         title.setAttribute("filigree-style", "h4");
         title.classList.add("text-secondary", "uppercase", "font-title-sm");
         sectionContainer.appendChild(title);
-        // Items
-        const itemContainer = document.createElement("div");
-        itemContainer.classList.add("map-tack-item-container");
-        const itemsToCheck = type != null ? this.sortedConstructibles : defs;
-        for (let itemDef of itemsToCheck) {
-            if (type != null && type != itemDef.ConstructibleClass) {
-                continue;
+        // Pinned items
+        if (pinnedDefs.length > 0) {
+            const pinnedItemContainer = document.createElement("div");
+            pinnedItemContainer.classList.add("map-tack-item-container", "mb-1");
+            for (let itemDef of pinnedDefs) {
+                const item = this.createItem(itemDef, true);
+                if (item != null) {
+                    pinnedItemContainer.appendChild(item);
+                }
             }
-            if (itemDef.Discovery == true) {
-                continue;
-            }
-            const item = this.createItem(itemDef, type == null);
-            if (item != null) {
-                itemContainer.appendChild(item);
-            }
+            sectionContainer.appendChild(pinnedItemContainer);
         }
-        sectionContainer.appendChild(itemContainer);
+        // Items
+        if (type != null) {
+            const itemContainer = document.createElement("div");
+            itemContainer.classList.add("map-tack-item-container");
+            const filteredItemDefs = [];
+            for (const itemDef of GameInfo.Constructibles) {
+                if (type != null && type != itemDef.ConstructibleClass) {
+                    continue;
+                }
+                if (itemDef.Discovery == true) {
+                    continue;
+                }
+                filteredItemDefs.push(itemDef);
+            }
+            const sortedItemDefs = this.sortItems(filteredItemDefs);
+            for (const itemDef of sortedItemDefs) {
+                const item = this.createItem(itemDef, false);
+                if (item != null) {
+                    itemContainer.appendChild(item);
+                }
+            }
+            sectionContainer.appendChild(itemContainer);
+        }
         return sectionContainer;
     }
     createItem(itemDef, skipExcludeCheck = false) {
@@ -157,10 +213,11 @@ class MapTackChooser extends Panel {
         if (itemDef.DistrictDefense && itemDef.ExistingDistrictOnly) {
             return;
         }
-        // Filter out items that don't belong to this age based on a setting (TBD).
-        if (this.showAllItems == false && itemDef.Age != null && itemDef.Age != this.currentAge) {
+        // Filter out items that don't belong to this age.
+        if (itemDef.Age != null && itemDef.Age != this.currentAge) {
             return;
         }
+
         const iconWrapper = document.createElement("fxs-activatable");
         const iconStyles = MapTackUtils.getMapTackIconStyles(type, itemDef.ConstructibleClass);
         iconWrapper.classList.add("m-1\\.25", "size-10", "map-tack-icon-wrapper", ...iconStyles);

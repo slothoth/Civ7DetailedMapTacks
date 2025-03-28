@@ -3,10 +3,6 @@ dmt-map-tack-icons {
 	position: absolute;
 }
 
-.delete-hint {
-    font-size: 0.7777777778rem;
-}
-
 .map-tack-icon-container {
     position: relative;
     display: flex;
