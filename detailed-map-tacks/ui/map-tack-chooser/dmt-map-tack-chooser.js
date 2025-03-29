@@ -220,12 +220,12 @@ class MapTackChooser extends Panel {
 
         const iconWrapper = document.createElement("fxs-activatable");
         const iconStyles = MapTackUtils.getMapTackIconStyles(type, itemDef.ConstructibleClass);
-        iconWrapper.classList.add("m-1\\.25", "size-10", "map-tack-icon-wrapper", ...iconStyles);
+        iconWrapper.classList.add("m-1\\.5", "size-12", "map-tack-icon-wrapper", ...iconStyles);
         iconWrapper.setAttribute("data-tooltip-content", this.createItemTooltip(itemDef));
         iconWrapper.setAttribute("data-audio-press-ref", "data-audio-select-press");
         iconWrapper.addEventListener('action-activate', () => this.mapTackClickListener(type));
         const icon = document.createElement('fxs-icon');
-        icon.classList.add("size-10");
+        icon.classList.add("size-12");
         icon.setAttribute("data-icon-id", type);
         iconWrapper.appendChild(icon);
         return iconWrapper;

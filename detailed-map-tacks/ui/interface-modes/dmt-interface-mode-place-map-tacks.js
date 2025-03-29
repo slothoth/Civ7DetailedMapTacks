@@ -3,7 +3,6 @@ import { Audio } from '/core/ui/audio-base/audio-support.js';
 import ChoosePlotInterfaceMode from '/base-standard/ui/interface-modes/interface-mode-choose-plot.js';
 import { InterfaceMode, InterfaceModeChangedEventName } from '/core/ui/interface-modes/interface-modes.js';
 import { MustGetElement } from '/core/ui/utilities/utilities-dom.js';
-import LensManager from '/core/ui/lenses/lens-manager.js';
 import { PlotCursorUpdatedEventName } from '/core/ui/input/plot-cursor.js';
 import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
 import MapTackValidator from '../map-tack-core/dmt-map-tack-validator.js';

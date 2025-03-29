@@ -172,6 +172,11 @@ class MapTackUtilsSingleton {
             .flat()
             .filter(m => m.validStatus?.isValid);
     }
+    getMapTackPlots(mapTackType) {
+        return MapTackStore.getCachedMapTackStructs()
+            .filter(s => s.mapTackList?.some(m => m.type == mapTackType))
+            .map(s => ({ x: s.x, y: s.y }));
+    }
     togglePlotDetailsCache(useCache) {
         this.usePlotDetailsCache = useCache;
         this.cachedPlotDetails = {};
