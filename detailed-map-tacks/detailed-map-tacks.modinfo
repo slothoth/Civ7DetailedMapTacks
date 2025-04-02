@@ -16,9 +16,30 @@
         </Criteria>
     </ActionCriteria>
     <ActionGroups>
+        <ActionGroup id="shell-detailed-map-tacks" scope="shell" criteria="always">
+            <Actions>
+                <UIScripts>
+                    <Item>ui/options/editors/dmt-editor-keyboard-mapping-decorator.js</Item>
+                </UIScripts>
+                <UpdateDatabase>
+                    <Item>config/Input.xml</Item>
+                </UpdateDatabase>
+                <UpdateText>
+                    <Item>text/en_us/InputText.xml</Item>
+                    <Item>l10n/InputText.xml</Item>
+                </UpdateText>
+            </Actions>
+        </ActionGroup>
         <ActionGroup id="game-detailed-map-tacks" scope="game" criteria="always">
             <Actions>
                 <ImportFiles>
+                    <Item>texture/dmt-building-culture.png</Item>
+                    <Item>texture/dmt-building-diplomacy.png</Item>
+                    <Item>texture/dmt-building-food.png</Item>
+                    <Item>texture/dmt-building-gold.png</Item>
+                    <Item>texture/dmt-building-happiness.png</Item>
+                    <Item>texture/dmt-building-production.png</Item>
+                    <Item>texture/dmt-building-science.png</Item>
                     <Item>texture/dmt-invalid-icon.png</Item>
                     <Item>texture/dmt-map-tack.png</Item>
                     <Item>ui/map-tack-chooser/dmt-map-tack-chooser.css</Item>
@@ -29,6 +50,7 @@
                     <Item>ui/plot-icons/dmt-map-tack-icons.css</Item>
                 </ImportFiles>
                 <UIScripts>
+                    <Item>ui/input/dmt-hotkey-manager.js</Item>
                     <Item>ui/interface-modes/dmt-interface-mode-map-tack-chooser.js</Item>
                     <Item>ui/interface-modes/dmt-interface-mode-place-map-tacks.js</Item>
                     <Item>ui/lenses/layer/dmt-map-tack-layer.js</Item>
@@ -40,19 +62,25 @@
                     <Item>ui/map-tack-core/modifier/dmt-trait-modifier.js</Item>
                     <Item>ui/map-tack-core/modifier/dmt-tree-modifier.js</Item>
                     <Item>ui/map-tack-core/dmt-map-tack-change-processor.js</Item>
+                    <Item>ui/map-tack-core/dmt-map-tack-constants.js</Item>
+                    <Item>ui/map-tack-core/dmt-map-tack-generics.js</Item>
                     <Item>ui/map-tack-core/dmt-map-tack-modifier.js</Item>
                     <Item>ui/map-tack-core/dmt-map-tack-store.js</Item>
+                    <Item>ui/map-tack-core/dmt-map-tack-ui-utils.js</Item>
                     <Item>ui/map-tack-core/dmt-map-tack-utils.js</Item>
                     <Item>ui/map-tack-core/dmt-map-tack-validator.js</Item>
                     <Item>ui/map-tack-core/dmt-map-tack-yield.js</Item>
                     <Item>ui/mini-map/dmt-lens-panel-decorator.js</Item>
                     <Item>ui/mini-map/dmt-panel-mini-map-decorator.js</Item>
+                    <Item>ui/options/editors/dmt-editor-keyboard-mapping-decorator.js</Item>
                     <Item>ui/place-map-tack/dmt-panel-place-map-tack.js</Item>
                     <Item>ui/plot-icons/dmt-map-tack-icons-manager.js</Item>
                     <Item>ui/plot-icons/dmt-map-tack-icons.js</Item>
                     <Item>ui/plot-icons/dmt-plot-icons-root-decorator.js</Item>
                 </UIScripts>
                 <UpdateText>
+                    <Item>text/en_us/InputText.xml</Item>
+                    <Item>l10n/InputText.xml</Item>
                     <Item>text/en_us/UIText.xml</Item>
                     <Item locale="de_DE">l10n/de_DE_Text.xml</Item>
                     <Item locale="es_ES">l10n/es_ES_Text.xml</Item>

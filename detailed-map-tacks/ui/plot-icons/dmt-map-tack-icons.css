@@ -26,6 +26,7 @@ dmt-map-tack-icons {
     z-index: -1;
     border-style: solid;
     border-color: transparent;
+    box-shadow: 0 0 1rem black;
 }
 
 .map-tack-icon-wrapper.round::before {
@@ -34,11 +35,11 @@ dmt-map-tack-icons {
 }
 
 .map-tack-icon-wrapper.square::before {
-    top: -0.0555555556rem;
-    bottom: -0.0555555556rem;
-    left: -0.0555555556rem;
-    right: -0.0555555556rem;
-    border-width: 0.1111111111rem;
+    top: -0.075rem;
+    bottom: -0.075rem;
+    left: -0.075rem;
+    right: -0.075rem;
+    border-width: 0.15rem;
     border-radius: 0;
     transform: none;
 }
@@ -48,32 +49,56 @@ dmt-map-tack-icons {
     transform: rotate(45deg) scale(0.8);
 }
 
+.map-tack-icon-wrapper.round.none::before {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 0 1rem black;
+}
+
+.map-tack-icon-wrapper.square.none::before {
+    top: 0.1rem;
+    bottom: 0.1rem;
+    left: 0.1rem;
+    right: 0.1rem;
+    box-shadow: 0 0 1.2rem black;
+}
+
+.map-tack-icon-wrapper.diamond.none::before {
+    top: 0.2rem;
+    bottom: 0.2rem;
+    left: 0.2rem;
+    right: 0.2rem;
+    box-shadow: 0 0 1.4rem black;
+}
+
 .map-tack-icon-wrapper.food::before {
-    border-color: rgb(27, 156, 34);
+    border-color: #80b34d;
 }
 
 .map-tack-icon-wrapper.production::before {
-    border-color: rgb(172, 44, 21);
+    border-color: #a33d29;
 }
 
 .map-tack-icon-wrapper.gold::before {
-    border-color: rgb(213, 216, 11);
+    border-color: #f6ce55;
 }
 
 .map-tack-icon-wrapper.science::before {
-    border-color: rgb(16, 100, 255);
+    border-color: #6ca6e0;
 }
 
 .map-tack-icon-wrapper.culture::before {
-    border-color: rgb(140, 64, 184);
+    border-color: #5c5cd6;
 }
 
 .map-tack-icon-wrapper.happiness::before {
-    border-color: rgb(224, 128, 49);
+    border-color: #f5993d;
 }
 
 .map-tack-icon-wrapper.diplomacy::before {
-    border-color: rgb(185, 198, 206);
+    border-color: #afb7cf;
 }
 
 .map-tack-icon-warn {

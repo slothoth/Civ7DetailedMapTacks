@@ -19,6 +19,32 @@
         <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="pl_PL">
             <Text>Kliknij, aby usunąć</Text>
         </Replace>
+
+        <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="pl_PL">
+            <Text>Specjalny</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_FOOD" Language="pl_PL">
+            <Text>Budynek Żywności</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_PRODUCTION" Language="pl_PL">
+            <Text>Budynek Produkcji</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_GOLD" Language="pl_PL">
+            <Text>Budynek Złota</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_SCIENCE" Language="pl_PL">
+            <Text>Budynek Nauki</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_CULTURE" Language="pl_PL">
+            <Text>Budynek Kultury</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_HAPPINESS" Language="pl_PL">
+            <Text>Budynek Szczęścia</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_DIPLOMACY" Language="pl_PL">
+            <Text>Budynek Dyplomacji</Text>
+        </Replace>
+
         <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="pl_PL">
             <Text>Liczba pinezek na tym polu osiągnęła limit.</Text>
         </Replace>
@@ -37,6 +63,7 @@
         <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="pl_PL">
             <Text>Nie można umieścić {1_Name}.</Text>
         </Replace>
+
         <Replace Tag="LOC_DMT_YIELD_FROM" Language="pl_PL">
             <Text>+{1_Amount} {2_YieldName} z {3_Name}</Text>
         </Replace>
@@ -46,6 +73,7 @@
         <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="pl_PL">
             <Text>+{1_Amount} {2_YieldName} z sąsiednich konstrukcji {3_TagName}</Text>
         </Replace>
+        
         <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="pl_PL">
             <Text>Całkowity dochód: {1_Yields}</Text>
         </Replace>

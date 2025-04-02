@@ -1,8 +1,8 @@
 import { InterfaceMode, InterfaceModeChangedEventName } from '/core/ui/interface-modes/interface-modes.js';
 import { MustGetElement } from "/core/ui/utilities/utilities-dom.js";
 import Panel from '/core/ui/panel-support.js';
-import { getConstructibleEffectStrings } from '/core/ui/utilities/utilities-core-textprovider.js';
-import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
+import MapTackUIUtils from '../map-tack-core/dmt-map-tack-ui-utils.js';
+import MapTackGenerics from '../map-tack-core/dmt-map-tack-generics.js';
 
 class PlaceMapTackPanel extends Panel {
     constructor(root) {
@@ -61,27 +61,30 @@ class PlaceMapTackPanel extends Panel {
         InterfaceMode.switchTo("DMT_INTERFACEMODE_MAP_TACK_CHOOSER");
     }
     populateItemDetails(type) {
-        const itemDef = GameInfo.Constructibles.lookup(type);
-        if (!itemDef) {
-            console.error("panel-place-map-tacks: No valid ConstructibleDefinition from ConstructibleType: " + type);
-            return;
+        if (MapTackGenerics.isGenericMapTack(type)) {
+            this.populateItemDetailsHelper(type, MapTackGenerics.getName(type), MapTackGenerics.getTooltipString(type));
+        } else {
+            const itemDef = GameInfo.Constructibles.lookup(type);
+            this.populateItemDetailsHelper(type, itemDef.Name, itemDef.Tooltip);
         }
+    }
+    populateItemDetailsHelper(type, name, tooltip) {
         // Title
         const header = this.panel.querySelector("#panel-place-map-tack-name");
-        header.setAttribute('data-l10n-id', itemDef.Name);
+        header.setAttribute('data-l10n-id', name);
         // Icon
         const icon = this.panel.querySelector("#panel-place-map-tack-icon");
-        icon.setAttribute("data-icon-id", type);
+        icon.style.backgroundImage = MapTackUIUtils.getMapTackIconBgImage(type);
         // Description
         const desc = this.panel.querySelector("#panel-place-map-tack-desc");
-        if (itemDef.Tooltip) {
-            desc.innerHTML = Locale.stylize(itemDef.Tooltip);
+        if (tooltip) {
+            desc.innerHTML = Locale.stylize(tooltip);
             desc.classList.remove("hidden");
         } else {
             desc.classList.add("hidden");
         }
         // Effects
-        const { baseYield, adjacencies, effects } = getConstructibleEffectStrings(type);
+        const { baseYield, adjacencies, effects } = MapTackUIUtils.getEffectStrings(type);
         const effectStrings = baseYield ? [baseYield, ...adjacencies, ...effects] : [...adjacencies, ...effects];
         const effectStr = Locale.compose(effectStrings.map(s => Locale.compose(s)).join('[N]'));
         const effectsContainer = this.panel.querySelector("#panel-place-map-tack-effects");
@@ -103,7 +106,7 @@ class PlaceMapTackPanel extends Panel {
             const yieldDetailsContainer = this.panel.querySelector("#panel-place-map-tack-yield-details");
             const yieldDetails = placementDetails.yieldDetails;
             if (yieldDetails) {
-                yieldDetailsContainer.innerHTML = MapTackUtils.getYieldFragment(yieldDetails, false).innerHTML;
+                yieldDetailsContainer.innerHTML = MapTackUIUtils.getYieldFragment(yieldDetails, false).innerHTML;
                 hasYieldDetails = yieldDetailsContainer.innerHTML != "";
             }
             yieldDetailsContainer.classList.toggle("hidden", !hasYieldDetails);

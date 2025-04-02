@@ -19,6 +19,32 @@
         <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="fr_FR">
             <Text>Cliquez pour supprimer</Text>
         </Replace>
+
+        <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="fr_FR">
+            <Text>Spécial</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_FOOD" Language="fr_FR">
+            <Text>Bâtiment Alimentaire</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_PRODUCTION" Language="fr_FR">
+            <Text>Bâtiment de Production</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_GOLD" Language="fr_FR">
+            <Text>Bâtiment d'Or</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_SCIENCE" Language="fr_FR">
+            <Text>Bâtiment Scientifique</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_CULTURE" Language="fr_FR">
+            <Text>Bâtiment Culturel</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_HAPPINESS" Language="fr_FR">
+            <Text>Bâtiment du Bonheur</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_DIPLOMACY" Language="fr_FR">
+            <Text>Bâtiment Diplomatique</Text>
+        </Replace>
+
         <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="fr_FR">
             <Text>Le nombre de punaises sur cette case a atteint la limite.</Text>
         </Replace>
@@ -37,6 +63,7 @@
         <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="fr_FR">
             <Text>Impossible de placer {1_Name}.</Text>
         </Replace>
+
         <Replace Tag="LOC_DMT_YIELD_FROM" Language="fr_FR">
             <Text>+{1_Amount} {2_YieldName} de {3_Name}</Text>
         </Replace>
@@ -46,6 +73,7 @@
         <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="fr_FR">
             <Text>+{1_Amount} {2_YieldName} des constructions {3_TagName} adjacentes</Text>
         </Replace>
+        
         <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="fr_FR">
             <Text>Rendement total : {1_Yields}</Text>
         </Replace>

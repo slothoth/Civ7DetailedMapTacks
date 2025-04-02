@@ -24,12 +24,6 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
     }
     initialize() {
         this.itemType = this.Context.type;
-        const itemDef = GameInfo.Constructibles.lookup(this.itemType);
-        if (!itemDef) {
-            console.error("interface-mode-place-map-tacks: No valid ConstructibleDefinition from ConstructibleType: " + this.itemType);
-            InterfaceMode.switchTo("DMT_INTERFACEMODE_MAP_TACK_CHOOSER");
-            return false;
-        }
         return true;
     }
     reset() {

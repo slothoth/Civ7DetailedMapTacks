@@ -19,6 +19,32 @@
         <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="pt_BR">
             <Text>Clique para excluir</Text>
         </Replace>
+
+        <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="pt_BR">
+            <Text>Especial</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_FOOD" Language="pt_BR">
+            <Text>Edifício de Alimentos</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_PRODUCTION" Language="pt_BR">
+            <Text>Edifício de Produção</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_GOLD" Language="pt_BR">
+            <Text>Edifício de Ouro</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_SCIENCE" Language="pt_BR">
+            <Text>Edifício de Ciência</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_CULTURE" Language="pt_BR">
+            <Text>Edifício de Cultura</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_HAPPINESS" Language="pt_BR">
+            <Text>Edifício de Felicidade</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_DIPLOMACY" Language="pt_BR">
+            <Text>Edifício de Diplomacia</Text>
+        </Replace>
+
         <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="pt_BR">
             <Text>O número de alfinetes neste terreno atingiu o limite.</Text>
         </Replace>
@@ -37,6 +63,7 @@
         <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="pt_BR">
             <Text>Não pode colocar {1_Name}.</Text>
         </Replace>
+
         <Replace Tag="LOC_DMT_YIELD_FROM" Language="pt_BR">
             <Text>+{1_Amount} {2_YieldName} de {3_Name}</Text>
         </Replace>
@@ -46,6 +73,7 @@
         <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="pt_BR">
             <Text>+{1_Amount} {2_YieldName} de {3_TagName} Construções adjacentes</Text>
         </Replace>
+        
         <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="pt_BR">
             <Text>Rendimento total: {1_Yields}</Text>
         </Replace>

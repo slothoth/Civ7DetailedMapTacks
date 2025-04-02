@@ -8,11 +8,13 @@ export class DMT_PanelMiniMapDecorator {
         this.component = component;
         this.componentRoot = component.Root;
         this.mapTacksPanelState = false;
+        this.mapTackPanelHotkeyListener = this.openMapTacksPanel.bind(this);
     }
 
     beforeAttach() {
         this.mapTackButton = this.createMinimapMapTacksButton();
         this.component.miniMapButtonRow.appendChild(this.mapTackButton);
+        window.addEventListener('hotkey-open-map-tack-panel', this.mapTackPanelHotkeyListener);
     }
 
     afterAttach() {
@@ -22,6 +24,7 @@ export class DMT_PanelMiniMapDecorator {
     }
 
     afterDetach() {
+        window.removeEventListener('hotkey-open-map-tack-panel', this.mapTackPanelHotkeyListener);
     }
 
     createMinimapMapTacksButton() {

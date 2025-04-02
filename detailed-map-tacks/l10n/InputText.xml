@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <!-- German (de_DE) -->
+        <Replace Tag="LOC_DMT_OPEN_MAP_TACK_PANEL" Language="de_DE">
+            <Text>Kartenmarkierungen-Panel öffnen</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOGGLE_MAP_TACKS" Language="de_DE">
+            <Text>Kartenmarkierungen umschalten</Text>
+        </Replace>
+        <!-- Spanish (es_ES) -->
+        <Replace Tag="LOC_DMT_OPEN_MAP_TACK_PANEL" Language="es_ES">
+            <Text>Abrir panel de chinchetas</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOGGLE_MAP_TACKS" Language="es_ES">
+            <Text>Alternar chinchetas del mapa</Text>
+        </Replace>
+        <!-- French (fr_FR) -->
+        <Replace Tag="LOC_DMT_OPEN_MAP_TACK_PANEL" Language="fr_FR">
+            <Text>Ouvrir le panneau des piques</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOGGLE_MAP_TACKS" Language="fr_FR">
+            <Text>Activer/désactiver les piques</Text>
+        </Replace>
+        <!-- Italian (it_IT) -->
+        <Replace Tag="LOC_DMT_OPEN_MAP_TACK_PANEL" Language="it_IT">
+            <Text>Apri pannello dei segnaposti</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOGGLE_MAP_TACKS" Language="it_IT">
+            <Text>Attiva/disattiva segnaposti</Text>
+        </Replace>
+        <!-- Japanese (ja_JP) -->
+        <Replace Tag="LOC_DMT_OPEN_MAP_TACK_PANEL" Language="ja_JP">
+            <Text>マップピンパネルを開く</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOGGLE_MAP_TACKS" Language="ja_JP">
+            <Text>マップピンの切り替え</Text>
+        </Replace>
+        <!-- Korean (ko_KR) -->
+        <Replace Tag="LOC_DMT_OPEN_MAP_TACK_PANEL" Language="ko_KR">
+            <Text>지도 핀 패널 열기</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOGGLE_MAP_TACKS" Language="ko_KR">
+            <Text>지도 핀 전환</Text>
+        </Replace>
+        <!-- Polish (pl_PL) -->
+        <Replace Tag="LOC_DMT_OPEN_MAP_TACK_PANEL" Language="pl_PL">
+            <Text>Otwórz panel pinezek</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOGGLE_MAP_TACKS" Language="pl_PL">
+            <Text>Przełącz pinezki na mapie</Text>
+        </Replace>
+        <!-- Portuguese (pt_BR) -->
+        <Replace Tag="LOC_DMT_OPEN_MAP_TACK_PANEL" Language="pt_BR">
+            <Text>Abrir painel de alfinetes</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOGGLE_MAP_TACKS" Language="pt_BR">
+            <Text>Alternar alfinetes do mapa</Text>
+        </Replace>
+        <!-- Russian (ru_RU) -->
+        <Replace Tag="LOC_DMT_OPEN_MAP_TACK_PANEL" Language="ru_RU">
+            <Text>Открыть панель булавок</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOGGLE_MAP_TACKS" Language="ru_RU">
+            <Text>Переключить булавки на карте</Text>
+        </Replace>
+        <!-- Simplified Chinese (zh_Hans_CN) -->
+        <Replace Tag="LOC_DMT_OPEN_MAP_TACK_PANEL" Language="zh_Hans_CN">
+            <Text>打开地图钉面板</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOGGLE_MAP_TACKS" Language="zh_Hans_CN">
+            <Text>切换地图钉</Text>
+        </Replace>
+        <!-- Traditional Chinese (zh_Hant_HK) -->
+        <Replace Tag="LOC_DMT_OPEN_MAP_TACK_PANEL" Language="zh_Hant_HK">
+            <Text>打開地圖釘面板</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_TOGGLE_MAP_TACKS" Language="zh_Hant_HK">
+            <Text>切換地圖釘</Text>
+        </Replace>
+    </LocalizedText>
+</Database>

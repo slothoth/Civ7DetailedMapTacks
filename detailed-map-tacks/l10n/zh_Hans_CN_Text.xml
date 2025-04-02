@@ -19,6 +19,31 @@
         <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="zh_Hans_CN">
             <Text>点击以删除</Text>
         </Replace>
+
+        <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="zh_Hans_CN">
+            <Text>特殊</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_FOOD" Language="zh_Hans_CN">
+            <Text>食物建筑</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_PRODUCTION" Language="zh_Hans_CN">
+            <Text>生产力建筑</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_GOLD" Language="zh_Hans_CN">
+            <Text>金币建筑</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_SCIENCE" Language="zh_Hans_CN">
+            <Text>科技值建筑</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_CULTURE" Language="zh_Hans_CN">
+            <Text>文化值建筑</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_HAPPINESS" Language="zh_Hans_CN">
+            <Text>幸福值建筑</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_DIPLOMACY" Language="zh_Hans_CN">
+            <Text>影响力建筑</Text>
+        </Replace>
         <!-- Invalid reasons -->
         <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="zh_Hans_CN">
             <Text>此地块上的地图钉已达到上限。</Text>

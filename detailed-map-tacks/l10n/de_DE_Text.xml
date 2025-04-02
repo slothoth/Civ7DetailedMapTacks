@@ -19,6 +19,32 @@
         <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="de_DE">
             <Text>Klicken zum Löschen</Text>
         </Replace>
+
+        <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="de_DE">
+            <Text>Besondere</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_FOOD" Language="de_DE">
+            <Text>Nahrungsgebäude</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_PRODUCTION" Language="de_DE">
+            <Text>Produktionsgebäude</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_GOLD" Language="de_DE">
+            <Text>Goldgebäude</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_SCIENCE" Language="de_DE">
+            <Text>Wissenschaftsgebäude</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_CULTURE" Language="de_DE">
+            <Text>Kulturgebäude</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_HAPPINESS" Language="de_DE">
+            <Text>Zufriedenheitsgebäude</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_DIPLOMACY" Language="de_DE">
+            <Text>Diplomatiegebäude</Text>
+        </Replace>
+
         <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="de_DE">
             <Text>Die Anzahl der Kartenmarkierungen auf diesem Feld hat das Limit erreicht.</Text>
         </Replace>
@@ -37,6 +63,7 @@
         <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="de_DE">
             <Text>Kann {1_Name} nicht platzieren.</Text>
         </Replace>
+
         <Replace Tag="LOC_DMT_YIELD_FROM" Language="de_DE">
             <Text>+{1_Amount} {2_YieldName} von {3_Name}</Text>
         </Replace>
@@ -46,6 +73,7 @@
         <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="de_DE">
             <Text>+{1_Amount} {2_YieldName} von angrenzenden {3_TagName}-Konstruktionen</Text>
         </Replace>
+        
         <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="de_DE">
             <Text>Gesamtertrag: {1_Yields}</Text>
         </Replace>

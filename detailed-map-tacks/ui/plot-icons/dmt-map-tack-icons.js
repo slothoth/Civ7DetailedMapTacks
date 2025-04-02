@@ -1,8 +1,9 @@
 // Modified from plot-icons.js. Not using as is because we want to show map tacks on hidden plots too.
 import DialogManager, { DialogBoxAction } from '/core/ui/dialog-box/manager-dialog-box.js';
 import MapTackIconsManager from './dmt-map-tack-icons-manager.js';
-import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
+import MapTackUIUtils from '../map-tack-core/dmt-map-tack-ui-utils.js';
 import { InterfaceMode } from '/core/ui/interface-modes/interface-modes.js';
+import MapTackGenerics from '../map-tack-core/dmt-map-tack-generics.js';
 
 class MapTackIcons extends Component {
     constructor() {
@@ -74,20 +75,19 @@ class MapTackIcons extends Component {
         this.makeWorldAnchor(this.location, mapTackList.length);
     }
     createItem(mapTackData) {
-        const itemDef = GameInfo.Constructibles.lookup(mapTackData.type);
         const iconContainer = document.createElement("div");
         iconContainer.classList.add("mx-0\\.5");
 
         const iconWrapper = document.createElement("fxs-activatable");
-        const iconStyles = MapTackUtils.getMapTackIconStyles(mapTackData.type, itemDef.ConstructibleClass);
+        const iconStyles = MapTackUIUtils.getMapTackIconStyles(mapTackData.type, mapTackData.classType);
         iconWrapper.classList.add("size-10", "map-tack-icon-wrapper", ...iconStyles);
-        iconWrapper.setAttribute("data-tooltip-content", this.createItemTooltip(itemDef));
+        iconWrapper.setAttribute("data-tooltip-content", this.createItemTooltip(mapTackData.type));
         iconWrapper.setAttribute("data-audio-press-ref", "data-audio-select-press");
         iconWrapper.addEventListener('action-activate', () => this.mapTackClickListener(mapTackData));
         // Icon
         const icon = document.createElement("fxs-icon");
         icon.classList.add("size-10");
-        icon.setAttribute("data-icon-id", mapTackData.type);
+        icon.style.backgroundImage = MapTackUIUtils.getMapTackIconBgImage(mapTackData.type);
         iconWrapper.appendChild(icon);
         iconContainer.appendChild(iconWrapper);
 
@@ -102,7 +102,7 @@ class MapTackIcons extends Component {
 
         // Yields
         const yieldDetails = mapTackData.yieldDetails;
-        const totalYieldStr = MapTackUtils.getTotalYieldString(yieldDetails, true);
+        const totalYieldStr = MapTackUIUtils.getTotalYieldString(yieldDetails, true);
         if (totalYieldStr) {
             const yields = document.createElement("fxs-activatable");
             yields.classList.add("map-tack-icon-yields", "pointer-events-none");
@@ -113,18 +113,28 @@ class MapTackIcons extends Component {
 
         return iconContainer;
     }
-    createItemTooltip(itemDef) {
+    createItemTooltip(type) {
+        let name;
+        let tooltip;
+        if (MapTackGenerics.isGenericMapTack(type)) {
+            name = MapTackGenerics.getName(type);
+            tooltip = MapTackGenerics.getTooltipString(type);
+        } else {
+            const itemDef = GameInfo.Constructibles.lookup(type);
+            name = itemDef?.Name;
+            tooltip = itemDef?.Tooltip;
+        }
         const container = document.createElement('fxs-tooltip');
         // Header
         const header = document.createElement('div');
         header.className = 'font-title text-secondary text-center uppercase tracking-100';
-        header.setAttribute('data-l10n-id', itemDef.Name);
+        header.setAttribute('data-l10n-id', name);
         container.appendChild(header);
         // Description
-        if (itemDef.Tooltip) {
+        if (tooltip) {
             const desc = document.createElement('div');
-            desc.className = 'mt-1';
-            desc.setAttribute('data-l10n-id', itemDef.Tooltip);
+            desc.classList.add("mt-1");
+            desc.innerHTML = Locale.stylize(tooltip);
             container.appendChild(desc);
         }
         return container.innerHTML;
@@ -137,7 +147,7 @@ class MapTackIcons extends Component {
         return Locale.stylize(`[BLIST]${invalidStr}[/LIST]`);
     }
     createYieldTooltip(mapTackData) {
-        return MapTackUtils.getYieldFragment(mapTackData.yieldDetails).innerHTML;
+        return MapTackUIUtils.getYieldFragment(mapTackData.yieldDetails).innerHTML;
     }
     mapTackClickListener(mapTackData) {
         if (InterfaceMode.getCurrent() == "DMT_INTERFACEMODE_MAP_TACK_CHOOSER") {

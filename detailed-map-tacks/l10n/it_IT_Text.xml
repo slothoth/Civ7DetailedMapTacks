@@ -19,6 +19,31 @@
         <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="it_IT">
             <Text>Fai clic per eliminare</Text>
         </Replace>
+
+        <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="it_IT">
+            <Text>Speciale</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_FOOD" Language="it_IT">
+            <Text>Edificio Alimentare</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_PRODUCTION" Language="it_IT">
+            <Text>Edificio di Produzione</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_GOLD" Language="it_IT">
+            <Text>Edificio dell'Oro</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_SCIENCE" Language="it_IT">
+            <Text>Edificio Scientifico</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_CULTURE" Language="it_IT">
+            <Text>Edificio Culturale</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_HAPPINESS" Language="it_IT">
+            <Text>Edificio della Felicità</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_DIPLOMACY" Language="it_IT">
+            <Text>Edificio Diplomatico</Text>
+        </Replace>
         
         <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="it_IT">
             <Text>Il numero di segnaposti su questa casella ha raggiunto il limite.</Text>

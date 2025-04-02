@@ -19,6 +19,32 @@
         <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="es_ES">
             <Text>Haga clic para eliminar</Text>
         </Replace>
+
+        <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="es_ES">
+            <Text>Especial</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_FOOD" Language="es_ES">
+            <Text>Edificio de Alimentos</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_PRODUCTION" Language="es_ES">
+            <Text>Edificio de Producción</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_GOLD" Language="es_ES">
+            <Text>Edificio de Oro</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_SCIENCE" Language="es_ES">
+            <Text>Edificio de Ciencia</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_CULTURE" Language="es_ES">
+            <Text>Edificio de Cultura</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_HAPPINESS" Language="es_ES">
+            <Text>Edificio de Felicidad</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_DIPLOMACY" Language="es_ES">
+            <Text>Edificio de Diplomacia</Text>
+        </Replace>
+
         <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="es_ES">
             <Text>El número de chinchetas en esta parcela ha alcanzado el límite.</Text>
         </Replace>
@@ -37,6 +63,7 @@
         <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="es_ES">
             <Text>No se puede colocar {1_Name}.</Text>
         </Replace>
+
         <Replace Tag="LOC_DMT_YIELD_FROM" Language="es_ES">
             <Text>+{1_Amount} {2_YieldName} de {3_Name}</Text>
         </Replace>
@@ -46,6 +73,7 @@
         <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="es_ES">
             <Text>+{1_Amount} {2_YieldName} de Construcciones {3_TagName} adyacentes</Text>
         </Replace>
+        
         <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="es_ES">
             <Text>Rendimiento total: {1_Yields}</Text>
         </Replace>

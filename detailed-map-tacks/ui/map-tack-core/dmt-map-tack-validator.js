@@ -1,6 +1,8 @@
 
 import MapTackStore from './dmt-map-tack-store.js';
-import MapTackUtils, { ConstructibleClassType } from './dmt-map-tack-utils.js';
+import MapTackUtils from './dmt-map-tack-utils.js';
+import MapTackGenerics from './dmt-map-tack-generics.js';
+import { ConstructibleClassType } from './dmt-map-tack-constants.js';
 
 const MAX_COUNT_PER_PLOT = 2;
 class MapTackValidatorSingleton {
@@ -56,12 +58,14 @@ class MapTackValidatorSingleton {
                     }
                 }
             }
-            // 3. Same map tack check.
-            const hasSameType = mapTackList.some(mapTack => mapTack.type == type);
-            if (hasSameType) {
-                isValid = isValid && false;
-                preventPlacement = preventPlacement || true;
-                reasons.add(Locale.compose("LOC_DMT_INVALID_REASON_DUPLICATE"));
+            // 3. Same map tack check. Only apply to non-generic map tacks.
+            if (!MapTackGenerics.isGenericMapTack(type)) {
+                const hasSameType = mapTackList.some(mapTack => mapTack.type == type);
+                if (hasSameType) {
+                    isValid = isValid && false;
+                    preventPlacement = preventPlacement || true;
+                    reasons.add(Locale.compose("LOC_DMT_INVALID_REASON_DUPLICATE"));
+                }
             }
             // END - Conditions that prevent placing map tacks.
         }

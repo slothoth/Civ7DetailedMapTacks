@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <EnglishText>
+        <Row Tag="LOC_DMT_OPEN_MAP_TACK_PANEL">
+            <Text>Open Map Tack Panel</Text>
+        </Row>
+        <Row Tag="LOC_DMT_TOGGLE_MAP_TACKS">
+            <Text>Toggle Map Tacks</Text>
+        </Row>
+    </EnglishText>
+</Database>

@@ -1,43 +1,8 @@
 
+import MapTackGenerics from './dmt-map-tack-generics.js';
 import MapTackStore from './dmt-map-tack-store.js';
+import { DirectionNames, ConstructibleClassType, QuarterType } from './dmt-map-tack-constants.js';
 
-export const YieldTypes = [
-    "YIELD_UNKNOWN",
-    "YIELD_FOOD",
-    "YIELD_PRODUCTION",
-    "YIELD_GOLD",
-    "YIELD_SCIENCE",
-    "YIELD_CULTURE",
-    "YIELD_HAPPINESS",
-    "YIELD_DIPLOMACY"
-];
-const YieldClassNames = new Map([
-    ["YIELD_FOOD", "food"],
-    ["YIELD_PRODUCTION", "production"],
-    ["YIELD_GOLD", "gold"],
-    ["YIELD_SCIENCE", "science"],
-    ["YIELD_CULTURE", "culture"],
-    ["YIELD_HAPPINESS", "happiness"],
-    ["YIELD_DIPLOMACY", "diplomacy"]
-]);
-export const DirectionNames = new Map([
-    [DirectionTypes.DIRECTION_EAST, "LOC_WORLD_DIRECTION_EAST"],
-    [DirectionTypes.DIRECTION_NORTHEAST, "LOC_WORLD_DIRECTION_NORTHEAST"],
-    [DirectionTypes.DIRECTION_NORTHWEST, "LOC_WORLD_DIRECTION_NORTHWEST"],
-    [DirectionTypes.DIRECTION_SOUTHEAST, "LOC_WORLD_DIRECTION_SOUTHEAST"],
-    [DirectionTypes.DIRECTION_SOUTHWEST, "LOC_WORLD_DIRECTION_SOUTHWEST"],
-    [DirectionTypes.DIRECTION_WEST, "LOC_WORLD_DIRECTION_WEST"]
-]);
-export const ConstructibleClassType = Object.freeze({
-    WONDER: "WONDER",
-    BUILDING: "BUILDING",
-    IMPROVEMENT: "IMPROVEMENT"
-});
-export const QuarterType = {
-    NO_QUARTER: 0,
-    NORMAL_QUARTER: 1
-    // More to be added in populateQuarterTypes
-};
 class MapTackUtilsSingleton {
     /**
      * Singleton accessor
@@ -62,16 +27,8 @@ class MapTackUtilsSingleton {
         engine.whenReady.then(() => { this.onReady(); });
     }
     onReady() {
-        this.populateQuarterTypes();
         this.cacheTypeTags();
         this.cacheYieldChanges();
-    }
-    populateQuarterTypes() {
-        let index = 2;
-        for (const itemRef of GameInfo.UniqueQuarters) {
-            QuarterType[itemRef.UniqueQuarterType] = index;
-            index++;
-        }
     }
     cacheTypeTags() {
         this.constructibleTypeTags = {};
@@ -82,6 +39,11 @@ class MapTackUtilsSingleton {
                 current.push(e.Tag);
                 this.constructibleTypeTags[e.Type] = current;
             }
+        }
+        // Generic map tack tags
+        const genericItems = MapTackGenerics.getGenericMapTacks();
+        for (const genericItem of genericItems) {
+            this.constructibleTypeTags[genericItem.type] = genericItem.tags;
         }
     }
     cacheYieldChanges() {
@@ -105,24 +67,21 @@ class MapTackUtilsSingleton {
             return true;
         }
         // Wonders check.
-        const itemRef = GameInfo.Constructibles.lookup(type);
-        if (itemRef) {
-            if (itemRef.ConstructibleClass == ConstructibleClassType.WONDER) {
-                return true;
-            }
-        }
-        return false;
+        return this.getConstructibleClassType(type) == ConstructibleClassType.WONDER;
     }
     isAgeless(type) {
         return this.hasTag(type, "AGELESS");
     }
     isCurrentAge(type) {
         const itemRef = GameInfo.Constructibles.lookup(type);
-        return itemRef.Age == GameInfo.Ages.lookup(Game.age).AgeType;
+        return itemRef?.Age == GameInfo.Ages.lookup(Game.age).AgeType;
     }
     isObsolete(type) {
         const itemRef = GameInfo.Constructibles.lookup(type);
-        return itemRef.Age && itemRef.Age != GameInfo.Ages.lookup(Game.age).AgeType;
+        return itemRef?.Age && itemRef.Age != GameInfo.Ages.lookup(Game.age).AgeType;
+    }
+    isCityCenter(type) {
+        return GameInfo.Buildings.lookup(type)?.CityCenterPriority > 0;
     }
     getAdjacentPlots(x, y) {
         const plots = [];
@@ -210,7 +169,6 @@ class MapTackUtilsSingleton {
         }
 
         const details = {};
-
         // Only take valid map tacks into consideration.
         const validMapTacks = this.getValidMapTacks(x, y);
 
@@ -314,7 +272,7 @@ class MapTackUtilsSingleton {
         }
         // Check for map tacks.
         for (const mapTack of validMapTacks) {
-            if (GameInfo.Buildings.lookup(mapTack.type)?.CityCenterPriority) {
+            if (this.isCityCenter(mapTack.type)) {
                 return "DISTRICT_CITY_CENTER";
             }
             switch (mapTack.classType) {
@@ -341,11 +299,11 @@ class MapTackUtilsSingleton {
      * @returns class type of given constructible type.
      */
     getConstructibleClassType(type) {
-        const constructibleDef = GameInfo.Constructibles.lookup(type);
-        if (constructibleDef) {
-            return constructibleDef.ConstructibleClass;
+        if (MapTackGenerics.isGenericMapTack(type)) {
+            return MapTackGenerics.getClassType(type);
+        } else {
+            return GameInfo.Constructibles.lookup(type)?.ConstructibleClass;
         }
-        return;
     }
     /**
      * @param {string} type feature type
@@ -465,126 +423,6 @@ class MapTackUtilsSingleton {
         }
         return "YIELD_UNKNOWN";
     }
-    // START - UI related
-    getMapTackIconStyles(type, classType) {
-        // Get shape based on class type.
-        const classes = [];
-        switch (classType) {
-            case ConstructibleClassType.WONDER:
-                classes.push("square");
-                break;
-            case ConstructibleClassType.IMPROVEMENT:
-                classes.push("diamond");
-                break;
-            case ConstructibleClassType.BUILDING:
-            default:
-                classes.push("round");
-                break;
-        }
-        // Get color based on type.
-        const yieldType = this.getConstructibleDominantYieldType(type);
-        if (yieldType != "YIELD_UNKNOWN") {
-            const colorClass = YieldClassNames.get(yieldType);
-            classes.push(colorClass);
-        }
-        return classes;
-    }
-    getYieldFragment(yieldDetails, includeDivider = true) {
-        const container = document.createElement('fragment');
-        const totalYieldStr = this.getTotalYieldString(yieldDetails);
-        if (totalYieldStr) {
-            const yieldContainer = document.createElement('div');
-            yieldContainer.innerHTML = Locale.stylize(`[B]${totalYieldStr}[/B]`);
-            container.appendChild(yieldContainer);
-        }
-        if (includeDivider) {
-            // Divider
-            const divider = document.createElement("div");
-            divider.classList.add("filigree-divider-inner-frame", "w-full");
-            container.appendChild(divider);
-        }
-        // Base yields
-        const baseYieldStr = this.getBaseYieldString(yieldDetails["base"]);
-        if (baseYieldStr) {
-            const yieldContainer = document.createElement('div');
-            yieldContainer.innerHTML = Locale.stylize(baseYieldStr);
-            container.appendChild(yieldContainer);
-        }
-        // Adjacency yields
-        const adjYieldStr = this.getAdjacencyYieldString(yieldDetails["adjacencies"]);
-        if (adjYieldStr) {
-            const yieldContainer = document.createElement('div');
-            yieldContainer.innerHTML = Locale.stylize(adjYieldStr);
-            container.appendChild(yieldContainer);
-        }
-        return container;
-    }
-    getYieldString(yieldDetails, short = false, separator = ' ') {
-        if (!yieldDetails || yieldDetails.length == 0) {
-            return;
-        }
-        yieldDetails.sort((a, b) => YieldTypes.indexOf(a.type) - YieldTypes.indexOf(b.type));
-        let yieldStr;
-        if (short) {
-            yieldStr = yieldDetails.map(yieldDetail => `+${yieldDetail.amount}[icon:${yieldDetail.type}]`).join(separator);
-        } else {
-            yieldStr = yieldDetails.map(yieldDetail => {
-                const itemDef = GameInfo.Yields.lookup(yieldDetail.type);
-                return Locale.compose("LOC_UI_POS_YIELD", yieldDetail.amount, itemDef.Name);
-            }).join(separator);
-        }
-        return Locale.compose(yieldStr);
-    }
-    getTotalYieldString(yieldDetails, short = false) {
-        const totalMap = new Map();
-        const subYieldDetails = Object.values(yieldDetails).flat();
-        if (!subYieldDetails || subYieldDetails.length == 0) {
-            return;
-        }
-        for (const subYieldDetail of subYieldDetails) {
-            const currentTotal = totalMap.get(subYieldDetail.type) || 0;
-            totalMap.set(subYieldDetail.type, currentTotal + subYieldDetail.amount);
-        }
-        const totalYieldDetails = Array.from(totalMap, ([type, amount]) => ({type, amount}));
-        totalYieldDetails.sort((a, b) => YieldTypes.indexOf(a.type) - YieldTypes.indexOf(b.type));
-        if (short) {
-            return this.getYieldString(totalYieldDetails, true, "[N]");
-        } else {
-            return Locale.compose("LOC_DMT_TOTAL_YIELD", this.getYieldString(totalYieldDetails));
-        }
-    }
-    getBaseYieldString(baseYieldDetails) {
-        if (!baseYieldDetails || baseYieldDetails.length == 0) {
-            return;
-        }
-        return Locale.compose("LOC_UI_PRODUCTION_BASE_YIELD", this.getYieldString(baseYieldDetails));
-    }
-    getAdjacencyYieldString(adjYieldDetails) {
-        // Adjacency Bonus: +6 Food + 6 Production
-        //      - +2 Food from adjacent XXX (xxx, xxx)
-        //      - +2 Food from adjacent YYY (yyy, yyy)
-        //      ...
-        if (!adjYieldDetails || adjYieldDetails.length == 0) {
-            return;
-        }
-        // Sort adjacencies by type.
-        adjYieldDetails.sort((a, b) => YieldTypes.indexOf(a.type) - YieldTypes.indexOf(b.type));
-        
-        const adjacencyStrings = [];
-        const sumMap = new Map();
-        for (const yieldDetail of adjYieldDetails) {
-            // Populate sum.
-            const currentSum = sumMap.get(yieldDetail.type) || 0;
-            sumMap.set(yieldDetail.type, currentSum + yieldDetail.amount);
-            // Add sub adjacency strings
-            adjacencyStrings.push(`[LI] ${Locale.compose(yieldDetail.text)}`);
-        }
-        // Add summary
-        const sumYieldDetails = Array.from(sumMap, ([type, amount]) => ({type, amount}));
-        const sumString = Locale.compose("LOC_DMT_ADJACENCY_YIELD", this.getYieldString(sumYieldDetails));
-        return Locale.compose(`${sumString}[N][BLIST]${adjacencyStrings.join("")}[/LIST]`);
-    }
-    // END - UI related
 }
 
 const MapTackUtils = MapTackUtilsSingleton.getInstance();

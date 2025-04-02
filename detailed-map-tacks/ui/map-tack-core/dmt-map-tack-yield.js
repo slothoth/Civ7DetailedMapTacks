@@ -1,6 +1,8 @@
 
-import MapTackUtils, { ConstructibleClassType, DirectionNames, QuarterType } from './dmt-map-tack-utils.js';
+import MapTackUtils from './dmt-map-tack-utils.js';
+import { ConstructibleClassType, DirectionNames, QuarterType } from './dmt-map-tack-constants.js';
 import MapTackModifier from './dmt-map-tack-modifier.js';
+import MapTackGenerics from './dmt-map-tack-generics.js';
 
 class MapTackYieldSingleton {
     /**
@@ -31,6 +33,11 @@ class MapTackYieldSingleton {
                 requiresActivation: e.RequiresActivation
             });
             this.constructibleAdjacencies[e.ConstructibleType] = current;
+        }
+        // Generic map tack adjacencies
+        const genericItems = MapTackGenerics.getGenericMapTacks();
+        for (const genericItem of genericItems) {
+            this.constructibleAdjacencies[genericItem.type] = MapTackGenerics.getAdjacencyObjs(genericItem.type);
         }
     }
     /**
@@ -84,8 +91,8 @@ class MapTackYieldSingleton {
      * @returns an array of wildcard adjacencies that can apply to the given constructible type
      */
     getWildcardAdjacency(x, y, type) {
-        // Don't check for improvement wildcard adjacency for now.
-        if (MapTackUtils.getConstructibleClassType(type) == ConstructibleClassType.IMPROVEMENT) {
+        // Wonder and improvement don't seem to be applicable for wildcard adjacencies.
+        if (MapTackUtils.getConstructibleClassType(type) != ConstructibleClassType.BUILDING) {
             return [];
         }
         const adjacencies = [];

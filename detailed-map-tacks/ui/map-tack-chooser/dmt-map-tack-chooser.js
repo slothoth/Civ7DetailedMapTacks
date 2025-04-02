@@ -1,10 +1,11 @@
 import Panel from '/core/ui/panel-support.js';
 import { InterfaceMode, InterfaceModeChangedEventName } from '/core/ui/interface-modes/interface-modes.js';
 import { MustGetElement } from "/core/ui/utilities/utilities-dom.js";
-import FocusManager from '/core/ui/input/focus-manager.js';
-import { getConstructibleEffectStrings } from '/core/ui/utilities/utilities-core-textprovider.js';
-import MapTackUtils, { ConstructibleClassType, YieldTypes } from '../map-tack-core/dmt-map-tack-utils.js';
+import MapTackUIUtils from '../map-tack-core/dmt-map-tack-ui-utils.js';
+import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
+import { ConstructibleClassType, ExcludedItems, YieldTypes } from '../map-tack-core/dmt-map-tack-constants.js';
 import TraitModifier from '../map-tack-core/modifier/dmt-trait-modifier.js';
+import MapTackGenerics from '../map-tack-core/dmt-map-tack-generics.js';
 // Cache constructible icons for faster panel load.
 Loading.runWhenFinished(() => {
     for (const c of GameInfo.Constructibles) {
@@ -16,29 +17,23 @@ class MapTackChooser extends Panel {
     constructor(root) {
         super(root);
 
-        this.uniqueBuildings = [];
-        this.uniqueImprovements = [];
-        this.excludedConstructibles = [
-            "BUILDING_PALACE", // Palace and City Hall falls under special map tacks.
-            "BUILDING_CITY_HALL", // Palace and City Hall falls under special map tacks.
-        ];
+        this.uniqueBuildingDefs = [];
+        this.uniqueImprovementDefs = [];
+        this.cityCenterBuildingDefs = [];
+        this.agelessBuildingDefs = [];
+        this.excludedConstructibles = new Set();
+        this.processDummyItems();
         this.processUniqueConstructibles();
-        this.dummyConstructibles = this.getDummyItems();
-        this.itemList = null;
+        this.processCityCenterBuildings();
+        this.processAgelessBuildings();
+
         this.currentAge = GameInfo.Ages.lookup(Game.age).AgeType;
 
         // Settings items (TBD)
         this.showYield = false;
 
         // UI related
-        this.onInterfaceModeChanged = () => {
-            if (InterfaceMode.getCurrent() == "DMT_INTERFACEMODE_MAP_TACK_CHOOSER") {
-                FocusManager.setFocus(this.sectionList);
-                this.setHidden(false);
-            } else {
-                this.setHidden(true);
-            }
-        };
+        this.interfaceModeChangedListener = this.onInterfaceModeChanged.bind(this);
         this.requestClose = this.onRequestClose.bind(this);
         this.animateInType = this.animateOutType = 5 /* AnchorType.RelativeToLeft */;
         this.enableOpenSound = true;
@@ -63,32 +58,39 @@ class MapTackChooser extends Panel {
     }
     onAttach() {
         super.onAttach();
-        window.addEventListener(InterfaceModeChangedEventName, this.onInterfaceModeChanged);
+        window.addEventListener(InterfaceModeChangedEventName, this.interfaceModeChangedListener);
         this.panel.addEventListener('subsystem-frame-close', this.requestClose);
     }
     onDetach() {
-        window.removeEventListener(InterfaceModeChangedEventName, this.onInterfaceModeChanged);
+        window.removeEventListener(InterfaceModeChangedEventName, this.interfaceModeChangedListener);
         this.panel.removeEventListener('subsystem-frame-close', this.requestClose);
         super.onDetach();
     }
-    onReceiveFocus() {
-        if (this.sectionList) {
-            FocusManager.setFocus(this.sectionList);
+    onInterfaceModeChanged() {
+        if (InterfaceMode.getCurrent() == "DMT_INTERFACEMODE_MAP_TACK_CHOOSER") {
+            this.setHidden(false);
+        } else {
+            this.setHidden(true);
         }
     }
     onRequestClose() {
         super.close();
         InterfaceMode.switchToDefault();
     }
+    processDummyItems() {
+        for (const item of ExcludedItems) {
+            this.excludedConstructibles.add(item);
+        }
+    }
     processUniqueConstructibles() {
         // Unique buildings
         for (const e of GameInfo.Buildings) {
             if (e.TraitType) {
                 if (TraitModifier.isTraitActive(e.TraitType)) {
-                    this.uniqueBuildings.push(e.ConstructibleType);
+                    this.uniqueBuildingDefs.push(GameInfo.Constructibles.lookup(e.ConstructibleType));
                 }
                 if (e.TraitType != "TRAIT_LEADER_MINOR_CIV") {
-                    this.excludedConstructibles.push(e.ConstructibleType);
+                    this.excludedConstructibles.add(e.ConstructibleType);
                 }
             }
         }
@@ -96,27 +98,44 @@ class MapTackChooser extends Panel {
         for (const e of GameInfo.Improvements) {
             if (e.TraitType) {
                 if (TraitModifier.isTraitActive(e.TraitType)) {
-                    this.uniqueImprovements.push(e.ConstructibleType);
+                    this.uniqueImprovementDefs.push(GameInfo.Constructibles.lookup(e.ConstructibleType));
                 }
                 if (e.TraitType != "TRAIT_LEADER_MINOR_CIV") {
-                    this.excludedConstructibles.push(e.ConstructibleType);
+                    this.excludedConstructibles.add(e.ConstructibleType);
                 }
             }
         }
     }
-    getDummyItems() {
-        // Get dummy entries that won't even show up in Civilopedia.
-        const items = new Set();
-        if (GameInfo.CivilopediaPageExcludes) {
-            GameInfo.CivilopediaPageExcludes.forEach((row) => {
-                items.add(row.PageID);
-            });
+    processCityCenterBuildings() {
+        for (const e of GameInfo.Constructibles) {
+            if (e.ConstructibleClass == ConstructibleClassType.BUILDING) {
+                const type = e.ConstructibleType;
+                if (MapTackUtils.isCityCenter(type)) {
+                    this.cityCenterBuildingDefs.push(e);
+                    this.excludedConstructibles.add(type);
+                }
+            }
         }
-        return [...items];
     }
-    sortItems(filteredItemDefs) {
-        return filteredItemDefs.sort((a, b) => {
+    processAgelessBuildings() {
+        for (const e of GameInfo.Constructibles) {
+            if (e.ConstructibleClass == ConstructibleClassType.BUILDING) {
+                const type = e.ConstructibleType;
+                if (MapTackUtils.isAgeless(type) && !this.excludedConstructibles.has(type)) {
+                    // Ageless non-unique items.
+                    this.agelessBuildingDefs.push(e);
+                }
+            }
+        }
+    }
+    sortItems(itemDefs) {
+        return itemDefs.sort((a, b) => {
             if (a.ConstructibleClass == ConstructibleClassType.BUILDING && b.ConstructibleClass == ConstructibleClassType.BUILDING) {
+                // Put unique buildings at the end
+                const aIsUnique = this.uniqueBuildingDefs.some(def => def.ConstructibleType == a.ConstructibleType);
+                const bIsUnique = this.uniqueBuildingDefs.some(def => def.ConstructibleType == b.ConstructibleType);
+                if (aIsUnique && !bIsUnique) return 1;
+                if (!aIsUnique && bIsUnique) return -1;
                 // Sort by yield type for buildings.
                 const aYieldType = MapTackUtils.getConstructibleDominantYieldType(a.ConstructibleType);
                 const bYieldType = MapTackUtils.getConstructibleDominantYieldType(b.ConstructibleType);
@@ -132,28 +151,54 @@ class MapTackChooser extends Panel {
     populateItems(container) {
         // Clear all sections first.
         container.innerHTML = "";
-        // Special tacks like city. (TODO more to come)
-        const citySection = this.createSection("LOC_UI_RESOURCE_CITY", null, [
-            GameInfo.Constructibles.lookup("BUILDING_CITY_HALL"),
-            GameInfo.Constructibles.lookup("BUILDING_PALACE")
-        ]);
-        container.appendChild(citySection);
+        // Special tacks
+        const genericSection = this.createSection("LOC_DMT_SPECIAL_SECTION", this.getGenericsItems());
+        container.appendChild(genericSection);
         this.attachDivider(container);
         // Buildings
-        const uniqueBuildingDefs = this.uniqueBuildings?.map(type => GameInfo.Constructibles.lookup(type)) || [];
-        const buildingSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_BUILDING", "BUILDING", uniqueBuildingDefs);
+        const buildingSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_BUILDING", this.getBuildingItems());
         container.appendChild(buildingSection);
         this.attachDivider(container);
         // Wonders
-        const wonderSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_WONDER", "WONDER");
+        const wonderSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_WONDER", this.getWonderItems());
         container.appendChild(wonderSection);
         this.attachDivider(container);
         // Improvements
-        const uniqueImprovementDefs = this.uniqueImprovements?.map(type => GameInfo.Constructibles.lookup(type)) || [];
-        const improvementSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_IMPROVEMENT", "IMPROVEMENT", uniqueImprovementDefs);
+        const improvementSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_IMPROVEMENT", this.getImprovementItems());
         container.appendChild(improvementSection);
     }
-    createSection(titleText, type, pinnedDefs = []) {
+    getGenericsItems() {
+        const generics = MapTackGenerics.getGenericMapTacks();
+        return [[...generics, ...this.cityCenterBuildingDefs]];
+    }
+    getBuildingItems() {
+        const agelessItems = [...this.agelessBuildingDefs, ...this.uniqueBuildingDefs];
+        const buildingDefs = this.getConstructiblesByClassType(ConstructibleClassType.BUILDING);
+        const filteredBuildings = buildingDefs.filter(itemDef => itemDef.Age != null);
+        return [agelessItems, filteredBuildings];
+    }
+    getWonderItems() {
+        const wonderdingDefs = this.getConstructiblesByClassType(ConstructibleClassType.WONDER);
+        return [wonderdingDefs];
+    }
+    getImprovementItems() {
+        const improvementDefs = this.getConstructiblesByClassType(ConstructibleClassType.IMPROVEMENT);
+        return [this.uniqueImprovementDefs, improvementDefs];
+    }
+    getConstructiblesByClassType(classType) {
+        const filteredItemDefs = [];
+        for (const itemDef of GameInfo.Constructibles) {
+            if (classType == itemDef.ConstructibleClass
+                    && !this.excludedConstructibles.has(itemDef.ConstructibleType)
+                    && !(itemDef.DistrictDefense && itemDef.ExistingDistrictOnly) // Filter out walls.
+                    && !(itemDef.Age != null && itemDef.Age != this.currentAge) // Filter out items that don't belong to this age.
+                    && !itemDef.Discovery) {
+                filteredItemDefs.push(itemDef);
+            }
+        }
+        return filteredItemDefs;
+    }
+    createSection(titleText, itemLists = []) {
         const sectionContainer = document.createElement("div");
         sectionContainer.classList.add("map-tack-chooser-section", "mb-1");
         // Title
@@ -162,35 +207,20 @@ class MapTackChooser extends Panel {
         title.setAttribute("filigree-style", "h4");
         title.classList.add("text-secondary", "uppercase", "font-title-sm");
         sectionContainer.appendChild(title);
-        // Pinned items
-        if (pinnedDefs.length > 0) {
-            const pinnedItemContainer = document.createElement("div");
-            pinnedItemContainer.classList.add("map-tack-item-container", "mb-1");
-            for (let itemDef of pinnedDefs) {
-                const item = this.createItem(itemDef, true);
-                if (item != null) {
-                    pinnedItemContainer.appendChild(item);
-                }
-            }
-            sectionContainer.appendChild(pinnedItemContainer);
-        }
         // Items
-        if (type != null) {
+        for (const items of itemLists) {
             const itemContainer = document.createElement("div");
             itemContainer.classList.add("map-tack-item-container");
-            const filteredItemDefs = [];
-            for (const itemDef of GameInfo.Constructibles) {
-                if (type != null && type != itemDef.ConstructibleClass) {
-                    continue;
+            const sortedItems = this.sortItems(items);
+            for (const itemDef of sortedItems) {
+                let item;
+                if (itemDef.ConstructibleType) {
+                    // This is a database item
+                    item = this.createItem(itemDef);
+                } else if (MapTackGenerics.isGenericMapTack(itemDef.type)) {
+                    // This is a generic item
+                    item = this.createGenericItem(itemDef);
                 }
-                if (itemDef.Discovery == true) {
-                    continue;
-                }
-                filteredItemDefs.push(itemDef);
-            }
-            const sortedItemDefs = this.sortItems(filteredItemDefs);
-            for (const itemDef of sortedItemDefs) {
-                const item = this.createItem(itemDef, false);
                 if (item != null) {
                     itemContainer.appendChild(item);
                 }
@@ -199,65 +229,59 @@ class MapTackChooser extends Panel {
         }
         return sectionContainer;
     }
-    createItem(itemDef, skipExcludeCheck = false) {
-        const type = itemDef.ConstructibleType;
-        // Filter out constructibles that will be pulled out.
-        if (!skipExcludeCheck && this.excludedConstructibles.includes(type)) {
-            return;
-        }
-        // Filter out dummy constructibles.
-        if (this.dummyConstructibles.includes(type)) {
-            return;
-        }
-        // Filter out walls.
-        if (itemDef.DistrictDefense && itemDef.ExistingDistrictOnly) {
-            return;
-        }
-        // Filter out items that don't belong to this age.
-        if (itemDef.Age != null && itemDef.Age != this.currentAge) {
-            return;
-        }
-
-        const iconWrapper = document.createElement("fxs-activatable");
-        const iconStyles = MapTackUtils.getMapTackIconStyles(type, itemDef.ConstructibleClass);
-        iconWrapper.classList.add("m-1\\.5", "size-12", "map-tack-icon-wrapper", ...iconStyles);
-        iconWrapper.setAttribute("data-tooltip-content", this.createItemTooltip(itemDef));
-        iconWrapper.setAttribute("data-audio-press-ref", "data-audio-select-press");
-        iconWrapper.addEventListener('action-activate', () => this.mapTackClickListener(type));
-        const icon = document.createElement('fxs-icon');
-        icon.classList.add("size-12");
-        icon.setAttribute("data-icon-id", type);
-        iconWrapper.appendChild(icon);
-        return iconWrapper;
+    createItem(itemDef) {
+        const tooltip = this.createItemTooltip(itemDef.ConstructibleType, itemDef.Name, itemDef.Cost, itemDef.Tooltip);
+        return this.createItemUI(itemDef.ConstructibleType, itemDef.ConstructibleClass, tooltip);
     }
-    createItemTooltip(itemDef) {
+    createGenericItem(genericObject) {
+        const type = genericObject.type;
+        const tooltip = this.createItemTooltip(type, genericObject.name, 0, MapTackGenerics.getTooltipString(type));
+        return this.createItemUI(type, genericObject.classType, tooltip);
+    }
+    createItemTooltip(type, name, cost = 0, subTooltip = null) {
         const container = document.createElement('fxs-tooltip');
         // Header
         const header = document.createElement('div');
         header.className = 'font-title text-secondary text-center uppercase tracking-100';
-        header.setAttribute('data-l10n-id', itemDef.Name);
+        header.setAttribute('data-l10n-id', name);
+        container.appendChild(header);
         // Production cost
-        const productionCost = document.createElement('div');
-        productionCost.innerHTML = Locale.stylize('LOC_UI_PRODUCTION_COST', itemDef.Cost);
-        container.append(header, productionCost);
+        if (cost > 0) {
+            const productionCost = document.createElement('div');
+            productionCost.innerHTML = Locale.stylize('LOC_UI_PRODUCTION_COST', cost);
+            container.appendChild(productionCost);
+        }
         // Description
-        if (itemDef.Tooltip) {
+        if (subTooltip) {
             const desc = document.createElement('div');
-            desc.className = 'mt-1';
-            desc.innerHTML = Locale.stylize(itemDef.Tooltip);
-            container.append(desc);
+            desc.classList.add("mt-1");
+            desc.innerHTML = Locale.stylize(subTooltip);
+            container.appendChild(desc);
         }
         // Base yield and bonus
-        const { baseYield, adjacencies, effects } = getConstructibleEffectStrings(itemDef.ConstructibleType);
+        const { baseYield, adjacencies, effects } = MapTackUIUtils.getEffectStrings(type);
         const effectStrings = baseYield ? [baseYield, ...adjacencies, ...effects] : [...adjacencies, ...effects];
         const effectStr = Locale.stylize(effectStrings.map(s => Locale.compose(s)).join('[N]'));
         if (effectStr) {
             this.attachDivider(container);
             const effectContainer = document.createElement('div');
             effectContainer.innerHTML = effectStr;
-            container.append(effectContainer);
+            container.appendChild(effectContainer);
         }
         return container.innerHTML;
+    }
+    createItemUI(type, classType, tooltip) {
+        const iconWrapper = document.createElement("fxs-activatable");
+        const iconStyles = MapTackUIUtils.getMapTackIconStyles(type, classType);
+        iconWrapper.classList.add("m-1\\.5", "size-12", "map-tack-icon-wrapper", ...iconStyles);
+        iconWrapper.setAttribute("data-tooltip-content", tooltip);
+        iconWrapper.setAttribute("data-audio-press-ref", "data-audio-select-press");
+        iconWrapper.addEventListener('action-activate', () => this.mapTackClickListener(type));
+        const icon = document.createElement('fxs-icon');
+        icon.classList.add("size-12");
+        icon.style.backgroundImage = MapTackUIUtils.getMapTackIconBgImage(type);
+        iconWrapper.appendChild(icon);
+        return iconWrapper;
     }
     attachDivider(container) {
         const divider = document.createElement("div");

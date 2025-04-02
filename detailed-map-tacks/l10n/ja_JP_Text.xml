@@ -19,6 +19,32 @@
         <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="ja_JP">
             <Text>クリックして削除</Text>
         </Replace>
+
+        <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="ja_JP">
+            <Text>特別</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_FOOD" Language="ja_JP">
+            <Text>食料の建物</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_PRODUCTION" Language="ja_JP">
+            <Text>生産の建物</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_GOLD" Language="ja_JP">
+            <Text>ゴールドの建物</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_SCIENCE" Language="ja_JP">
+            <Text>科学の建物</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_CULTURE" Language="ja_JP">
+            <Text>文化の建物</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_HAPPINESS" Language="ja_JP">
+            <Text>幸福の建物</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_BUILDING_DIPLOMACY" Language="ja_JP">
+            <Text>外交の建物</Text>
+        </Replace>
+
         <Replace Tag="LOC_DMT_INVALID_REASON_REACHED_LIMIT" Language="ja_JP">
             <Text>このプロットのマップピンの数が上限に達しました。</Text>
         </Replace>
@@ -37,6 +63,7 @@
         <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="ja_JP">
             <Text>{1_Name}を配置できません。</Text>
         </Replace>
+
         <Replace Tag="LOC_DMT_YIELD_FROM" Language="ja_JP">
             <Text>+{1_Amount} {2_YieldName}（{3_Name}より）</Text>
         </Replace>
@@ -46,6 +73,7 @@
         <Replace Tag="LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG" Language="ja_JP">
             <Text>+{1_Amount} {2_YieldName}（隣接する{3_TagName}の建造物より）</Text>
         </Replace>
+        
         <Replace Tag="LOC_DMT_TOTAL_YIELD" Language="ja_JP">
             <Text>総収益: {1_Yields}</Text>
         </Replace>

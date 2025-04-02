@@ -10,6 +10,7 @@ class MapTackLensLayer {
     }
     initLayer() {
         window.addEventListener("user-interface-loaded-and-ready", this.onGameLoaded.bind(this));
+        window.addEventListener('layer-hotkey', this.onLayerHotkey.bind(this));
         window.addEventListener(LensActivationEventName, this.onActiveLensChanged.bind(this));
         this.mapTackModelGroup = WorldUI.createModelGroup("MapTackModelGroup");
     }
@@ -19,11 +20,23 @@ class MapTackLensLayer {
     removeLayer() {
         window.dispatchEvent(new Event("ui-hide-map-tack-icons"));
     }
+    onLayerHotkey(hotkey) {
+        if (hotkey.detail?.name == "toggle-map-tack-layer") {
+            LensManager.toggleLayer("dmt-map-tack-layer");
+        }
+    }
     onActiveLensChanged(event) {
+        // Highlight corresponding plots in building placement lens.
         if (event.detail?.activeLens == "fxs-building-placement-lens") {
             this.highlightMapTackPlot(BuildingPlacementManager?.currentConstructible?.ConstructibleType);
         } else {
             this.clearHiglights();
+        }
+        // Enable map tack layer in settler lens by default.
+        if (event.detail?.activeLens == "fxs-settler-lens") {
+            if (!LensManager.isLayerEnabled("dmt-map-tack-layer")) {
+                LensManager.enableLayer("dmt-map-tack-layer");
+            }
         }
     }
     highlightMapTackPlot(mapTackType) {
