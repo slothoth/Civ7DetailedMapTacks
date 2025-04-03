@@ -202,13 +202,25 @@ class MapTackYieldSingleton {
      */
     getAdjacentYieldsHelper(adjacencyDef, adjacentPlotDetails, filterFunction, name, textStr = "LOC_DMT_YIELD_FROM_ADJACENT") {
         // Get matching adjacent records
-        const matchingRecords = adjacentPlotDetails.filter(filterFunction);
+        const matchingRecords = adjacentPlotDetails.map(plotDetails => {
+            const filterValue = filterFunction(plotDetails);
+            let count = 0;
+            if (filterValue === true) {
+                count = 1;
+            } else if (typeof filterValue === "number") {
+                count = filterValue;
+            }
+            if (count > 0) {
+                return { count, direction: plotDetails.direction };
+            }
+            return;
+        }).filter(value => value);
         if (matchingRecords.length > 0) {
             // Construct adjacency text
             const type = adjacencyDef.YieldType;
-            const amount = matchingRecords.length * adjacencyDef.YieldChange;
+            const amount = matchingRecords.reduce((sum, record) => sum + record.count, 0) * adjacencyDef.YieldChange;
             const yieldName = GameInfo.Yields.lookup(type)?.Name;
-            const directionText = matchingRecords.map(obj => Locale.compose(DirectionNames.get(obj.direction))).join(", ");
+            const directionText = matchingRecords.map(record => Locale.compose(DirectionNames.get(record.direction))).join(", ");
             const text = `${Locale.compose(textStr, amount, yieldName, name)} (${directionText})`;
             return { type, amount, text };
         }
@@ -257,12 +269,12 @@ class MapTackYieldSingleton {
         return this.getAdjacentYieldsHelper(adjacencyDef, adjacentPlotDetails, filterFunction, name);
     }
     getAdjacentResourceYields(adjacencyDef, adjacentPlotDetails) {
-        const filterFunction = e => e?.details?.resource;
+        const filterFunction = e => e?.details?.resource != null;
         const name = "LOC_UI_MINI_MAP_RESOURCE";
         return this.getAdjacentYieldsHelper(adjacencyDef, adjacentPlotDetails, filterFunction, name);
     }
     getAdjacentSeaResourceYields(adjacencyDef, adjacentPlotDetails) {
-        const filterFunction = e => e?.details?.resource;
+        const filterFunction = e => e?.details?.resource != null;
         const name = "LOC_UI_MINI_MAP_RESOURCE";
         return this.getAdjacentYieldsHelper(adjacencyDef, adjacentPlotDetails, filterFunction, name);
     }
@@ -286,12 +298,13 @@ class MapTackYieldSingleton {
     getAdjacentConstructibleTagYields(adjacencyDef, adjacentPlotDetails) {
         const filterFunction = e => {
             const constructibles = e?.details?.constructibles || [];
+            let matchingCount = 0;
             for (const c of constructibles) {
                 if (MapTackUtils.hasTag(c, adjacencyDef.AdjacentConstructibleTag)) {
-                    return true;
+                    matchingCount++;
                 }
             }
-            return false;
+            return matchingCount;
         };
         const name = Locale.compose("LOC_TAG_CONSTRUCTIBLE_" + adjacencyDef.AdjacentConstructibleTag);
         return this.getAdjacentYieldsHelper(adjacencyDef, adjacentPlotDetails, filterFunction, name, "LOC_DMT_YIELD_FROM_ADJACENT_CONSTRUCTIBLE_TAG");

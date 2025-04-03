@@ -4,6 +4,7 @@ import ChoosePlotInterfaceMode from '/base-standard/ui/interface-modes/interface
 import { InterfaceMode, InterfaceModeChangedEventName } from '/core/ui/interface-modes/interface-modes.js';
 import { MustGetElement } from '/core/ui/utilities/utilities-dom.js';
 import { PlotCursorUpdatedEventName } from '/core/ui/input/plot-cursor.js';
+import LensManager from '/core/ui/lenses/lens-manager.js';
 import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
 import MapTackValidator from '../map-tack-core/dmt-map-tack-validator.js';
 import MapTackYield from '../map-tack-core/dmt-map-tack-yield.js';
@@ -41,8 +42,15 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
         window.addEventListener(InterfaceModeChangedEventName, this.interfaceModeChangedListener);
         WorldUI.setUnitVisibility(false);
         Input.setActiveContext(InputContext.World);
+        // Enable/Disable settler lens depends on the map tack.
+        if (MapTackUtils.isCityCenter(this.itemType)) {
+            LensManager.enableLayer("fxs-appeal-layer");
+            LensManager.enableLayer("fxs-settlement-recommendations-layer");
+        }
     }
     transitionFrom(oldMode, newMode) {
+        LensManager.disableLayer("fxs-appeal-layer");
+        LensManager.disableLayer("fxs-settlement-recommendations-layer");
         window.removeEventListener(PlotCursorUpdatedEventName, this.plotCursorUpdatedListener);
         window.removeEventListener(InterfaceModeChangedEventName, this.interfaceModeChangedListener);
         WorldUI.setUnitVisibility(true);

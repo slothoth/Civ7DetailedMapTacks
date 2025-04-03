@@ -131,9 +131,14 @@ class MapTackUtilsSingleton {
             .flat()
             .filter(m => m.validStatus?.isValid);
     }
-    getMapTackPlots(mapTackType) {
+    getMapTackTypePlots(mapTackType) {
         return MapTackStore.getCachedMapTackStructs()
             .filter(s => s.mapTackList?.some(m => m.type == mapTackType))
+            .map(s => ({ x: s.x, y: s.y }));
+    }
+    getCityCenterMapTackPlots() {
+        return MapTackStore.getCachedMapTackStructs()
+            .filter(s => s.mapTackList?.some(m => this.isCityCenter(m.type)))
             .map(s => ({ x: s.x, y: s.y }));
     }
     togglePlotDetailsCache(useCache) {
