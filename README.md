@@ -1,8 +1,9 @@
 Upcoming:
 * Auto delete upon constructible placement. Shift+Click to delete.
 * Merge common improvements. i.e. choose generic improvement tack, change to corresponding improvement depends on the plot.
-* Show settler lens when placing city center map tacks.
-* Show 3 tiles radius for city center map tacks in chooser mode.
+* [DONE] ~Show settler lens when placing city center map tacks~.
+* [DONE] ~Show 3 tiles radius for city center map tacks in chooser mode~.
+* [DONE] ~Fix bugs reported in discussion thread for multiple matching constructible tags in one plot~.
 
 Backlog:
 * Calculate bonus yields for the constructible, like Granary warehouse yields.
