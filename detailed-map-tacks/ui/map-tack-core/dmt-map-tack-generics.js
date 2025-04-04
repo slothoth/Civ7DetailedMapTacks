@@ -87,6 +87,14 @@ class MapTackGenericsSingleton {
             tags: ["AGELESS", "DIPLOMACY"],
             adjacencyIds: []
         });
+        this.genericMapTacks.set("BUILDING_CITY_HALL", { // Reuse city hall type to be able to apply its yields
+            type: "BUILDING_CITY_HALL",
+            icon: `url(fs://game/city_settlement_hi.png)`,
+            name: "LOC_DISTRICT_CITY_CENTER_NAME",
+            classType: ConstructibleClassType.BUILDING,
+            tags: ["AGELESS"],
+            adjacencyIds: []
+        });
         this.genericMapTacks.set("DMT_WONDER", {
             type: "DMT_WONDER",
             icon: `url(fs://game/city_wonders_hi.png)`,

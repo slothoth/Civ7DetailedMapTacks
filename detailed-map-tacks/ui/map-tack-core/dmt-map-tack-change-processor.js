@@ -22,8 +22,8 @@ class MapTackChangeProcessorSingleton {
         engine.on("RemoveMapTackRequest", this.onRemoveMapTackRequest, this);
         engine.on("MapTackLoadedFromStore", this.onMapTackLoadedFromStore, this);
         // Game update events
-        engine.on("ConstructibleAddedToMap", this.onConstructibleChanged, this);
-        engine.on("ConstructibleRemovedFromMap", this.onConstructibleChanged, this);
+        engine.on("ConstructibleAddedToMap", this.onConstructibleAdded, this);
+        engine.on("ConstructibleRemovedFromMap", this.onConstructibleRemoved, this);
         engine.on("PlotVisibilityChanged", this.onPlotVisibilityChanged, this);
         engine.on('LocalPlayerTurnBegin', this.onLocalPlayerTurnBegin, this);
     }
@@ -35,7 +35,16 @@ class MapTackChangeProcessorSingleton {
         MapTackStore.removeMapTack(mapTackData);
         this.onPlotDetailsUpdated(mapTackData.x, mapTackData.y);
     }
-    onConstructibleChanged(data) {
+    onConstructibleAdded(data) {
+        const mapTackData = {
+            x: data.location.x,
+            y: data.location.y,
+            type: GameInfo.Constructibles.lookup(data.constructibleType)?.ConstructibleType
+        }
+        MapTackStore.removeMapTack(mapTackData);
+        this.onPlotDetailsUpdated(data.location.x, data.location.y);
+    }
+    onConstructibleRemoved(data) {
         this.onPlotDetailsUpdated(data.location.x, data.location.y);
     }
     onPlotVisibilityChanged(data) {

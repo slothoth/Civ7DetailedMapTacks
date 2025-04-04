@@ -16,8 +16,8 @@
         <Replace Tag="LOC_DMT_QUARTER_NAME" Language="it_IT">
             <Text>Quartiere</Text>
         </Replace>
-        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="it_IT">
-            <Text>Fai clic per eliminare</Text>
+        <Replace Tag="LOC_DMT_DOUBLE_CLICK_TO_DELETE" Language="it_IT">
+            <Text>Doppio clic per eliminare</Text>
         </Replace>
 
         <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="it_IT">

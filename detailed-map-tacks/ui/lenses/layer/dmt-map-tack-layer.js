@@ -46,17 +46,26 @@ class MapTackLensLayer {
         }
     }
     onActiveLensChanged(event) {
-        // Highlight corresponding plots in building placement lens.
+        // Building placement lens.
         if (event.detail?.activeLens == "fxs-building-placement-lens") {
-            this.highlightMapTackPlot(BuildingPlacementManager?.currentConstructible?.ConstructibleType);
+            // Highlight corresponding plots.
+            const type = BuildingPlacementManager?.currentConstructible?.ConstructibleType;
+            if (type) {
+                const plotCoords = MapTackUtils.getMapTackTypePlots(type) || [];
+                this.highlightMapTackPlot(plotCoords);
+            }
         } else {
             this.clearHiglights();
         }
-        // Enable map tack layer in settler lens by default.
+        // Settler lens.
         if (event.detail?.activeLens == "fxs-settler-lens") {
+            // Enable map tack layer in settler lens by default.
             if (!LensManager.isLayerEnabled("dmt-map-tack-layer")) {
                 LensManager.enableLayer("dmt-map-tack-layer");
             }
+            // Highlight city center plots.
+            const plotCoords = MapTackUtils.getCityCenterMapTackPlots() || [];
+            this.highlightMapTackPlot(plotCoords);
         }
     }
     onInterfaceModeChanged() {
@@ -93,13 +102,11 @@ class MapTackLensLayer {
             this.cityCenterRadiusOverlayList.clear();
         }
     }
-    highlightMapTackPlot(mapTackType) {
+    highlightMapTackPlot(plotCoords = []) {
         this.clearHiglights();
-        if (mapTackType) {
-            const plotCoords = MapTackUtils.getMapTackTypePlots(mapTackType) || [];
-            for (const plotCoord of plotCoords) {
-                this.mapTackModelGroup?.addVFXAtPlot("VFX_3dUI_Tut_SelectThis_01", plotCoord, { x: 0, y: 0, z: 0 });
-            }
+        for (const plotCoord of plotCoords) {
+            this.mapTackModelGroup?.addVFXAtPlot("VFX_3dUI_Tut_SelectThis_01", plotCoord, { x: 0, y: 0, z: 0 });
+            this.mapTackModelGroup?.addVFXAtPlot("VFX_3dUI_Unit_Selected_01", plotCoord, { x: 0, y: 0, z: 0 });
         }
     }
     clearHiglights() {

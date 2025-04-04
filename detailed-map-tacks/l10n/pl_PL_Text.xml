@@ -16,8 +16,8 @@
         <Replace Tag="LOC_DMT_QUARTER_NAME" Language="pl_PL">
             <Text>Dzielnica</Text>
         </Replace>
-        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="pl_PL">
-            <Text>Kliknij, aby usunąć</Text>
+        <Replace Tag="LOC_DMT_DOUBLE_CLICK_TO_DELETE" Language="pl_PL">
+            <Text>Dwukrotne kliknięcie, aby usunąć</Text>
         </Replace>
 
         <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="pl_PL">

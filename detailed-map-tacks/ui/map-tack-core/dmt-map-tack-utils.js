@@ -49,6 +49,10 @@ class MapTackUtilsSingleton {
     cacheYieldChanges() {
         this.constructibleYieldChanges = {};
         for (const e of GameInfo.Constructible_YieldChanges) {
+            // Skip city hall
+            if (e.ConstructibleType == "BUILDING_CITY_HALL") {
+                continue;
+            }
             const current = this.constructibleYieldChanges[e.ConstructibleType] || [];
             current.push({
                 type: e.YieldType,

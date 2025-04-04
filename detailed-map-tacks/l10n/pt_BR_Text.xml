@@ -16,8 +16,8 @@
         <Replace Tag="LOC_DMT_QUARTER_NAME" Language="pt_BR">
             <Text>Bairro</Text>
         </Replace>
-        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="pt_BR">
-            <Text>Clique para excluir</Text>
+        <Replace Tag="LOC_DMT_DOUBLE_CLICK_TO_DELETE" Language="pt_BR">
+            <Text>Duplo clique para excluir</Text>
         </Replace>
 
         <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="pt_BR">

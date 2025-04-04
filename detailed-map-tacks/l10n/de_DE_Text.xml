@@ -16,8 +16,8 @@
         <Replace Tag="LOC_DMT_QUARTER_NAME" Language="de_DE">
             <Text>Viertel</Text>
         </Replace>
-        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="de_DE">
-            <Text>Klicken zum Löschen</Text>
+        <Replace Tag="LOC_DMT_DOUBLE_CLICK_TO_DELETE" Language="de_DE">
+            <Text>Doppelklick zum Löschen</Text>
         </Replace>
 
         <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="de_DE">

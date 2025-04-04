@@ -1,8 +1,6 @@
 // Modified from plot-icons.js. Not using as is because we want to show map tacks on hidden plots too.
-import DialogManager, { DialogBoxAction } from '/core/ui/dialog-box/manager-dialog-box.js';
 import MapTackIconsManager from './dmt-map-tack-icons-manager.js';
 import MapTackUIUtils from '../map-tack-core/dmt-map-tack-ui-utils.js';
-import { InterfaceMode } from '/core/ui/interface-modes/interface-modes.js';
 import MapTackGenerics from '../map-tack-core/dmt-map-tack-generics.js';
 
 class MapTackIcons extends Component {
@@ -83,7 +81,7 @@ class MapTackIcons extends Component {
         iconWrapper.classList.add("size-10", "map-tack-icon-wrapper", ...iconStyles);
         iconWrapper.setAttribute("data-tooltip-content", this.createItemTooltip(mapTackData.type));
         iconWrapper.setAttribute("data-audio-press-ref", "data-audio-select-press");
-        iconWrapper.addEventListener('action-activate', () => this.mapTackClickListener(mapTackData));
+        iconWrapper.addEventListener("dblclick", () => this.mapTackDoubleClickListener(mapTackData));
         // Icon
         const icon = document.createElement("fxs-icon");
         icon.classList.add("size-10");
@@ -137,6 +135,11 @@ class MapTackIcons extends Component {
             desc.innerHTML = Locale.stylize(tooltip);
             container.appendChild(desc);
         }
+        // Delete hint
+        const deleteHint = document.createElement('div');
+        deleteHint.className = 'mt-1 text-error delete-hint';
+        deleteHint.setAttribute('data-l10n-id', "LOC_DMT_DOUBLE_CLICK_TO_DELETE");
+        container.appendChild(deleteHint);
         return container.innerHTML;
     }
     createInvalidTooltip(invalidReasons) {
@@ -149,18 +152,9 @@ class MapTackIcons extends Component {
     createYieldTooltip(mapTackData) {
         return MapTackUIUtils.getYieldFragment(mapTackData.yieldDetails).innerHTML;
     }
-    mapTackClickListener(mapTackData) {
-        if (InterfaceMode.getCurrent() == "DMT_INTERFACEMODE_MAP_TACK_CHOOSER") {
-            // Only allow map tack deletion in MapTackChooser screen.
-            engine.trigger("RemoveMapTackRequest", mapTackData);
-        }
-        // DialogManager.createDialog_ConfirmCancel({
-        //     body: "LOC_PAUSE_MENU_CONFIRM_QUIT_TO_DESKTOP", // TODO: add a checkbox for skipping confirmation
-        //     title: "LOC_PAUSE_MENU_QUIT_TO_DESKTOP",
-        //     callback: (eAction) => { if (eAction == DialogBoxAction.Confirm) {
-        //         engine.trigger("RemoveMapTackRequest", mapTackData);
-        //     } }
-        // });
+    mapTackDoubleClickListener(mapTackData) {
+        // Double click to delete map tacks.
+        engine.trigger("RemoveMapTackRequest", mapTackData);
     }
     onAttributeChanged(name, _oldValue, _newValue) {
         switch (name) {

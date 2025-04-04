@@ -46,11 +46,13 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
         if (MapTackUtils.isCityCenter(this.itemType)) {
             LensManager.enableLayer("fxs-appeal-layer");
             LensManager.enableLayer("fxs-settlement-recommendations-layer");
+            LensManager.enableLayer("fxs-random-events-layer");
         }
     }
     transitionFrom(oldMode, newMode) {
         LensManager.disableLayer("fxs-appeal-layer");
         LensManager.disableLayer("fxs-settlement-recommendations-layer");
+        LensManager.disableLayer("fxs-random-events-layer");
         window.removeEventListener(PlotCursorUpdatedEventName, this.plotCursorUpdatedListener);
         window.removeEventListener(InterfaceModeChangedEventName, this.interfaceModeChangedListener);
         WorldUI.setUnitVisibility(true);

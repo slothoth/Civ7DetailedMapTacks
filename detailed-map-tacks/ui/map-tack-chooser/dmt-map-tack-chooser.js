@@ -19,7 +19,6 @@ class MapTackChooser extends Panel {
 
         this.uniqueBuildingDefs = [];
         this.uniqueImprovementDefs = [];
-        this.cityCenterBuildingDefs = [];
         this.agelessBuildingDefs = [];
         this.excludedConstructibles = new Set();
         this.processDummyItems();
@@ -111,7 +110,6 @@ class MapTackChooser extends Panel {
             if (e.ConstructibleClass == ConstructibleClassType.BUILDING) {
                 const type = e.ConstructibleType;
                 if (MapTackUtils.isCityCenter(type)) {
-                    this.cityCenterBuildingDefs.push(e);
                     this.excludedConstructibles.add(type);
                 }
             }
@@ -169,12 +167,13 @@ class MapTackChooser extends Panel {
     }
     getGenericsItems() {
         const generics = MapTackGenerics.getGenericMapTacks();
-        return [[...generics, ...this.cityCenterBuildingDefs]];
+        return [generics];
     }
     getBuildingItems() {
         const agelessItems = [...this.agelessBuildingDefs, ...this.uniqueBuildingDefs];
         const buildingDefs = this.getConstructiblesByClassType(ConstructibleClassType.BUILDING);
-        const filteredBuildings = buildingDefs.filter(itemDef => itemDef.Age != null);
+        // Filter by AGELESS tag as BUILDING_IRONWORKS has itemDef.Age as MODERN.
+        const filteredBuildings = buildingDefs.filter(itemDef => !MapTackUtils.isAgeless(itemDef.ConstructibleType));
         return [agelessItems, filteredBuildings];
     }
     getWonderItems() {
