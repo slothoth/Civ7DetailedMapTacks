@@ -82,7 +82,7 @@ class MapTackIcons extends Component {
         iconWrapper.classList.add("size-10", "map-tack-icon-wrapper", ...iconStyles);
         iconWrapper.setAttribute("data-tooltip-content", this.createItemTooltip(mapTackData.type));
         iconWrapper.setAttribute("data-audio-press-ref", "data-audio-select-press");
-        iconWrapper.addEventListener("click", () => this.mapTackClickListener(mapTackData));
+        iconWrapper.addEventListener("action-activate", () => this.mapTackClickListener(mapTackData));
         // Icon
         const icon = document.createElement("fxs-icon");
         icon.classList.add("size-10");
@@ -154,8 +154,7 @@ class MapTackIcons extends Component {
             // if the chooser is open, delete the tack.
             engine.trigger("RemoveMapTackRequest", mapTackData);
         } else {
-            // otherwise, open the chooser.
-            InterfaceMode.switchTo("DMT_INTERFACEMODE_MAP_TACK_CHOOSER");
+            // TODO: Come up with a better quicker deletion solution.
         }
     }
     onAttributeChanged(name, _oldValue, _newValue) {

@@ -18,7 +18,6 @@ import { Catalog } from '/core/ui/utilities/utility-serialize.js';
  */
 
 const ID_MAP_TACK = "MAP_TACK";
-const ID_SETTING = "SETTING";
 class MapTackStoreSingleton {
     /**
      * Singleton accessor
@@ -85,11 +84,11 @@ class MapTackStoreSingleton {
     }
     updateMapTacks(x, y, mapTackList) {
         const key = this.getMapTackKey(x, y);
+        const mapTackObj = this.catalog.getObject(ID_MAP_TACK);
         if (mapTackList && mapTackList.length > 0) {
             // Write to cache
             this.cacheMap[key] = mapTackList;
             // Write to store
-            const mapTackObj = this.catalog.getObject(ID_MAP_TACK);
             mapTackObj.write(key, JSON.stringify(mapTackList));
         } else {
             // Nothing left in this plot. Delete the key.
