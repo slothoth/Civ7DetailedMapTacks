@@ -16,8 +16,8 @@
         <Replace Tag="LOC_DMT_QUARTER_NAME" Language="zh_Hant_HK">
             <Text>城區</Text>
         </Replace>
-        <Replace Tag="LOC_DMT_DOUBLE_CLICK_TO_DELETE" Language="zh_Hant_HK">
-            <Text>雙擊以刪除</Text>
+        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="zh_Hant_HK">
+            <Text>點擊刪除</Text>
         </Replace>
 
         <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="zh_Hant_HK">

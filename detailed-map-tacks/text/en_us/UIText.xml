@@ -16,8 +16,8 @@
         <Row Tag="LOC_DMT_QUARTER_NAME">
             <Text>Quarter</Text>
         </Row>
-        <Row Tag="LOC_DMT_DOUBLE_CLICK_TO_DELETE">
-            <Text>Double-click to delete</Text>
+        <Row Tag="LOC_DMT_CLICK_TO_DELETE">
+            <Text>Click to delete</Text>
         </Row>
         <!-- Special map tacks -->
         <Row Tag="LOC_DMT_SPECIAL_SECTION">

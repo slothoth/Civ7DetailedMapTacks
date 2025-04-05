@@ -16,8 +16,8 @@
         <Replace Tag="LOC_DMT_QUARTER_NAME" Language="ru_RU">
             <Text>кварталы</Text>
         </Replace>
-        <Replace Tag="LOC_DMT_DOUBLE_CLICK_TO_DELETE" Language="ru_RU">
-            <Text>Двойной щелчок для удаления</Text>
+        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="ru_RU">
+            <Text>Нажмите, чтобы удалить</Text>
         </Replace>
 
         <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="ru_RU">
