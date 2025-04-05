@@ -16,8 +16,8 @@
         <Replace Tag="LOC_DMT_QUARTER_NAME" Language="ko_KR">
             <Text>구역</Text>
         </Replace>
-        <Replace Tag="LOC_DMT_DOUBLE_CLICK_TO_DELETE" Language="ko_KR">
-            <Text>더블 클릭하여 삭제</Text>
+        <Replace Tag="LOC_DMT_CLICK_TO_DELETE" Language="ko_KR">
+            <Text>클릭하여 삭제</Text>
         </Replace>
 
         <Replace Tag="LOC_DMT_SPECIAL_SECTION" Language="ko_KR">

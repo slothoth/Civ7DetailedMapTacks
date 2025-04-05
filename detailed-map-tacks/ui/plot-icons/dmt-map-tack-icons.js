@@ -1,4 +1,5 @@
 // Modified from plot-icons.js. Not using as is because we want to show map tacks on hidden plots too.
+import { InterfaceMode } from '/core/ui/interface-modes/interface-modes.js';
 import MapTackIconsManager from './dmt-map-tack-icons-manager.js';
 import MapTackUIUtils from '../map-tack-core/dmt-map-tack-ui-utils.js';
 import MapTackGenerics from '../map-tack-core/dmt-map-tack-generics.js';
@@ -81,7 +82,7 @@ class MapTackIcons extends Component {
         iconWrapper.classList.add("size-10", "map-tack-icon-wrapper", ...iconStyles);
         iconWrapper.setAttribute("data-tooltip-content", this.createItemTooltip(mapTackData.type));
         iconWrapper.setAttribute("data-audio-press-ref", "data-audio-select-press");
-        iconWrapper.addEventListener("dblclick", () => this.mapTackDoubleClickListener(mapTackData));
+        iconWrapper.addEventListener("click", () => this.mapTackClickListener(mapTackData));
         // Icon
         const icon = document.createElement("fxs-icon");
         icon.classList.add("size-10");
@@ -135,11 +136,6 @@ class MapTackIcons extends Component {
             desc.innerHTML = Locale.stylize(tooltip);
             container.appendChild(desc);
         }
-        // Delete hint
-        const deleteHint = document.createElement('div');
-        deleteHint.className = 'mt-1 text-error delete-hint';
-        deleteHint.setAttribute('data-l10n-id', "LOC_DMT_DOUBLE_CLICK_TO_DELETE");
-        container.appendChild(deleteHint);
         return container.innerHTML;
     }
     createInvalidTooltip(invalidReasons) {
@@ -152,9 +148,15 @@ class MapTackIcons extends Component {
     createYieldTooltip(mapTackData) {
         return MapTackUIUtils.getYieldFragment(mapTackData.yieldDetails).innerHTML;
     }
-    mapTackDoubleClickListener(mapTackData) {
-        // Double click to delete map tacks.
-        engine.trigger("RemoveMapTackRequest", mapTackData);
+    mapTackClickListener(mapTackData) {
+        // on click:
+        if (InterfaceMode.getCurrent() == "DMT_INTERFACEMODE_MAP_TACK_CHOOSER") {
+            // if the chooser is open, delete the tack.
+            engine.trigger("RemoveMapTackRequest", mapTackData);
+        } else {
+            // otherwise, open the chooser.
+            InterfaceMode.switchTo("DMT_INTERFACEMODE_MAP_TACK_CHOOSER");
+        }
     }
     onAttributeChanged(name, _oldValue, _newValue) {
         switch (name) {
