@@ -64,7 +64,7 @@ class MapTackYieldSingleton {
 
         return { base: baseYields, adjacencies: adjacencyYields };
     }
-    getBonusYields(x, y, type) {
+    getBonusYields(_x, _y, _type) {
         // TODO
     }
     getAdjacencyYields(x, y, type) {
