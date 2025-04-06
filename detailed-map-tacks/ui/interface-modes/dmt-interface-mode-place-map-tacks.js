@@ -8,7 +8,12 @@ import LensManager from '/core/ui/lenses/lens-manager.js';
 import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
 import MapTackValidator from '../map-tack-core/dmt-map-tack-validator.js';
 import MapTackYield from '../map-tack-core/dmt-map-tack-yield.js';
+import { OVERLAY_PRIORITY } from '/base-standard/ui/utilities/utilities-overlay.js';
 
+const CLEAR_BORDER_OVERLAY_STYLE = {
+    style: "CommanderRadius",
+    primaryColor: Color.convertToLinear([255, 255, 255, 255])
+};
 /**
  * Handler for DMT_INTERFACEMODE_PLACE_MAP_TACKS.
  */
@@ -16,6 +21,8 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
     constructor() {
         super(...arguments);
         this.lastHoveredPlot = -1;
+        this.isCityCenter = false;
+        this.clearBorderOverlayGroup = null;
 
         this.validStatus = {};
         this.yieldDetails = {};
@@ -25,6 +32,10 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
     }
     initialize() {
         this.itemType = this.Context.type;
+        this.isCityCenter = MapTackUtils.isCityCenter(this.itemType);
+        if (this.isCityCenter) {
+            this.clearBorderOverlayGroup = WorldUI.createOverlayGroup("ClearCityCenterBorderOverlayGroup", OVERLAY_PRIORITY.CULTURE_BORDER);
+        }
         return true;
     }
     reset() {
@@ -50,6 +61,7 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
         }
     }
     transitionFrom(oldMode, newMode) {
+        this.clearBorderOverlayGroup?.clearAll();
         LensManager.disableLayer("fxs-appeal-layer");
         LensManager.disableLayer("fxs-settlement-recommendations-layer");
         LensManager.disableLayer("fxs-random-events-layer");
@@ -93,6 +105,10 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
                     this.yieldDetails = MapTackYield.getYieldDetails(plot.x, plot.y, this.itemType);
                 }
                 this.updatePlacementDetails();
+                // Update city center border overlay if needed.
+                if (this.isCityCenter) {
+                    this.updateCityCenterBorderOverlay(plot);
+                }
             }
         }
     }
@@ -103,9 +119,17 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
         const placementDetails = {
             validStatus: this.validStatus,
             yieldDetails: this.yieldDetails
-        }
+        };
         // Following same pattern as tree's unlock-by-depth but using attributes is not ideal for passing large payload.
         this.panel.setAttribute("placement-details", JSON.stringify(placementDetails));
+    }
+    updateCityCenterBorderOverlay(plot) {
+        if (this.clearBorderOverlayGroup) {
+            this.clearBorderOverlayGroup.clearAll();
+            const cityPlotIndices = GameplayMap.getPlotIndicesInRadius(plot.x, plot.y, 3);
+            const clearBorderOverlay = this.clearBorderOverlayGroup.addBorderOverlay(CLEAR_BORDER_OVERLAY_STYLE);
+            clearBorderOverlay.setPlotGroups(cityPlotIndices, 0);
+        }
     }
     selectPlot(plot, _previousPlot) {
         if (this.isPlotProposed) {
@@ -137,7 +161,6 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
             yieldDetails: this.yieldDetails
         };
         engine.trigger("AddMapTackRequest", mapTackData);
-        
     }
     handleInput(inputEvent) {
         if (inputEvent.detail.status != InputActionStatuses.FINISH) {

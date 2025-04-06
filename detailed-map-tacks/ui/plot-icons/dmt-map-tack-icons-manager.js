@@ -50,7 +50,6 @@ class MapTackIconsManagerSingleton {
         if (x != -1 && y != -1) {
             const key = this.getMapTackKey(x, y);
             if (this.perPlotMap.has(key)) {
-                console.error(`map-tack-icons-manager: Stack at plot location ${x},${y} already added for tracking.`);
                 return;
             }
             this.perPlotMap.set(key, stack);
@@ -62,7 +61,6 @@ class MapTackIconsManagerSingleton {
         if (x != -1 && y != -1) {
             const key = this.getMapTackKey(x, y);
             if (!this.perPlotMap.has(key)) {
-                console.error(`map-tack-icons-manager: Stack at plot location ${x},${y} is not being tracked.`);
                 return;
             }
             this.perPlotMap.delete(key);

@@ -30,17 +30,23 @@ class MapTackChangeProcessorSingleton {
     onAddMapTackRequest(mapTackData) {
         MapTackStore.addMapTack(mapTackData);
         this.onPlotDetailsUpdated(mapTackData.x, mapTackData.y);
+        if (MapTackUtils.isCityCenter(mapTackData.type)) {
+            engine.trigger("CityCenterMapTackUpdated");
+        }
     }
     onRemoveMapTackRequest(mapTackData) {
         MapTackStore.removeMapTack(mapTackData);
         this.onPlotDetailsUpdated(mapTackData.x, mapTackData.y);
+        if (MapTackUtils.isCityCenter(mapTackData.type)) {
+            engine.trigger("CityCenterMapTackUpdated");
+        }
     }
     onConstructibleAdded(data) {
         const mapTackData = {
             x: data.location.x,
             y: data.location.y,
             type: GameInfo.Constructibles.lookup(data.constructibleType)?.ConstructibleType
-        }
+        };
         MapTackStore.removeMapTack(mapTackData);
         this.onPlotDetailsUpdated(data.location.x, data.location.y);
     }
@@ -66,6 +72,9 @@ class MapTackChangeProcessorSingleton {
     onMapTackLoadedFromStore() {
         const mapTackStructList = MapTackStore.getCachedMapTackStructs();
         this.triggerMapTackUIUpdate(mapTackStructList);
+        if (mapTackStructList.some(struct => struct?.mapTackList.some(mapTack => MapTackUtils.isCityCenter(mapTack.type)))) {
+            engine.trigger("CityCenterMapTackUpdated");
+        }
     }
     triggerMapTackUIUpdate(mapTackStructList) {
         engine.trigger("MapTackUIUpdated", mapTackStructList);

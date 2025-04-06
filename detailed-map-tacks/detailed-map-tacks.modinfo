@@ -74,8 +74,10 @@
                     <Item>ui/mini-map/dmt-panel-mini-map-decorator.js</Item>
                     <Item>ui/options/editors/dmt-editor-keyboard-mapping-decorator.js</Item>
                     <Item>ui/place-map-tack/dmt-panel-place-map-tack.js</Item>
+                    <Item>ui/plot-icons/dmt-map-tack-city-radius-manager.js</Item>
                     <Item>ui/plot-icons/dmt-map-tack-icons-manager.js</Item>
                     <Item>ui/plot-icons/dmt-map-tack-icons.js</Item>
+                    <Item>ui/plot-icons/dmt-plot-icon-suggested-settlement-decorator.js</Item>
                     <Item>ui/plot-icons/dmt-plot-icons-root-decorator.js</Item>
                 </UIScripts>
                 <UpdateText>

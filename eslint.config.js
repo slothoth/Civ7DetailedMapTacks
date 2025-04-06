@@ -1,5 +1,6 @@
 // eslint.config.js
 import js from "@eslint/js";
+import globals from "globals";
 
 export default [
     js.configs.recommended,
@@ -11,11 +12,18 @@ export default [
                     "varsIgnorePattern": "^_",
                     "argsIgnorePattern": "^_",
                 }
-            ]
+            ],
+            "no-undef": "error",
+            "no-console": "warn",
+            "semi": ["error", "always"],
+            "no-trailing-spaces": "error"
         },
         languageOptions: {
             globals: {
+                ...globals.browser,
+                Color: "readonly",
                 Component: "readonly",
+                Configuration: "readonly",
                 Constructibles: "readonly",
                 Controls: "readonly",
                 CustomEvent: "readonly",
@@ -32,16 +40,17 @@ export default [
                 Input: "readonly",
                 InputActionStatuses: "readonly",
                 InputContext: "readonly",
-                InterfaceMode: "readonly",
                 Loading: "readonly",
                 Locale: "readonly",
                 MapConstructibles: "readonly",
+                PlayerIds: "readonly",
                 Players: "readonly",
                 ProgressionTreeNodeState: "readonly",
                 ResourceTypes: "readonly",
                 RevealedStates: "readonly",
                 RiverTypes: "readonly",
                 UI: "readonly",
+                Units: "readonly",
                 WorldAnchors: "readonly",
                 WorldUI: "readonly",
                 console: "readonly",

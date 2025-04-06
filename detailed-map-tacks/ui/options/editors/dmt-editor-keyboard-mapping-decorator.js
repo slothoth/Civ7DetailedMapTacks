@@ -22,7 +22,6 @@ export class DMT_EditorKeyboardMappingDecorator {
     addAction(actionIdString, inputContext) {
         const actionId = Input.getActionIdByName(actionIdString);
         if (!actionId) {
-            console.error(`editor-keyboard-mapping: getActionIdByName failed for ${actionIdString}`);
             return;
         }
         if (this.component.mappingDataMap.has(actionId)) {

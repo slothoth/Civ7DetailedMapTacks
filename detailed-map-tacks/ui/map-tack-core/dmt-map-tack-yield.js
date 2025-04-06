@@ -111,7 +111,7 @@ class MapTackYieldSingleton {
             adjacencies.push({
                 id: e.YieldChangeId,
                 requiresActivation: e.RequiresActivation
-            })
+            });
         }
         return adjacencies;
     }

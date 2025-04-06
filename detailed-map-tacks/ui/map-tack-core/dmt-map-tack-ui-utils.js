@@ -144,7 +144,7 @@ class MapTackUIUtilsSingleton {
         }
         // Sort adjacencies by type.
         adjYieldDetails.sort((a, b) => YieldTypes.indexOf(a.type) - YieldTypes.indexOf(b.type));
-        
+
         const adjacencyStrings = [];
         const sumMap = new Map();
         for (const yieldDetail of adjYieldDetails) {
@@ -176,7 +176,7 @@ class MapTackUIUtilsSingleton {
                 baseYield: null,
                 adjacencies,
                 effects: []
-            }
+            };
         } else {
             // Use the game ones.
             return getConstructibleEffectStrings(type);

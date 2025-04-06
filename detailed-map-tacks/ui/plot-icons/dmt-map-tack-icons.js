@@ -3,12 +3,15 @@ import { InterfaceMode } from '/core/ui/interface-modes/interface-modes.js';
 import MapTackIconsManager from './dmt-map-tack-icons-manager.js';
 import MapTackUIUtils from '../map-tack-core/dmt-map-tack-ui-utils.js';
 import MapTackGenerics from '../map-tack-core/dmt-map-tack-generics.js';
+import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
+import { OVERLAY_PRIORITY } from '/base-standard/ui/utilities/utilities-overlay.js';
 
 class MapTackIcons extends Component {
     constructor() {
         super(...arguments);
         this.worldAnchorHandle = null;
         this.location = { x: -1, y: -1 };
+        this.showOverlayTimeout = null;
     }
     get mapTackList() {
         const mapTackListAttribute = this.Root.getAttribute("map-tack-list");
@@ -51,9 +54,6 @@ class MapTackIcons extends Component {
                 this.Root.setAttribute('data-bind-style-transform2d', `{{FixedWorldAnchors.offsetTransforms[${this.worldAnchorHandle}].value}}`);
                 this.Root.setAttribute('data-bind-style-opacity', `{{FixedWorldAnchors.visibleValues[${this.worldAnchorHandle}]}}`);
             }
-            else {
-                console.error(`Failed to create world anchor.`);
-            }
         }
     }
     destroyWorldAnchor() {
@@ -83,6 +83,11 @@ class MapTackIcons extends Component {
         iconWrapper.setAttribute("data-tooltip-content", this.createItemTooltip(mapTackData.type));
         iconWrapper.setAttribute("data-audio-press-ref", "data-audio-select-press");
         iconWrapper.addEventListener("action-activate", () => this.mapTackClickListener(mapTackData));
+        if (MapTackUtils.isCityCenter(mapTackData.type)) {
+            this.clearBorderOverlayGroup = WorldUI.createOverlayGroup("ClearCityCenterBorderOverlayGroup", OVERLAY_PRIORITY.CULTURE_BORDER);
+            iconWrapper.addEventListener("mouseenter", () => this.mouseEnterListener());
+            iconWrapper.addEventListener("mouseleave", () => this.mouseLeaveListener());
+        }
         // Icon
         const icon = document.createElement("fxs-icon");
         icon.classList.add("size-10");
@@ -148,6 +153,24 @@ class MapTackIcons extends Component {
     createYieldTooltip(mapTackData) {
         return MapTackUIUtils.getYieldFragment(mapTackData.yieldDetails).innerHTML;
     }
+    mouseEnterListener() {
+        clearTimeout(this.showOverlayTimeout);
+        this.showOverlayTimeout = setTimeout(() => {
+            if (this.clearBorderOverlayGroup) {
+                this.clearBorderOverlayGroup.clearAll();
+                const cityPlotIndices = GameplayMap.getPlotIndicesInRadius(this.location.x, this.location.y, 3);
+                const clearBorderOverlay = this.clearBorderOverlayGroup?.addBorderOverlay({
+                    style: "CommanderRadius",
+                    primaryColor: Color.convertToLinear([255, 255, 255, 255])
+                });
+                clearBorderOverlay.setPlotGroups(cityPlotIndices, 0);
+            }
+        }, Configuration.getUser().tooltipDelay);
+    }
+    mouseLeaveListener() {
+        clearTimeout(this.showOverlayTimeout);
+        this.clearBorderOverlayGroup?.clearAll();
+    }
     mapTackClickListener(mapTackData) {
         // on click:
         if (InterfaceMode.getCurrent() == "DMT_INTERFACEMODE_MAP_TACK_CHOOSER") {
@@ -170,6 +193,7 @@ Controls.define(MAP_TACK_ELEMENT_NAME, {
     createInstance: MapTackIcons,
     description: 'MapTack Icons',
     styles: ['fs://game/detailed-map-tacks/ui/plot-icons/dmt-map-tack-icons.css'],
+    classNames: ['allowCameraMovement'],
     attributes: [{
         name: "map-tack-list",
         description: "List of map tack objects to display."

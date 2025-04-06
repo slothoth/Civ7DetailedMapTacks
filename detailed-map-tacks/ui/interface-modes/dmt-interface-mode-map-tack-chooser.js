@@ -15,6 +15,8 @@ class MapTackChooserInterfaceMode {
         window.addEventListener(InterfaceModeChangedEventName, this.interfaceModeChangedListener);
         LensManager.setActiveLens("dmt-map-tack-lens");
         WorldUI.setUnitVisibility(false);
+        UI.Player.deselectAllUnits();
+        UI.Player.deselectAllCities();
     }
     transitionFrom(_oldMode, _newMode) {
         window.removeEventListener(InterfaceModeChangedEventName, this.interfaceModeChangedListener);
@@ -24,7 +26,7 @@ class MapTackChooserInterfaceMode {
         // Currently in this mode.
         if (InterfaceMode.getCurrent() == "DMT_INTERFACEMODE_MAP_TACK_CHOOSER") {
             // Push the chooser to an element under "placement" template screen. Use parent of panel-place-building.
-            // The default "fxs-popups" will be hidden when "placement" is the current screen view. 
+            // The default "fxs-popups" will be hidden when "placement" is the current screen view.
             this.panel = document.querySelector("dmt-map-tack-chooser");
             if (!this.panel) {
                 const parentElement = MustGetElement(".panel-place-building").parentElement;

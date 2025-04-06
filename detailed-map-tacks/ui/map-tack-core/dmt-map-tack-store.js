@@ -3,18 +3,18 @@ import { Catalog } from '/core/ui/utilities/utility-serialize.js';
 
 /**
  * Data definition
- * 
+ *
  * mapTackList: list of mapTackData
- * 
+ *
  * mapTackData:
- * 
+ *
  * x: x coordinate of the plot.
  * y: y coordinate of the plot.
  * type: type of the MapTack constructible, e.g. "BUILDING_MONUMENT".
  * classType: class type of constructible, e.g. "WONDER", "BUILDING", "IMPROVEMENT".
  * validStatus: contains the validation check result of the map tack. Non-null, empty object {} okay.
  * yieldDetails: contains the yield details of the map tack. Non-null, empty object {} okay.
- * 
+ *
  */
 
 const ID_MAP_TACK = "MAP_TACK";

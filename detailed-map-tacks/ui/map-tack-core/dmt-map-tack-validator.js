@@ -19,7 +19,6 @@ class MapTackValidatorSingleton {
         engine.whenReady.then(() => { this.onReady(); });
     }
     onReady() {
-        
     }
     /**
      * Check if the given map tack is valid.

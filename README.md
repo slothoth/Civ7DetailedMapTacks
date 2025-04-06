@@ -1,5 +1,4 @@
 Upcoming:
-* Show 3 tile radius when placing city center map tack as well.
 * Show an overlay with yield data on hovered plot and its adjacent plot in map tacks placement screen.
 * Merge common improvements. i.e. choose generic improvement tack, change to corresponding improvement depends on the plot.
 

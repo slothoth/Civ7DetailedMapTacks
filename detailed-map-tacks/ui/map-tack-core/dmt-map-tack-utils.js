@@ -153,8 +153,8 @@ class MapTackUtilsSingleton {
         return `${x}-${y}`;
     }
     /**
-     * @param {int} x 
-     * @param {int} y 
+     * @param {int} x
+     * @param {int} y
      * @returns an object with these fields:
      *      biome: Biome on this plot. e.g. Grassland, Desert.
      *      terrain: Terrain of this plot.
@@ -204,7 +204,7 @@ class MapTackUtilsSingleton {
                 details["resource"] = resourceDef?.ResourceType;
             }
             // Constructibles
-            const canOverrideImprovement = validMapTacks.some(m => 
+            const canOverrideImprovement = validMapTacks.some(m =>
                 (m.classType == ConstructibleClassType.BUILDING || m.classType == ConstructibleClassType.WONDER));
             const buildingSet = new Set();
             const improvementSet = new Set();
@@ -328,7 +328,7 @@ class MapTackUtilsSingleton {
         return;
     }
     /**
-     * @param {int} x 
+     * @param {int} x
      * @param {int} y
      * @returns an array of objects with these fields:
      *      type: Constructible type
