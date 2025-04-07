@@ -24,13 +24,14 @@ export const ConstructibleClassType = Object.freeze({
 });
 export const QuarterType = {
     NO_QUARTER: 0,
-    NORMAL_QUARTER: 1
+    NORMAL_QUARTER: 1,
+    GENERIC_UNIQUE_QUARTER: 2,
     // More to be added in populateQuarterTypes
 };
 export const ExcludedItems = new Set();
 
 function populateQuarterTypes() {
-    let index = 2;
+    let index = Object.keys(QuarterType).length;
     for (const itemRef of GameInfo.UniqueQuarters) {
         QuarterType[itemRef.UniqueQuarterType] = index;
         index++;

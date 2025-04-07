@@ -49,8 +49,8 @@ class MapTackUtilsSingleton {
     cacheYieldChanges() {
         this.constructibleYieldChanges = {};
         for (const e of GameInfo.Constructible_YieldChanges) {
-            // Skip city hall & generic unique quarter
-            if (e.ConstructibleType == "BUILDING_CITY_HALL" || e.constructibleType == "CITY_UNIQUE_QUARTER") {
+            // Skip city hall
+            if (e.ConstructibleType == "BUILDING_CITY_HALL") {
                 continue;
             }
             const current = this.constructibleYieldChanges[e.ConstructibleType] || [];
@@ -387,6 +387,7 @@ class MapTackUtilsSingleton {
     getQuarterType(constructibles) {
         if (constructibles) {
             const validConstructibles = constructibles.filter(c => !this.isObsolete(c));
+            const hasGenericUniqueQuarter = validConstructibles.some(c => MapTackGenerics.isGenericUniqueQuarter(c));
             if (validConstructibles.length >= 2) {
                 // Unique quarter check
                 for (const uniqueQuarterDef of GameInfo.UniqueQuarters) {
@@ -398,12 +399,11 @@ class MapTackUtilsSingleton {
                         return QuarterType[uniqueQuarterDef.UniqueQuarterType];
                     }
                 }
-                return QuarterType.NORMAL_QUARTER;;
-            }
-            for (const c of validConstructibles) {
-                if (this.hasTag(c, "FULL_TILE")) {
-                    return QuarterType.NORMAL_QUARTER;
-                }
+                return hasGenericUniqueQuarter ? QuarterType.GENERIC_UNIQUE_QUARTER : QuarterType.NORMAL_QUARTER;
+            } else if (hasGenericUniqueQuarter) {
+                return QuarterType.GENERIC_UNIQUE_QUARTER;
+            } else if (validConstructibles.some(c => this.hasTag(c, "FULL_TILE"))) {
+                return QuarterType.NORMAL_QUARTER;
             }
         }
         return QuarterType.NO_QUARTER;
