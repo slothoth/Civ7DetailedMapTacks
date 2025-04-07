@@ -95,6 +95,14 @@ class MapTackGenericsSingleton {
             tags: ["AGELESS"],
             adjacencyIds: []
         });
+        this.genericMapTacks.set("CITY_UNIQUE_QUARTER", { // reuse existing i18n & art
+            type: "CITY_UNIQUE_QUARTER",
+            icon: `url(blp:city_uniquequarter)`,
+            name: "LOC_UI_PRODUCTION_UNIQUE_QUARTER",
+            classType: ConstructibleClassType.BUILDING,
+            tags: ["AGELESS"],
+            adjacencyIds: []
+        });
         this.genericMapTacks.set("DMT_WONDER", {
             type: "DMT_WONDER",
             icon: `url(fs://game/city_wonderslist.png)`,

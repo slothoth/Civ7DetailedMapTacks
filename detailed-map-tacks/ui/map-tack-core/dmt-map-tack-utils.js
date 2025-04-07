@@ -49,8 +49,8 @@ class MapTackUtilsSingleton {
     cacheYieldChanges() {
         this.constructibleYieldChanges = {};
         for (const e of GameInfo.Constructible_YieldChanges) {
-            // Skip city hall
-            if (e.ConstructibleType == "BUILDING_CITY_HALL") {
+            // Skip city hall & generic unique quarter
+            if (e.ConstructibleType == "BUILDING_CITY_HALL" || e.constructibleType == "CITY_UNIQUE_QUARTER") {
                 continue;
             }
             const current = this.constructibleYieldChanges[e.ConstructibleType] || [];
