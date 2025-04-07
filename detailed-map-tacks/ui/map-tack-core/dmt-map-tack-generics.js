@@ -100,7 +100,7 @@ class MapTackGenericsSingleton {
             icon: `url(blp:city_uniquequarter)`,
             name: "LOC_UI_PRODUCTION_UNIQUE_QUARTER",
             classType: ConstructibleClassType.BUILDING,
-            tags: ["AGELESS"],
+            tags: ["AGELESS", "FULL_TILE"],
             adjacencyIds: []
         });
         this.genericMapTacks.set("DMT_WONDER", {
