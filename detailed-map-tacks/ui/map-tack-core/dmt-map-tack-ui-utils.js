@@ -98,7 +98,7 @@ class MapTackUIUtilsSingleton {
         if (!yieldDetails || yieldDetails.length == 0) {
             return;
         }
-        yieldDetails.sort((a, b) => YieldTypes.indexOf(a.type) - YieldTypes.indexOf(b.type));
+        this.sortYields(yieldDetails);
         let yieldStr;
         if (short) {
             yieldStr = yieldDetails.map(yieldDetail => `+${yieldDetail.amount}[icon:${yieldDetail.type}]`).join(separator);
@@ -111,17 +111,10 @@ class MapTackUIUtilsSingleton {
         return Locale.compose(yieldStr);
     }
     getTotalYieldString(yieldDetails, short = false) {
-        const totalMap = new Map();
-        const subYieldDetails = Object.values(yieldDetails).flat();
-        if (!subYieldDetails || subYieldDetails.length == 0) {
+        const totalYieldDetails = this.getTotalYields(yieldDetails);
+        if (!totalYieldDetails || totalYieldDetails.length == 0) {
             return;
         }
-        for (const subYieldDetail of subYieldDetails) {
-            const currentTotal = totalMap.get(subYieldDetail.type) || 0;
-            totalMap.set(subYieldDetail.type, currentTotal + subYieldDetail.amount);
-        }
-        const totalYieldDetails = Array.from(totalMap, ([type, amount]) => ({type, amount}));
-        totalYieldDetails.sort((a, b) => YieldTypes.indexOf(a.type) - YieldTypes.indexOf(b.type));
         if (short) {
             return this.getYieldString(totalYieldDetails, true, "[N]");
         } else {
@@ -143,7 +136,7 @@ class MapTackUIUtilsSingleton {
             return;
         }
         // Sort adjacencies by type.
-        adjYieldDetails.sort((a, b) => YieldTypes.indexOf(a.type) - YieldTypes.indexOf(b.type));
+        this.sortYields(adjYieldDetails);
 
         const adjacencyStrings = [];
         const sumMap = new Map();
@@ -181,6 +174,23 @@ class MapTackUIUtilsSingleton {
             // Use the game ones.
             return getConstructibleEffectStrings(type);
         }
+    }
+    sortYields(yieldDetails) {
+        yieldDetails.sort((a, b) => YieldTypes.indexOf(a.type) - YieldTypes.indexOf(b.type));
+    }
+    getTotalYields(yieldDetails) {
+        const totalMap = new Map();
+        const subYieldDetails = Object.values(yieldDetails).flat();
+        if (!subYieldDetails || subYieldDetails.length == 0) {
+            return [];
+        }
+        for (const subYieldDetail of subYieldDetails) {
+            const currentTotal = totalMap.get(subYieldDetail.type) || 0;
+            totalMap.set(subYieldDetail.type, currentTotal + subYieldDetail.amount);
+        }
+        const totalYieldDetails = Array.from(totalMap, ([type, amount]) => ({type, amount}));
+        this.sortYields(totalYieldDetails);
+        return totalYieldDetails;
     }
 }
 

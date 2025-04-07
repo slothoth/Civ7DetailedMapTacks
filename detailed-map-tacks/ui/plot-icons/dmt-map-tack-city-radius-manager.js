@@ -1,6 +1,5 @@
 import { OVERLAY_PRIORITY } from '/base-standard/ui/utilities/utilities-overlay.js';
 import { InterfaceMode, InterfaceModeChangedEventName } from '/core/ui/interface-modes/interface-modes.js';
-// import { LensActivationEventName } from '/core/ui/lenses/lens-manager.js';
 import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
 
 const PRIMARY_COLOR = UI.Player.getPrimaryColorValueAsHex(GameContext.localPlayerID);
@@ -32,23 +31,12 @@ class MapTackCityRadiusManagerSingleton {
         engine.whenReady.then(() => { this.onReady(); });
     }
     onReady() {
-        // This is a bit too chaotic in settler lens, so disable it for now.
-        // window.addEventListener(LensActivationEventName, this.onActiveLensChanged.bind(this));
         window.addEventListener(InterfaceModeChangedEventName, this.onInterfaceModeChanged.bind(this));
         engine.on("CityCenterMapTackUpdated", this.onCityCenterMapTackUpdated.bind(this));
-    }
-    onActiveLensChanged(event) {
-        if (event.detail?.activeLens == "fxs-settler-lens" || event.default?.activeLens == "fxs-founder-lens") { // Settler lens.
-            this.showOverlay();
-        } else {
-            this.hideOverlay();
-        }
     }
     onInterfaceModeChanged() {
         if (InterfaceMode.getCurrent() == "DMT_INTERFACEMODE_MAP_TACK_CHOOSER" || InterfaceMode.getCurrent() == "DMT_INTERFACEMODE_PLACE_MAP_TACKS") {
             this.showOverlay();
-        // } else if (InterfaceMode.getCurrent() == "INTERFACEMODE_UNIT_SELECTED" && this.isSettlerSelected()) {
-        //     this.showOverlay();
         } else {
             this.hideOverlay();
         }
@@ -61,16 +49,6 @@ class MapTackCityRadiusManagerSingleton {
     }
     onCityCenterMapTackUpdated() {
         this.updateCityCenterRadiusData();
-    }
-    isSettlerSelected() {
-        const selectedUnitId = UI.Player.getHeadSelectedUnit();
-        if (selectedUnitId) {
-            const unit = Units.get(selectedUnitId);
-            if (unit) {
-                return GameInfo.Units.lookup(unit.type)?.FoundCity;
-            }
-        }
-        return false;
     }
     updateCityCenterRadiusData() {
         this.borderOverlayGroup.clearAll();

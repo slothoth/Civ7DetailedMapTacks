@@ -9,7 +9,10 @@ import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
 import MapTackValidator from '../map-tack-core/dmt-map-tack-validator.js';
 import MapTackYield from '../map-tack-core/dmt-map-tack-yield.js';
 import { OVERLAY_PRIORITY } from '/base-standard/ui/utilities/utilities-overlay.js';
+import MapTackUIUtils from '../map-tack-core/dmt-map-tack-ui-utils.js';
 
+const YIELD_SPRITE_X_PADDING = 11;
+const YIELD_SPRITE_Y_OFFSET = -25;
 const CLEAR_BORDER_OVERLAY_STYLE = {
     style: "CommanderRadius",
     primaryColor: Color.convertToLinear([255, 255, 255, 255])
@@ -22,7 +25,10 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
         super(...arguments);
         this.lastHoveredPlot = -1;
         this.isCityCenter = false;
-        this.clearBorderOverlayGroup = null;
+        this.borderOverlayGroup = null;
+        this.plotOverlayGroup = null;
+        this.plotOverlay = null;
+        this.yieldSpriteGrid = null;
 
         this.validStatus = {};
         this.yieldDetails = {};
@@ -33,10 +39,15 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
     initialize() {
         this.itemType = this.Context.type;
         this.isCityCenter = MapTackUtils.isCityCenter(this.itemType);
-        if (this.isCityCenter) {
-            this.clearBorderOverlayGroup = WorldUI.createOverlayGroup("ClearCityCenterBorderOverlayGroup", OVERLAY_PRIORITY.CULTURE_BORDER);
-        }
         return true;
+    }
+    decorate(overlayGroup, _modelGroup) {
+        if (this.isCityCenter) {
+            this.borderOverlayGroup = WorldUI.createOverlayGroup("MapTackPlacementBorderOverlayGroup", OVERLAY_PRIORITY.CULTURE_BORDER);
+        }
+        this.plotOverlay = overlayGroup.addPlotOverlay();
+        this.yieldSpriteGrid = WorldUI.createSpriteGrid("MapTackPlacementYieldSpriteGroup", true);
+        this.yieldSpriteGrid.setVisible(true);
     }
     reset() {
         this.validStatus = {};
@@ -53,15 +64,20 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
         window.addEventListener(InterfaceModeChangedEventName, this.interfaceModeChangedListener);
         WorldUI.setUnitVisibility(false);
         Input.setActiveContext(InputContext.World);
-        // Enable/Disable settler lens depends on the map tack.
-        if (MapTackUtils.isCityCenter(this.itemType)) {
+        // Enable settler lens when placing city center map tack.
+        if (this.isCityCenter) {
             LensManager.enableLayer("fxs-appeal-layer");
             LensManager.enableLayer("fxs-settlement-recommendations-layer");
             LensManager.enableLayer("fxs-random-events-layer");
         }
+        MapTackUtils.togglePlotDetailsCache(true);
     }
     transitionFrom(oldMode, newMode) {
-        this.clearBorderOverlayGroup?.clearAll();
+        MapTackUtils.togglePlotDetailsCache(false);
+        this.borderOverlayGroup?.clearAll();
+        this.plotOverlay?.clear();
+        this.yieldSpriteGrid?.clear();
+        this.yieldSpriteGrid?.setVisible(false);
         LensManager.disableLayer("fxs-appeal-layer");
         LensManager.disableLayer("fxs-settlement-recommendations-layer");
         LensManager.disableLayer("fxs-random-events-layer");
@@ -109,6 +125,8 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
                 if (this.isCityCenter) {
                     this.updateCityCenterBorderOverlay(plot);
                 }
+                // Update plot overlay
+                this.updateHoverPlotOverlay(plot);
             }
         }
     }
@@ -124,12 +142,82 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
         this.panel.setAttribute("placement-details", JSON.stringify(placementDetails));
     }
     updateCityCenterBorderOverlay(plot) {
-        if (this.clearBorderOverlayGroup) {
-            this.clearBorderOverlayGroup.clearAll();
+        if (this.borderOverlayGroup) {
+            this.borderOverlayGroup.clearAll();
             const cityPlotIndices = GameplayMap.getPlotIndicesInRadius(plot.x, plot.y, 3);
-            const clearBorderOverlay = this.clearBorderOverlayGroup.addBorderOverlay(CLEAR_BORDER_OVERLAY_STYLE);
-            clearBorderOverlay.setPlotGroups(cityPlotIndices, 0);
+            const borderOverlay = this.borderOverlayGroup.addBorderOverlay(CLEAR_BORDER_OVERLAY_STYLE);
+            borderOverlay.setPlotGroups(cityPlotIndices, 0);
         }
+    }
+    updateHoverPlotOverlay(hoveredPlot) {
+        if (this.plotOverlay && this.yieldSpriteGrid) {
+            this.plotOverlay.clear();
+            this.yieldSpriteGrid.clear();
+            let bestValue = 0;
+            const bestPlotIndices = [];
+            const invalidPlotIndices = [];
+            const normalPlotIndices = [];
+            const plotIndices = GameplayMap.getPlotIndicesInRadius(hoveredPlot.x, hoveredPlot.y, 1);
+            for (const plotIndex of plotIndices) {
+                const plot = GameplayMap.getLocationFromIndex(plotIndex);
+                const validStatus = MapTackValidator.isValid(plot.x, plot.y, this.itemType);
+                if (validStatus.preventPlacement) {
+                    continue;
+                }
+                const yieldDetails = MapTackYield.getYieldDetails(plot.x, plot.y, this.itemType);
+                const totalYields = MapTackUIUtils.getTotalYields(yieldDetails) || [];
+                const pillOffsets = this.getXYOffsetForPill(totalYields.length);
+                let totalValue = 0;
+                for (let i = 0; i < totalYields.length; i++) {
+                    const offset = pillOffsets[i];
+                    const value = totalYields[i].amount;
+                    totalValue += value;
+                    this.yieldSpriteGrid.addSprite(plot, this.getYieldPillIcon(totalYields[i].type), { x: offset.x, y: offset.y, z: 5 });
+                    this.yieldSpriteGrid.addText(plot, value.toString(), { x: offset.x, y: (offset.y - 3), z: 5 }, { fonts: ["TitleFont"], fontSize: 4, faceCamera: true });
+                }
+                if (validStatus.isValid) {
+                    normalPlotIndices.push(plotIndex);
+                    // Update best plot indices
+                    if (totalValue > bestValue) {
+                        bestPlotIndices.length = 0;
+                        bestPlotIndices.push(plotIndex);
+                        bestValue = totalValue;
+                    } else if (totalValue == bestValue) {
+                        bestPlotIndices.push(plotIndex);
+                    }
+                } else {
+                    invalidPlotIndices.push(plotIndex);
+                }
+            }
+            const filteredNormalPlotIndices = normalPlotIndices.filter(index => !bestPlotIndices.includes(index));
+            this.plotOverlay.addPlots(filteredNormalPlotIndices, { fillColor: { x: 0.9, y: 0.9, z: 0.1, w: 0.8 } });
+            this.plotOverlay.addPlots(invalidPlotIndices, { fillColor: { x: 0.8, y: 0.1, z: 0.1, w: 0.8 } });
+            this.plotOverlay.addPlots(bestPlotIndices, { fillColor: { x: 0.1, y: 0.9, z: 0.1, w: 0.8 } });
+        }
+    }
+    getXYOffsetForPill(totalPills) {
+        // Modified from building-placement-layer's getXYOffsetForPill function, but only allow 1 row.
+        const offsets = [];
+        const groupWidth = (totalPills - 1) * YIELD_SPRITE_X_PADDING;
+        for (let i = 0; i < totalPills; i++) {
+            offsets.push({
+                x: (i * YIELD_SPRITE_X_PADDING) - (groupWidth / 2),
+                y: YIELD_SPRITE_Y_OFFSET
+            });
+        }
+        return offsets;
+    }
+    getYieldPillIcon(yieldType) {
+        // Modified from building-placement-manager's getYieldPillIcon function.
+        let yieldIconPath = "";
+        if (yieldType == "YIELD_DIPLOMACY") {
+            yieldIconPath = "yield_influence";
+        }
+        else {
+            yieldIconPath = yieldType.toLowerCase();
+        }
+        yieldIconPath += "_pos-lrg";
+        return yieldIconPath;
     }
     selectPlot(plot, _previousPlot) {
         if (this.isPlotProposed) {

@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Replace Tag="LOC_DMT_MAP_TACKS" Language="it_IT">
-            <Text>Segnaposto mappa</Text>
+            <Text>Spilli mappa</Text>
         </Replace>
         <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="it_IT">
             <Text>Dettagli di posizionamento</Text>

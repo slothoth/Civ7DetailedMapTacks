@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Replace Tag="LOC_DMT_MAP_TACKS" Language="fr_FR">
-            <Text>Punaises de carte</Text>
+            <Text>Marqueurs</Text>
         </Replace>
         <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="fr_FR">
             <Text>Détails du placement</Text>

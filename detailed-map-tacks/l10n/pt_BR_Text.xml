@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Replace Tag="LOC_DMT_MAP_TACKS" Language="pt_BR">
-            <Text>Alfinetes do mapa</Text>
+            <Text>Marcadores</Text>
         </Replace>
         <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="pt_BR">
             <Text>Detalhes de colocação</Text>

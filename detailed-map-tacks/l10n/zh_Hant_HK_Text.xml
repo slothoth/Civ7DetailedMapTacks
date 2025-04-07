@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Replace Tag="LOC_DMT_MAP_TACKS" Language="zh_Hant_HK">
-            <Text>地圖釘</Text>
+            <Text>地圖針</Text>
         </Replace>
         <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="zh_Hant_HK">
             <Text>放置詳情</Text>

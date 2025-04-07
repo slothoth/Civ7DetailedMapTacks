@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Replace Tag="LOC_DMT_MAP_TACKS" Language="de_DE">
-            <Text>Kartenmarkierungen</Text>
+            <Text>Landkartennadeln</Text>
         </Replace>
         <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="de_DE">
             <Text>Platzierungsdetails</Text>

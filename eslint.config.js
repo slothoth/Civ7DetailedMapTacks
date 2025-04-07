@@ -57,6 +57,7 @@ export default [
                 document: "readonly",
                 engine: "readonly",
                 window: "readonly",
+                waitForLayout: "readonly",
             }
         }
 
