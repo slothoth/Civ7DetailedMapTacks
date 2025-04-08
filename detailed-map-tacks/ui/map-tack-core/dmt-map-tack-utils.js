@@ -2,6 +2,7 @@
 import MapTackGenerics from './dmt-map-tack-generics.js';
 import MapTackStore from './dmt-map-tack-store.js';
 import { DirectionNames, ConstructibleClassType, QuarterType } from './dmt-map-tack-constants.js';
+import TraitModifier from './modifier/dmt-trait-modifier.js';
 
 class MapTackUtilsSingleton {
     /**
@@ -21,6 +22,21 @@ class MapTackUtilsSingleton {
         this.constructibleYieldChanges = {};
         // Type tags - BUILDING_PALACE => [GREATWORK, AGELESS, PERSISTENT]
         this.constructibleTypeTags = {};
+        // Free improvements - {
+        //      BiomeType: new Map() => {biomeType: [{improvementType, priority, traitType}, ...]},
+        //      TerrainType: new Map() => {terrainType: [{improvementType, priority, traitType}, ...]},
+        //      FeatureType: new Map() => {featureType: [{improvementType, priority, traitType}, ...]},
+        //      ResourceType: new Map() => {resourceType: [{improvementType, priority, traitType}, ...]},
+        //      RiverType: new Map() => {riverType: [{improvementType, priority, traitType}, ...]},
+        // }
+        this.freeImprovementMap = {
+            BiomeType: new Map(),
+            TerrainType: new Map(),
+            FeatureType: new Map(),
+            ResourceType: new Map(),
+            RiverType: new Map()
+        };
+        this.commonImprovements = new Set();
 
         this.currentAge = GameInfo.Ages.lookup(Game.age).AgeType;
 
@@ -29,6 +45,7 @@ class MapTackUtilsSingleton {
     onReady() {
         this.cacheTypeTags();
         this.cacheYieldChanges();
+        this.cacheFreeImprovements();
     }
     cacheTypeTags() {
         this.constructibleTypeTags = {};
@@ -59,6 +76,35 @@ class MapTackUtilsSingleton {
                 amount: e.YieldChange
             });
             this.constructibleYieldChanges[e.ConstructibleType] = current;
+        }
+    }
+    cacheFreeImprovements() {
+        this.freeImprovementMap = {
+            BiomeType: new Map(),
+            TerrainType: new Map(),
+            FeatureType: new Map(),
+            ResourceType: new Map(),
+            RiverType: new Map()
+        };
+        this.commonImprovements = new Set();
+        for (const e of GameInfo.District_FreeConstructibles) {
+            for (const key of Object.keys(this.freeImprovementMap)) {
+                const type = e[key];
+                if (type) {
+                    if (!this.freeImprovementMap[key].has(type)) {
+                        this.freeImprovementMap[key].set(type, []);
+                    }
+                    const traitType = GameInfo.Improvements.lookup(e.ConstructibleType)?.TraitType;
+                    this.freeImprovementMap[key].get(type).push({
+                        improvementType: e.ConstructibleType,
+                        priority: e.Priority,
+                        traitType: traitType
+                    });
+                    if (!traitType) {
+                        this.commonImprovements.add(e.ConstructibleType);
+                    }
+                }
+            }
         }
     }
     hasTag(constructibleType, tag) {
@@ -431,6 +477,56 @@ class MapTackUtilsSingleton {
             }
         }
         return "YIELD_UNKNOWN";
+    }
+    isCommonImprovement(improvementType) {
+        return this.commonImprovements.has(improvementType);
+    }
+    getFreeImprovementAtPlot(x, y) {
+        const plotDetails = this.getRealizedPlotDetails(x, y);
+        const formattedPlotDetails = {
+            BiomeType: plotDetails.biome,
+            TerrainType: plotDetails.terrain,
+            FeatureType: plotDetails.feature,
+            ResourceType: plotDetails.resource,
+            RiverType: this.getRiverTypeName(x, y)
+        };
+        const candidates = new Set();
+        for (const key of Object.keys(this.freeImprovementMap)) {
+            const type = formattedPlotDetails[key];
+            if (!type) {
+                continue;
+            }
+            const matchedRecords = this.freeImprovementMap[key].get(type);
+            if (!matchedRecords) {
+                continue;
+            }
+            for (const matchedRecord of matchedRecords) {
+                if (matchedRecord.traitType && !TraitModifier.isTraitActive(matchedRecord.traitType)) {
+                    continue;
+                }
+                candidates.add(matchedRecord);
+            }
+        }
+        // Find best candidate having the highest priority.
+        let best = null;
+        for (const candidate of candidates) {
+            if (!best || candidate.priority < best.priority) { // Lower priority the better
+                best = candidate;
+            }
+        }
+        return best?.improvementType.replace(/_RESOURCE$/, ''); // Return without "_RESOURCE" suffix
+    }
+    getRiverTypeName(x, y) {
+        const riverType = GameplayMap.getRiverType(x, y);
+        switch (riverType) {
+            case RiverTypes.NO_RIVER:
+                return "NO_RIVER";
+            case RiverTypes.RIVER_MINOR:
+                return "RIVER_MINOR";
+            case RiverTypes.RIVER_NAVIGABLE:
+                return "RIVER_NAVIGABLE";
+        }
+        return;
     }
 }
 

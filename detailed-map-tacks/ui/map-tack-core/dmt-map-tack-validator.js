@@ -243,7 +243,7 @@ class MapTackValidatorSingleton {
                 if (entry.TerrainType && entry.TerrainType == plotDetails["terrain"]) {
                     return true;
                 }
-                if (entry.RiverType == "RIVER_NAVIGABLE" && GameplayMap.getRiverType(x, y) == RiverTypes.RIVER_NAVIGABLE) {
+                if (entry.RiverType && entry.RiverType == MapTackUtils.getRiverTypeName(x, y)) {
                     return true;
                 }
                 hasRequirement = true;

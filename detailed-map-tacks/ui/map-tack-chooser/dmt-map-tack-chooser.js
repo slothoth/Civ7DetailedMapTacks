@@ -182,7 +182,9 @@ class MapTackChooser extends Panel {
     }
     getImprovementItems() {
         const improvementDefs = this.getConstructiblesByClassType(ConstructibleClassType.IMPROVEMENT);
-        return [this.uniqueImprovementDefs, improvementDefs];
+        // Filter out common improvements.
+        const filteredImprovements = improvementDefs.filter(def => !MapTackUtils.isCommonImprovement(def.ConstructibleType));
+        return [this.uniqueImprovementDefs, filteredImprovements];
     }
     getConstructiblesByClassType(classType) {
         const filteredItemDefs = [];

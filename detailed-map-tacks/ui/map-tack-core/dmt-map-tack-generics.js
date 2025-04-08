@@ -111,6 +111,14 @@ class MapTackGenericsSingleton {
             tags: [],
             adjacencyIds: []
         });
+        this.genericMapTacks.set("DMT_IMPROVEMENT", {
+            type: "DMT_IMPROVEMENT",
+            icon: `url(fs://game/city_improvementslist.png)`,
+            name: "LOC_CONSTRUCTIBLE_CLASS_NAME_IMPROVEMENT",
+            classType: ConstructibleClassType.IMPROVEMENT,
+            tags: [],
+            adjacencyIds: []
+        });
     }
     cacheData() {
         const constructibleAdjacencies = {};
@@ -142,6 +150,9 @@ class MapTackGenericsSingleton {
     }
     isGenericUniqueQuarter(type) {
         return type == "DMT_BUILDING_UNIQUE_QUARTER";
+    }
+    isGenericImprovement(type) {
+        return type == "DMT_IMPROVEMENT";
     }
     getGenericMapTacks() {
         return [...this.genericMapTacks.values()];

@@ -10,6 +10,7 @@ import MapTackValidator from '../map-tack-core/dmt-map-tack-validator.js';
 import MapTackYield from '../map-tack-core/dmt-map-tack-yield.js';
 import { OVERLAY_PRIORITY } from '/base-standard/ui/utilities/utilities-overlay.js';
 import MapTackUIUtils from '../map-tack-core/dmt-map-tack-ui-utils.js';
+import MapTackGenerics from '../map-tack-core/dmt-map-tack-generics.js';
 
 const YIELD_SPRITE_X_PADDING = 11;
 const YIELD_SPRITE_Y_OFFSET = -25;
@@ -24,7 +25,9 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
     constructor() {
         super(...arguments);
         this.lastHoveredPlot = -1;
+        this.itemType = null;
         this.isCityCenter = false;
+        this.isGenericImprovement = false;
         this.borderOverlayGroup = null;
         this.plotOverlayGroup = null;
         this.plotOverlay = null;
@@ -39,6 +42,7 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
     initialize() {
         this.itemType = this.Context.type;
         this.isCityCenter = MapTackUtils.isCityCenter(this.itemType);
+        this.isGenericImprovement = MapTackGenerics.isGenericImprovement(this.itemType);
         return true;
     }
     decorate(overlayGroup, _modelGroup) {
@@ -108,6 +112,17 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
             const plotIndex = GameplayMap.getIndexFromLocation(plot);
             if (plotIndex != this.lastHoveredPlot) {
                 this.lastHoveredPlot = plotIndex;
+                if (this.isGenericImprovement) {
+                    const improvementType = MapTackUtils.getFreeImprovementAtPlot(plot.x, plot.y);
+                    if (improvementType) {
+                        // Use compatible improvement on this plot.
+                        this.itemType = improvementType;
+                    } else {
+                        // Fallback to original generic improvement type
+                        this.itemType = this.Context.type;
+                    }
+                    this.panel.setAttribute("item-type", this.itemType);
+                }
                 // Valid status
                 this.validStatus = MapTackValidator.isValid(plot.x, plot.y, this.itemType);
                 if (this.validStatus.preventPlacement) {
@@ -153,6 +168,10 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
         if (this.plotOverlay && this.yieldSpriteGrid) {
             this.plotOverlay.clear();
             this.yieldSpriteGrid.clear();
+            if (this.isGenericImprovement) {
+                // Don't need to check for generic improvements.
+                return;
+            }
             let bestValue = 0;
             const bestPlotIndices = [];
             const invalidPlotIndices = [];
@@ -160,6 +179,10 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
             const plotIndices = GameplayMap.getPlotIndicesInRadius(hoveredPlot.x, hoveredPlot.y, 1);
             for (const plotIndex of plotIndices) {
                 const plot = GameplayMap.getLocationFromIndex(plotIndex);
+                const isPlotHidden = GameplayMap.getRevealedState(GameContext.localPlayerID, plot.x, plot.y) == RevealedStates.HIDDEN;
+                if (isPlotHidden) {
+                    continue;
+                }
                 const validStatus = MapTackValidator.isValid(plot.x, plot.y, this.itemType);
                 if (validStatus.preventPlacement) {
                     continue;
