@@ -63,7 +63,10 @@ class PlaceMapTackPanel extends Panel {
     populateItemDetails(type) {
         if (MapTackGenerics.isGenericMapTack(type)) {
             this.populateItemDetailsHelper(type, MapTackGenerics.getName(type), MapTackGenerics.getTooltipString(type));
-        } else {
+        } else if (type.includes(',')) {
+            this.populateQuarterDetailsHelper(type);
+        }
+        else {
             const itemDef = GameInfo.Constructibles.lookup(type);
             this.populateItemDetailsHelper(type, itemDef.Name, itemDef.Tooltip);
         }
@@ -96,6 +99,45 @@ class PlaceMapTackPanel extends Panel {
             effectsContainer.classList.add("hidden");
         }
     }
+
+    populateQuarterDetailsHelper(type) {
+        let agg_name = ''
+        let agg_tooltip = ''
+        let effectStrings
+        const itemList = type.split(',');
+        for (const e of itemList) {
+            agg_name = agg_name + MapTackGenerics.getName(e)
+            agg_tooltip = agg_tooltip + MapTackGenerics.getTooltipString(e)
+            const { baseYield, adjacencies, effects } = MapTackUIUtils.getEffectStrings(type);
+            effectStrings = baseYield ? [baseYield, ...adjacencies, ...effects] : [...adjacencies, ...effects];
+        }
+
+        // Title
+        const header = this.panel.querySelector("#panel-place-map-tack-name");
+        header.setAttribute('data-l10n-id', name);
+        // Icon
+        const icon = this.panel.querySelector("#panel-place-map-tack-icon");
+        icon.style.backgroundImage = MapTackUIUtils.getMapTackIconBgImage('DMT_BUILDING_UNIQUE_QUARTER');
+        // Description
+        const desc = this.panel.querySelector("#panel-place-map-tack-desc");
+        if (agg_tooltip !== '') {
+            desc.innerHTML = Locale.stylize(agg_tooltip);
+            desc.classList.remove("hidden");
+        } else {
+            desc.classList.add("hidden");
+        }
+        // Effects
+        const effectStr = Locale.compose(effectStrings.map(s => Locale.compose(s)).join('[N]'));
+        const effectsContainer = this.panel.querySelector("#panel-place-map-tack-effects");
+        if (effectStr) {
+            effectsContainer.innerHTML = Locale.stylize(effectStr);
+            effectsContainer.classList.remove("hidden");
+        } else {
+            effectsContainer.innerHTML = "";
+            effectsContainer.classList.add("hidden");
+        }
+    }
+
     updatePlacementDetails(placementDetailsStr) {
         let hasContent = false;
         const placementDetailsContainer = this.panel.querySelector("#panel-place-map-tack-placement-details-container");
