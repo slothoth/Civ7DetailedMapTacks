@@ -64,6 +64,20 @@ class MapTackUIUtilsSingleton {
             return UI.getIconCSS(type);
         }
     }
+    getMapTackName(type) {
+        if (MapTackGenerics.isGenericMapTack(type)) {
+            return MapTackGenerics.getName(type);
+        } else {
+            return GameInfo.Constructibles.lookup(type)?.Name;
+        }
+    }
+    getMapTackTooltip(type) {
+        if (MapTackGenerics.isGenericMapTack(type)) {
+            return MapTackGenerics.getTooltipString(type);
+        } else {
+            return GameInfo.Constructibles.lookup(type)?.Tooltip;
+        }
+    }
     getYieldFragment(yieldDetails, includeDivider = true) {
         const container = document.createElement('fragment');
         const totalYieldStr = this.getTotalYieldString(yieldDetails);

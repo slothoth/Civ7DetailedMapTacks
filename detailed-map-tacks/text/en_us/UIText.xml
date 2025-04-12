@@ -60,6 +60,9 @@
         <Row Tag="LOC_DMT_INVALID_REASON_ADJACENT_X">
             <Text>Must be placed adjacent to a {1_Name}.</Text>
         </Row>
+        <Row Tag="LOC_DMT_INVALID_REASON_NOT_ADJACENT_X">
+            <Text>Cannot be placed adjacent to a {1_Name}.</Text>
+        </Row>
         <Row Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X">
             <Text>Cannot place {1_Name}.</Text>
         </Row>

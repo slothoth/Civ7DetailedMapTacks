@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Replace Tag="LOC_DMT_MAP_TACKS" Language="de_DE">
-            <Text>Landkartennadeln</Text>
+            <Text>Nadeln</Text>
         </Replace>
         <Replace Tag="LOC_DMT_PLACEMENT_DETAILS" Language="de_DE">
             <Text>Platzierungsdetails</Text>
@@ -59,6 +59,9 @@
         </Replace>
         <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="de_DE">
             <Text>Muss angrenzend an {1_Name} platziert werden.</Text>
+        </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_NOT_ADJACENT_X" Language="de_DE">
+            <Text>Kann nicht neben einem {1_Name} platziert werden.</Text>
         </Replace>
         <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="de_DE">
             <Text>Kann {1_Name} nicht platzieren.</Text>

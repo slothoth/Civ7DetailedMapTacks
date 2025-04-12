@@ -60,6 +60,9 @@
         <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="it_IT">
             <Text>Deve essere posizionato adiacente a {1_Name}.</Text>
         </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_NOT_ADJACENT_X" Language="it_IT">
+            <Text>Non può essere posizionato adiacente a un {1_Name}.</Text>
+        </Replace>
         <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="it_IT">
             <Text>Impossibile posizionare {1_Name}.</Text>
         </Replace>

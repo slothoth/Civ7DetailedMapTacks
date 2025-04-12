@@ -152,6 +152,12 @@ class MapTackUtilsSingleton {
         }
         return plotDetails;
     }
+    getAdjacentConstructibles(x, y) {
+        return this.getAdjacentPlotDetails(x, y).map(plotDetail => ({
+            direction: plotDetail.direction,
+            constructibles: plotDetail.details.constructibles
+        }));
+    }
     getAdjacentMapTackStructs(x, y, includeSelf = true) {
         const mapTacks = [];
         if (includeSelf) {
@@ -419,6 +425,15 @@ class MapTackUtilsSingleton {
         }
         return false;
     }
+    isAdjacentToConstructible(x, y, constructibleType) {
+        const adjConstructibles = this.getAdjacentConstructibles(x, y);
+        for (const { constructibles } of adjConstructibles) {
+            if (constructibles?.includes(constructibleType)) {
+                return true;
+            }
+        }
+        return false;
+    }
     isAdjacentToTerrain(x, y, terrainType) {
         const adjacentPlots = this.getAdjacentPlots(x, y);
         for (const { plot } of adjacentPlots) {
@@ -429,6 +444,37 @@ class MapTackUtilsSingleton {
             }
         }
         return false;
+    }
+    isAdjacentToBiome(x, y, biomeType) {
+        const adjacentPlots = this.getAdjacentPlots(x, y);
+        for (const { plot } of adjacentPlots) {
+            const adjBiomeIndex = GameplayMap.getBiomeType(plot.x, plot.y);
+            const adjBiomeDef = GameInfo.Biomes.lookup(adjBiomeIndex);
+            if (biomeType == adjBiomeDef?.BiomeType) {
+                return true;
+            }
+        }
+        return false;
+    }
+    isLandAdjacentCoast(x, y) {
+        // Coast check
+        const terrainIndex = GameplayMap.getTerrainType(x, y);
+        if ("TERRAIN_COAST" != GameInfo.Terrains.lookup(terrainIndex)?.TerrainType) {
+            return false;
+        }
+        // Adjacent land check
+        return GameplayMap.isAdjacentToLand(x, y);
+    }
+    isAppealing(x, y) {
+        let adjacentAppeal = 0;
+        const adjacentPlots = this.getAdjacentPlots(x, y);
+        for (const { plot } of adjacentPlots) {
+            const adjTerrainIndex = GameplayMap.getTerrainType(plot.x, plot.y);
+            adjacentAppeal += GameInfo.Terrains.lookup(adjTerrainIndex)?.Appeal ?? 0;
+            const adjFeatureIndex = GameplayMap.getFeatureType(plot.x, plot.y);
+            adjacentAppeal += GameInfo.Features.lookup(adjFeatureIndex)?.Appeal ?? 0;
+        }
+        return adjacentAppeal >= 3;
     }
     getQuarterType(constructibles) {
         if (constructibles) {
@@ -481,8 +527,10 @@ class MapTackUtilsSingleton {
     isCommonImprovement(improvementType) {
         return this.commonImprovements.has(improvementType);
     }
-    getFreeImprovementAtPlot(x, y) {
-        const plotDetails = this.getRealizedPlotDetails(x, y);
+    getFreeImprovementAtPlot(x, y, plotDetails = null) {
+        if (!plotDetails) {
+            plotDetails = this.getRealizedPlotDetails(x, y);
+        }
         const formattedPlotDetails = {
             BiomeType: plotDetails.biome,
             TerrainType: plotDetails.terrain,

@@ -49,6 +49,9 @@ class MapTackChangeProcessorSingleton {
         };
         MapTackStore.removeMapTack(mapTackData);
         this.onPlotDetailsUpdated(data.location.x, data.location.y);
+        if (MapTackUtils.isCityCenter(mapTackData.type)) {
+            engine.trigger("CityCenterMapTackUpdated");
+        }
     }
     onConstructibleRemoved(data) {
         this.onPlotDetailsUpdated(data.location.x, data.location.y);

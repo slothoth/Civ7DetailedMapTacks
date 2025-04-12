@@ -60,6 +60,9 @@
         <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="pl_PL">
             <Text>Musi być umieszczona obok {1_Name}.</Text>
         </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_NOT_ADJACENT_X" Language="pl_PL">
+            <Text>Nie można umieścić obok {1_Name}.</Text>
+        </Replace>
         <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="pl_PL">
             <Text>Nie można umieścić {1_Name}.</Text>
         </Replace>

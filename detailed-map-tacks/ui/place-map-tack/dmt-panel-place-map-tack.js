@@ -2,7 +2,6 @@ import { InterfaceMode, InterfaceModeChangedEventName } from '/core/ui/interface
 import { MustGetElement } from "/core/ui/utilities/utilities-dom.js";
 import Panel from '/core/ui/panel-support.js';
 import MapTackUIUtils from '../map-tack-core/dmt-map-tack-ui-utils.js';
-import MapTackGenerics from '../map-tack-core/dmt-map-tack-generics.js';
 
 class PlaceMapTackPanel extends Panel {
     constructor(root) {
@@ -61,14 +60,8 @@ class PlaceMapTackPanel extends Panel {
         InterfaceMode.switchTo("DMT_INTERFACEMODE_MAP_TACK_CHOOSER");
     }
     populateItemDetails(type) {
-        if (MapTackGenerics.isGenericMapTack(type)) {
-            this.populateItemDetailsHelper(type, MapTackGenerics.getName(type), MapTackGenerics.getTooltipString(type));
-        } else {
-            const itemDef = GameInfo.Constructibles.lookup(type);
-            this.populateItemDetailsHelper(type, itemDef.Name, itemDef.Tooltip);
-        }
-    }
-    populateItemDetailsHelper(type, name, tooltip) {
+        const name = MapTackUIUtils.getMapTackName(type);
+        const tooltip = MapTackUIUtils.getMapTackTooltip(type);
         // Title
         const header = this.panel.querySelector("#panel-place-map-tack-name");
         header.setAttribute('data-l10n-id', name);
