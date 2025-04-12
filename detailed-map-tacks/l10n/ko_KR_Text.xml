@@ -60,6 +60,9 @@
         <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="ko_KR">
             <Text>{1_Name} 옆에 배치해야 합니다.</Text>
         </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_NOT_ADJACENT_X" Language="ko_KR">
+            <Text>{1_Name} 옆에 배치할 수 없습니다.</Text>
+        </Replace>
         <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="ko_KR">
             <Text>{1_Name}을(를) 배치할 수 없습니다.</Text>
         </Replace>

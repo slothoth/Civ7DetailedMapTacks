@@ -2,7 +2,6 @@
 import { InterfaceMode } from '/core/ui/interface-modes/interface-modes.js';
 import MapTackIconsManager from './dmt-map-tack-icons-manager.js';
 import MapTackUIUtils from '../map-tack-core/dmt-map-tack-ui-utils.js';
-import MapTackGenerics from '../map-tack-core/dmt-map-tack-generics.js';
 import MapTackUtils from '../map-tack-core/dmt-map-tack-utils.js';
 import { OVERLAY_PRIORITY } from '/base-standard/ui/utilities/utilities-overlay.js';
 
@@ -93,17 +92,15 @@ class MapTackIcons extends Component {
         icon.classList.add("size-10");
         icon.style.backgroundImage = MapTackUIUtils.getMapTackIconBgImage(mapTackData.type);
         iconWrapper.appendChild(icon);
-        iconContainer.appendChild(iconWrapper);
-
         // Invalid status
         const validStatus = mapTackData.validStatus;
         if (validStatus && !validStatus.isValid) {
             const invalidIcon = document.createElement("fxs-activatable");
             invalidIcon.classList.add("map-tack-icon-warn", "size-5", "pointer-events-none");
             invalidIcon.setAttribute("data-tooltip-content", this.createInvalidTooltip(validStatus.reasons));
-            iconContainer.appendChild(invalidIcon);
+            iconWrapper.appendChild(invalidIcon);
         }
-
+        iconContainer.appendChild(iconWrapper);
         // Yields
         const yieldDetails = mapTackData.yieldDetails;
         const totalYieldStr = MapTackUIUtils.getTotalYieldString(yieldDetails, true);
@@ -118,16 +115,8 @@ class MapTackIcons extends Component {
         return iconContainer;
     }
     createItemTooltip(type) {
-        let name;
-        let tooltip;
-        if (MapTackGenerics.isGenericMapTack(type)) {
-            name = MapTackGenerics.getName(type);
-            tooltip = MapTackGenerics.getTooltipString(type);
-        } else {
-            const itemDef = GameInfo.Constructibles.lookup(type);
-            name = itemDef?.Name;
-            tooltip = itemDef?.Tooltip;
-        }
+        const name = MapTackUIUtils.getMapTackName(type);
+        const tooltip = MapTackUIUtils.getMapTackTooltip(type);
         const container = document.createElement('fxs-tooltip');
         // Header
         const header = document.createElement('div');

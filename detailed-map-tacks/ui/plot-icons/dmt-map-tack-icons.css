@@ -10,11 +10,11 @@ dmt-map-tack-icons {
     flex-direction: row;
     transform: translateX(-50%) translateY(-1.7777777778rem);
     transform-origin: center;
+    filter: drop-shadow(0 0 0.3333333333rem #000);
 }
 
 .map-tack-icon-wrapper {
     position: relative;
-	filter: drop-shadow(0 0 0.3333333333rem #000);
 }
 
 .map-tack-icon-wrapper::before {
@@ -91,7 +91,6 @@ dmt-map-tack-icons {
 .map-tack-icon-yields {
     cursor: help !important;
     text-align: center;
-    margin-top: -0.1111111111rem;
     background-color: rgba(0, 0, 0, 0.6);
     border-radius: 0.4444444444rem;
     color: white;

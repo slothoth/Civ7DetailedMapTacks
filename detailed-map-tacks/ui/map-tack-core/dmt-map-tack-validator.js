@@ -2,7 +2,8 @@
 import MapTackStore from './dmt-map-tack-store.js';
 import MapTackUtils from './dmt-map-tack-utils.js';
 import MapTackGenerics from './dmt-map-tack-generics.js';
-import { ConstructibleClassType } from './dmt-map-tack-constants.js';
+import { ConstructibleClassType, DirectionNames } from './dmt-map-tack-constants.js';
+import MapTackUIUtils from './dmt-map-tack-ui-utils.js';
 
 const MAX_COUNT_PER_PLOT = 2;
 class MapTackValidatorSingleton {
@@ -16,9 +17,20 @@ class MapTackValidatorSingleton {
         return MapTackValidatorSingleton.singletonInstance;
     }
     constructor() {
+        // ConstructibleType => [ biomeType, ... ]
+        this.invalidAjacentBiomes = {};
         engine.whenReady.then(() => { this.onReady(); });
     }
     onReady() {
+        this.cacheData();
+    }
+    cacheData() {
+        this.invalidAjacentBiomes = {};
+        for (const e of GameInfo.Constructible_InvalidAdjacentBiomes) {
+            const current = this.invalidAjacentBiomes[e.ConstructibleType] || [];
+            current.push(e.BiomeType);
+            this.invalidAjacentBiomes[e.ConstructibleType] = current;
+        }
     }
     /**
      * Check if the given map tack is valid.
@@ -32,6 +44,8 @@ class MapTackValidatorSingleton {
      *      reasons: an array of strings with reasons if it cannot be placed here.
      */
     isValid(x, y, type, isAdditive = true) {
+        this.waterPlacement = false;
+        this.mountainPlacement = false;
         let isValid = true;
         let preventPlacement = false;
         const reasons = new Set();
@@ -71,7 +85,6 @@ class MapTackValidatorSingleton {
 
         const plotDetails = MapTackUtils.getRealizedPlotDetails(x, y);
         const classType = MapTackUtils.getConstructibleClassType(type);
-
         // START - Common conditions.
         // 1. Biome check.
         if (plotDetails["biome"]) {
@@ -130,17 +143,83 @@ class MapTackValidatorSingleton {
             const name = GameInfo.Terrains.lookup(itemDef.AdjacentTerrain)?.Name;
             reasons.add(Locale.compose("LOC_DMT_INVALID_REASON_ADJACENT_X", name));
         }
-        // 6. More improvement check.
-        if (classType == ConstructibleClassType.IMPROVEMENT && this.canPlaceImprovement(type, x, y) == false) {
+        // 6. NoFeature check.
+        if (itemDef?.NoFeature && plotDetails["feature"]) {
             isValid = isValid && false;
-            const name = GameInfo.Constructibles.lookup(type)?.Name;
-            reasons.add(Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_X", name));
+            const name = GameInfo.Features.lookup(plotDetails["feature"])?.Name;
+            reasons.add(Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X", name));
         }
-
-        // 7. Invalid adjacent biome check.
-
-        // TODO: Further checks.
-
+        // 7. NoRiver check.
+        if (itemDef?.NoRiver && (GameplayMap.isNavigableRiver(x, y) || GameplayMap.isRiver(x, y))) {
+            isValid = isValid && false;
+            reasons.add(Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X", "LOC_RIVER_NAME"));
+        }
+        // 8. RequiresAppealPlacement check. (TODO)
+        // 9. RequiresDistantLands check. (TODO)
+        // 10. RequiresHomeland check. (TODO)
+        // 11. RiverPlacement check.
+        if (itemDef?.RiverPlacement) {
+            this.waterPlacement = true;
+            if (this.checkRiverPlacement(x, y, itemDef.RiverPlacement) == false) {
+                isValid = isValid && false;
+                reasons.add(Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_X", MapTackUIUtils.getMapTackName(type)));
+            }
+        }
+        // 12. InvalidAdjacentBiomes check.
+        if (this.invalidAjacentBiomes[type]) {
+            for (const biome of this.invalidAjacentBiomes[type]) {
+                if (MapTackUtils.isAdjacentToBiome(x, y, biome)) {
+                    isValid = isValid && false;
+                    const name = GameInfo.Biomes.lookup(biome)?.Name;
+                    reasons.add(Locale.compose("LOC_DMT_INVALID_REASON_NOT_ADJACENT_X", name));
+                }
+            }
+        }
+        // 13. InvalidFeatures check. (TODO)
+        // 14. More improvement check.
+        if (classType == ConstructibleClassType.IMPROVEMENT) {
+            const [result, subReason] = this.canPlaceImprovement(type, x, y, plotDetails);
+            if (result == false) {
+                isValid = isValid && false;
+                const reason = subReason || Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_X", MapTackUIUtils.getMapTackName(type));
+                reasons.add(reason);
+            }
+        }
+        // 15. More building check.
+        if (classType == ConstructibleClassType.BUILDING) {
+            const [result, subReason] = this.canPlaceBuilding(type, x, y, plotDetails);
+            if (result == false) {
+                isValid = isValid && false;
+                const reason = subReason || Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_X", MapTackUIUtils.getMapTackName(type));
+                reasons.add(reason);
+            }
+        }
+        // 16. More wonder check.
+        if (classType == ConstructibleClassType.WONDER) {
+            const [result, subReason] = this.canPlaceWonder(type, x, y, plotDetails);
+            if (result == false) {
+                isValid = isValid && false;
+                const reason = subReason || Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_X", MapTackUIUtils.getMapTackName(type));
+                reasons.add(reason);
+            }
+        }
+        // 17. Final additional terrain placement check.
+        const terrainType = plotDetails["terrain"];
+        if (terrainType) {
+            if (!this.waterPlacement && (terrainType == "TERRAIN_COAST" || terrainType == "TERRAIN_NAVIGABLE_RIVER")) {
+                isValid = isValid && false;
+                const name = GameInfo.Terrains.lookup(terrainType)?.Name;
+                reasons.add(Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X", name));
+            } else if (!this.mountainPlacement && terrainType == "TERRAIN_MOUNTAIN") {
+                isValid = isValid && false;
+                const name = GameInfo.Terrains.lookup(terrainType)?.Name;
+                reasons.add(Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X", name));
+            } else if (terrainType == "TERRAIN_OCEAN") {
+                isValid = isValid && false;
+                const name = GameInfo.Terrains.lookup(terrainType)?.Name;
+                reasons.add(Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X", name));
+            }
+        }
         // END - Common conditions.
 
         return { isValid: isValid, preventPlacement: preventPlacement, reasons: [...reasons] };
@@ -166,6 +245,11 @@ class MapTackValidatorSingleton {
         for (const row of GameInfo.Constructible_ValidTerrains) {
             if (row.ConstructibleType == mapTackType) {
                 if (row.TerrainType == terrainType) {
+                    if (terrainType == "TERRAIN_COAST" || terrainType == "TERRAIN_NAVIGABLE_RIVER") {
+                        this.waterPlacement = true;
+                    } else if (terrainType == "TERRAIN_MOUNTAIN") {
+                        this.mountainPlacement = true;
+                    }
                     return true;
                 }
                 hasRequirement = true;
@@ -183,7 +267,7 @@ class MapTackValidatorSingleton {
             return false;
         }
         let hasRequirement = false;
-        // Required feature class check
+        // Required feature class check.
         for (const row of GameInfo.Constructible_RequiredFeatureClasses) {
             if (row.ConstructibleType == mapTackType) {
                 if (row.FeatureClassType == MapTackUtils.getFeatureClassType(featureType)) {
@@ -192,8 +276,8 @@ class MapTackValidatorSingleton {
                 hasRequirement = true;
             }
         }
-        // Required feature check (TODO: This table is currently empty)
-        // Valid feature check
+        // Required feature check. (TODO)
+        // Valid feature check.
         for (const row of GameInfo.Constructible_ValidFeatures) {
             if (row.ConstructibleType == mapTackType) {
                 if (row.FeatureType == featureType) {
@@ -229,32 +313,109 @@ class MapTackValidatorSingleton {
         // return false by default.
         return false;
     }
-    canPlaceImprovement(mapTackType, x, y) {
-        const plotDetails = MapTackUtils.getRealizedPlotDetails(x, y);
-        let hasRequirement = false;
-        for (const entry of GameInfo.District_FreeConstructibles) {
-            if (entry?.ConstructibleType == mapTackType) {
-                if (entry.FeatureType && entry.FeatureType == plotDetails["feature"]) {
-                    return true;
-                }
-                if (entry.ResourceType && entry.ResourceType == plotDetails["resource"]) {
-                    return true;
-                }
-                if (entry.TerrainType && entry.TerrainType == plotDetails["terrain"]) {
-                    return true;
-                }
-                if (entry.RiverType && entry.RiverType == MapTackUtils.getRiverTypeName(x, y)) {
-                    return true;
-                }
-                hasRequirement = true;
+    checkRiverPlacement(x, y, riverPlacement) {
+        switch (riverPlacement) {
+            // OFF_COAST - Coast only, adjacent to land
+            // ANCHORED - Coast or navigable river.
+            // RIVER - River or navigable river.
+            case "OFF_COAST":
+                return MapTackUtils.isLandAdjacentCoast(x, y);
+            case "ANCHORED":
+                return GameplayMap.isNavigableRiver(x, y) || MapTackUtils.isLandAdjacentCoast(x, y);
+            case "RIVER":
+                return GameplayMap.isNavigableRiver(x, y) || GameplayMap.isRiver(x, y);
+        }
+        return true;
+    }
+    canPlaceImprovement(mapTackType, x, y, plotDetails) {
+        const itemDef = GameInfo.Improvements.lookup(mapTackType);
+        // Common improvements.
+        if (itemDef?.CityBuildable == false) {
+            return [mapTackType == MapTackUtils.getFreeImprovementAtPlot(x, y, plotDetails)];
+        } else {
+            // City buildable improvements.
+            // Require Rural district, but also allow placing on wilderness for easier placements.
+            if (plotDetails["district"] != "DISTRICT_RURAL" && plotDetails["district"] != "DISTRICT_WILDERNESS") {
+                const name = GameInfo.Districts.lookup(plotDetails["district"])?.Name;
+                return [false, Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X", name)];
+            }
+            // Cannot be placed on natural wonders.
+            if (GameplayMap.isNaturalWonder(x, y)) {
+                const name = GameInfo.Features.lookup(plotDetails["feature"])?.Name;
+                return [false, Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X", name)];
             }
         }
-        if (hasRequirement) {
-            return false;
+        // SameAdjacentValid check.
+        if (itemDef?.SameAdjacentValid === false && MapTackUtils.isAdjacentToConstructible(x, y, mapTackType)) {
+            return [false, Locale.compose("LOC_DMT_INVALID_REASON_NOT_ADJACENT_X", MapTackUIUtils.getMapTackName(mapTackType))];
         }
-        // TODO: Must be appealing check.
+        // BuildOnFrontier check.
+        if (itemDef?.BuildOnFrontier && MapTackUtils.isAdjacentToDistrict(x, y, "DISTRICT_URBAN")) {
+            return [false, Locale.compose("LOC_DMT_INVALID_REASON_NOT_ADJACENT_X", "LOC_DISTRICT_URBAN_NAME")];
+        }
+        // BuildInLine check.
+        if (itemDef?.BuildInLine) {
+            const adjConstructibles = MapTackUtils.getAdjacentConstructibles(x, y);
+            const directionWithConstructible = new Set();
+            const numOfDirections = DirectionNames.size;
+            for (const { direction, constructibles } of adjConstructibles) {
+                if (!constructibles.includes(mapTackType)) continue;
+                const nextDir = (direction + 1) % numOfDirections;
+                const prevDir = (direction - 1 + numOfDirections) % numOfDirections;
+                if (directionWithConstructible.has(nextDir) || directionWithConstructible.has(prevDir)) {
+                    // Not in line
+                    return [false];
+                }
+                directionWithConstructible.add(direction);
+            }
+        }
+        // MustBeAppealing check.
+        if (itemDef?.MustBeAppealing && MapTackUtils.isAppealing(x, y) == false) {
+            return [false];
+        }
         // return true by default.
-        return true;
+        return [true];
+    }
+    canPlaceBuilding(_mapTackType, _x, _y, _plotDetails) {
+        // No special check for buildings yet.
+        return [true];
+    }
+    canPlaceWonder(mapTackType, x, y, _plotDetails) {
+        const itemDef = GameInfo.Wonders.lookup(mapTackType);
+        if (itemDef?.AdjacentToLand || itemDef?.MustBeLake) {
+            this.waterPlacement = true;
+        }
+        // AdjacentCapital check.
+        if (itemDef?.AdjacentCapital && MapTackUtils.isAdjacentToConstructible(x, y, "BUILDING_PALACE") == false) {
+            return [false, Locale.compose("LOC_DMT_INVALID_REASON_ADJACENT_X", "LOC_CAPITAL_SELECT_CAPITAL_BUTTON")];
+        }
+        // AdjacentConstructible check.
+        if (itemDef?.AdjacentConstructible && MapTackUtils.isAdjacentToConstructible(x, y, itemDef.AdjacentConstructible) == false) {
+            const name = GameInfo.Constructibles.lookup(itemDef.AdjacentConstructible)?.Name;
+            return [false, Locale.compose("LOC_DMT_INVALID_REASON_ADJACENT_X", name)];
+        }
+        // AdjacentResource check. (TODO)
+        // AdjacentToLand check.
+        if (itemDef?.AdjacentToLand && GameplayMap.isAdjacentToLand(x, y) == false) {
+            return [false];
+        }
+        // AdjacentToMountain check.
+        if (itemDef?.AdjacentToMountain && MapTackUtils.isAdjacentToTerrain(x, y, "TERRAIN_MOUNTAIN") == false) {
+            return [false, Locale.compose("LOC_DMT_INVALID_REASON_ADJACENT_X", "LOC_TERRAIN_MOUNTAIN_NAME")];
+        }
+        // BuildOnFrontier check.
+        if (itemDef?.BuildOnFrontier && MapTackUtils.isAdjacentToDistrict(x, y, "DISTRICT_URBAN")) {
+            return [false, Locale.compose("LOC_DMT_INVALID_REASON_NOT_ADJACENT_X", "LOC_DISTRICT_URBAN_NAME")];
+        }
+        // MustBeLake check.
+        if (itemDef?.MustBeLake && GameplayMap.isLake(x, y) == false) {
+            return [false];
+        }
+        // MustNotBeLake check.
+        if (itemDef?.MustNotBeLake && GameplayMap.isLake(x, y) == true) {
+            return [false, Locale.compose("LOC_DMT_INVALID_REASON_CANNOT_PLACE_ON_X", "LOC_DMT_LAKE_NAME")];
+        }
+        return [true];
     }
 }
 

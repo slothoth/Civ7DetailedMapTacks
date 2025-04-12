@@ -174,7 +174,7 @@ class MapTackChooser extends Panel {
         container.appendChild(wonderSection);
         this.attachDivider(container);
         // Improvements
-        const improvementSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_IMPROVEMENT", this.getImprovementItems());
+        const improvementSection = this.createSection("LOC_CONSTRUCTIBLE_CLASS_NAME_IMPROVEMENT", this.getImprovementItems(), true);
         container.appendChild(improvementSection);
     }
     getGenericsItems() {
@@ -196,7 +196,7 @@ class MapTackChooser extends Panel {
         const improvementDefs = this.getConstructiblesByClassType(ConstructibleClassType.IMPROVEMENT);
         // Filter out common improvements.
         const filteredImprovements = improvementDefs.filter(def => !MapTackUtils.isCommonImprovement(def.ConstructibleType));
-        return [this.uniqueImprovementDefs, filteredImprovements];
+        return [[...this.sortItems(this.uniqueImprovementDefs), ...this.sortItems(filteredImprovements)]]; // Combining into one row with uniques in front.
     }
     getConstructiblesByClassType(classType) {
         const filteredItemDefs = [];
@@ -211,7 +211,7 @@ class MapTackChooser extends Panel {
         }
         return filteredItemDefs;
     }
-    createSection(titleText, itemLists = []) {
+    createSection(titleText, itemLists = [], sorted = false) {
         const sectionContainer = document.createElement("div");
         sectionContainer.classList.add("map-tack-chooser-section", "mb-1");
         // Title
@@ -224,7 +224,7 @@ class MapTackChooser extends Panel {
         for (const items of itemLists) {
             const itemContainer = document.createElement("div");
             itemContainer.classList.add("map-tack-item-container");
-            const sortedItems = this.sortItems(items);
+            const sortedItems = sorted ? items : this.sortItems(items);
             for (const itemDef of sortedItems) {
                 let item;
                 if (itemDef.ConstructibleType) {

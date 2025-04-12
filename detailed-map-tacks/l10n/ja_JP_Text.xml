@@ -60,6 +60,9 @@
         <Replace Tag="LOC_DMT_INVALID_REASON_ADJACENT_X" Language="ja_JP">
             <Text>{1_Name}の隣に配置する必要があります。</Text>
         </Replace>
+        <Replace Tag="LOC_DMT_INVALID_REASON_NOT_ADJACENT_X" Language="ja_JP">
+            <Text>{1_Name} に隣接して配置できません。</Text>
+        </Replace>
         <Replace Tag="LOC_DMT_INVALID_REASON_CANNOT_PLACE_X" Language="ja_JP">
             <Text>{1_Name}を配置できません。</Text>
         </Replace>

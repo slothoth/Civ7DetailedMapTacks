@@ -234,9 +234,9 @@ class PlaceMapTacksInterfaceMode extends ChoosePlotInterfaceMode {
                 }
             }
             const filteredNormalPlotIndices = normalPlotIndices.filter(index => !bestPlotIndices.includes(index));
-            this.plotOverlay.addPlots(filteredNormalPlotIndices, { fillColor: { x: 0.9, y: 0.9, z: 0.1, w: 0.8 } });
-            this.plotOverlay.addPlots(invalidPlotIndices, { fillColor: { x: 0.8, y: 0.1, z: 0.1, w: 0.8 } });
-            this.plotOverlay.addPlots(bestPlotIndices, { fillColor: { x: 0.1, y: 0.9, z: 0.1, w: 0.8 } });
+            this.plotOverlay.addPlots(filteredNormalPlotIndices, { fillColor: { x: 0.9, y: 0.9, z: 0.1, w: 0.6 } });
+            this.plotOverlay.addPlots(invalidPlotIndices, { fillColor: { x: 0.8, y: 0.1, z: 0.1, w: 0.6 } });
+            this.plotOverlay.addPlots(bestPlotIndices, { fillColor: { x: 0.1, y: 0.9, z: 0.1, w: 0.6 } });
         }
     }
     getXYOffsetForPill(totalPills) {
